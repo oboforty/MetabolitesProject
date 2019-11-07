@@ -9,11 +9,13 @@ library(rvest)
 library(purrr)
 library(dplyr)
 require(devtools)
-install_github("processVISION", "muschellij2")
+library(hmdbQuery)
+#install_github("processVISION", "muschellij2")
+devtools::install_github("muschellij2/processVISION")
 library("processVISION")
-library("muschellij2")
+#library("muschellij2")
 library('XML2R')
-devtools::install_github('dantonnoriega/xmltools')
+#devtools::install_github('dantonnoriega/xmltools')
 library(xmltools)
 library(data.table)
 library('RMySQL')
@@ -25,6 +27,7 @@ library('readr')
 fileHMDB<- "hmdb_metabolites.xml"
 
 #Create Data frame with all IDS
+createDB(fileHMDB,"")
 createDB=function(fileHMDB,pathCHEBI)
 {
   
@@ -59,7 +62,7 @@ createDB=function(fileHMDB,pathCHEBI)
   }
   
   CHEBI_DB=readCHEBI(fileCHEBI)
- 
+ return(metaboliteDB)
 } 
 
 readCHEBI=function(fileCHEBIpath)
@@ -70,19 +73,19 @@ readCHEBI=function(fileCHEBIpath)
   
   dbSendQuery(mydb, "USE CHEBI")
   
-  createMySqlDB("/Users/sarayones/Desktop/Projects/MetabolitesProject/MetabolitesProject/MySQLDump/generic_dumps/mysql_create_tables.sql")
-  createMySqlDB("/Users/sarayones/Desktop/Projects/MetabolitesProject/MetabolitesProject/MySQLDump/generic_dumps/generic_dump_allstar/compounds.sql")
-  createMySqlDb("/Users/sarayones/Desktop/Projects/MetabolitesProject/MetabolitesProject/MySQLDump/generic_dumps/generic_dump_allstar/chemical_data.sql")  
-  createMySqlDb("/Users/sarayones/Desktop/Projects/MetabolitesProject/MetabolitesProject/MySQLDump/generic_dumps/generic_dump_allstar/comments.sql")
-  createMySqlDb("/Users/sarayones/Desktop/Projects/MetabolitesProject/MetabolitesProject/MySQLDump/generic_dumps/generic_dump_allstar/database_accession.sql")
-  createMySqlDb("/Users/sarayones/Desktop/Projects/MetabolitesProject/MetabolitesProject/MySQLDump/generic_dumps/generic_dump_allstar/names.sql")
-  createMySqlDb("/Users/sarayones/Desktop/Projects/MetabolitesProject/MetabolitesProject/MySQLDump/generic_dumps/generic_dump_allstar/ontology.sql")
-  createMySqlDb("/Users/sarayones/Desktop/Projects/MetabolitesProject/MetabolitesProject/MySQLDump/generic_dumps/generic_dump_allstar/references.sql")
-  createMySqlDb("/Users/sarayones/Desktop/Projects/MetabolitesProject/MetabolitesProject/MySQLDump/generic_dumps/generic_dump_allstar/vertice.sql")
-  createMySqlDb("/Users/sarayones/Desktop/Projects/MetabolitesProject/MetabolitesProject/MySQLDump/generic_dumps/generic_dump_allstar/relation.sql")
-   createMySqlDb("/Users/sarayones/Desktop/Projects/MetabolitesProject/MetabolitesProject/MySQLDump/generic_dumps/generic_dump_allstar/structures.sql")
-  createMySqlDb("/Users/sarayones/Desktop/Projects/MetabolitesProject/MetabolitesProject/MySQLDump/generic_dumps/generic_dump_allstar/default_structures.sql")
-  createMySqlDb("/Users/sarayones/Desktop/Projects/MetabolitesProject/MetabolitesProject/MySQLDump/generic_dumps/generic_dump_allstar/autogen_structures.sql")
+  createMySqlDB("MySQLDump/generic_dumps/mysql_create_tables.sql")
+  createMySqlDB("MySQLDump/generic_dumps/generic_dump_allstar/compounds.sql")
+  createMySqlDB("MySQLDump/generic_dumps/generic_dump_allstar/chemical_data.sql")  
+  createMySqlDB("MySQLDump/generic_dumps/generic_dump_allstar/comments.sql")
+  createMySqlDB("MySQLDump/generic_dumps/generic_dump_allstar/database_accession.sql")
+  createMySqlDB("MySQLDump/generic_dumps/generic_dump_allstar/names.sql")
+  createMySqlDB("MySQLDump/generic_dumps/generic_dump_allstar/ontology.sql")
+  createMySqlDB("MySQLDump/generic_dumps/generic_dump_allstar/references.sql")
+  createMySqlDB("MySQLDump/generic_dumps/generic_dump_allstar/vertice.sql")
+  createMySqlDB("MySQLDump/generic_dumps/generic_dump_allstar/relation.sql")
+  createMySqlDB("MySQLDump/generic_dumps/generic_dump_allstar/structures.sql")
+  createMySqlDB("MySQLDump/generic_dumps/generic_dump_allstar/default_structures.sql")
+  createMySqlDB("MySQLDump/generic_dumps/generic_dump_allstar/autogen_structures.sql")
   
   }
 
@@ -94,7 +97,7 @@ readCHEBI=function(fileCHEBIpath)
  
  
 createMySqlDB<- function(filepath){
-  filepath="/Users/sarayones/Desktop/Projects/MetabolitesProject/MetabolitesProject/MySQLDump/generic_dumps/generic_dump_allstar/chemical_data.sql" 
+  #filepath="/Users/sarayones/Desktop/Projects/MetabolitesProject/MetabolitesProject/MySQLDump/generic_dumps/generic_dump_allstar/chemical_data.sql" 
   con = file(filepath, "r")
     
    sql.string <- ""
