@@ -1,10 +1,11 @@
 import queue
-from apis import call_api
+from time import time
+
+from api import call_api, DBs
+
 
 #import pandas
 #import numpy as np
-
-_DBs = ['hmdb', 'kegg', 'chebi', 'chemspider', 'pubchem', 'metlin']
 
 
 def _nil(var):
@@ -23,24 +24,24 @@ def discover(start_db_tag, start_db_id):
     _data = {}
 
     # create empty "data frame"
-    for db_tag in _DBs:
+    for db_tag in DBs:
         #_data[db_tag+'_id'] = np.array([])
         _data[db_tag] = {}
 
     # queue for the discover algorithm
     Q = queue.SimpleQueue()
-    Q.put((start_db_tag, start_db_id))
+    Q.put((start_db_tag, start_db_id, 'root'))
 
     # discover other metabolites from other DBs
     while Q.qsize() > 0:
-        db_tag, db_id = Q.get()
+        db_tag, db_id, db_ref_origin = Q.get()
 
         # "HTTP call"
         result = call_api(db_tag, db_id)
 
         if result is None:
             #print("  !Foreign ID not found:", db_tag, db_id)
-            undiscovered.add((db_tag, db_id))
+            undiscovered.add((db_tag, db_id, db_ref_origin))
             continue
 
         result['id'] = db_id
@@ -48,13 +49,14 @@ def discover(start_db_tag, start_db_id):
         #_data[db_tag+'_id'].append(db_id)
         discovered.add((db_tag, db_id))
 
+        foreign.update([(key, val, db_tag) for key,val in result['refs_etc'].items()])
+
         # discover foreign refs from this entry:
-        for ref_tag_prefix, ref_db_id in result['refs'].items():
-            ref_db_tag = ref_tag_prefix[0:-3]
+        for ref_db_tag, ref_db_id in result['refs'].items():
 
             # not supported DB type, skip:
-            if ref_db_tag not in _DBs:
-                foreign.add((ref_db_tag, ref_db_id))
+            if ref_db_tag not in DBs:
+                foreign.add((ref_db_tag, ref_db_id, db_tag))
                 continue
 
             if (ref_db_tag, ref_db_id) not in discovered:
@@ -64,7 +66,7 @@ def discover(start_db_tag, start_db_id):
                     continue
 
                 # schedule this foreign ID for discovery
-                Q.put((ref_db_tag, ref_db_id) )
+                Q.put((ref_db_tag, ref_db_id, db_tag) )
 
     # validate consensus regarding ref ids:
 
@@ -75,24 +77,29 @@ def discover(start_db_tag, start_db_id):
 def main():
     result, undiscovered, foreign = discover('hmdb', 'HMDB0001134')
 
-    print("FETCH finished: ", len(result))
+    LOG_OUT = ''
+
+    print("FETCH finished")
+    print("Discovered: {}, Undiscovered: {}, Foreign: {}".format(len(result), len(undiscovered), len(foreign)))
+
+    LOG_OUT += "Discovered entries: {}\n".format(len(result))
     for db_tag, dct in result.items():
         if dct:
-            print("{}({})".format(db_tag, dct['id']), end=', ')
-    print('\n---------------------')
+            LOG_OUT += "    {}({})\n".format(db_tag, dct['id'])
+    LOG_OUT += '\n\n'
 
-    print("Undiscovered entries: ")
-    for db_tag, db_id in undiscovered:
-        print("{}({})".format(db_tag, db_id), end=', ')
-    print('\n---------------------')
+    LOG_OUT += "Undiscovered entries: {}\n".format(len(undiscovered))
+    for db_tag, db_id, db_tag_from in undiscovered:
+        LOG_OUT += "    {}({})  -- from {}, \n".format(db_tag, db_id, db_tag_from)
+    LOG_OUT += '\n\n'
 
-    print("Foreign entries: ")
-    for db_tag, db_id in foreign:
-        print("{}({})".format(db_tag, db_id), end=', ')
-    print('\n---------------------')
+    LOG_OUT += "Foreign entries: {}\n".format(len(foreign))
+    for db_tag, db_id, db_tag_from in foreign:
+        LOG_OUT += "    {}({})  -- from {}, \n".format(db_tag, db_id, db_tag_from)
+    LOG_OUT += '\n\n'
 
-
-
+    with open('logs/log_{}.txt'.format(time()), 'w') as fh:
+        fh.write(LOG_OUT)
 
 
 if __name__ == "__main__":

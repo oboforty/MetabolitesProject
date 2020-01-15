@@ -1,5 +1,6 @@
 # IDE
 .idea/
+logs/
 
 # R ignore
 .Rproj.user
