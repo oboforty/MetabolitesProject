@@ -1,0 +1,1006 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metabolite>
+  <version>4.0</version>
+  <creation_date>2005-11-16 15:48:42 UTC</creation_date>
+  <update_date>2019-07-23 05:44:44 UTC</update_date>
+  <accession>HMDB0001134</accession>
+  <status>expected</status>
+  <secondary_accessions>
+    <accession>HMDB01134</accession>
+  </secondary_accessions>
+  <name>Phosphoadenosine phosphosulfate</name>
+  <description>3'-Phosphoadenosine-5'-phosphosulfate. Key intermediate in the formation by living cells of sulfate esters of phenols, alcohols, steroids, sulfated polysaccharides, and simple esters, such as choline sulfate. It is formed from sulfate ion and ATP in a two-step process. This compound also is an important step in the process of sulfur fixation in plants and microorganisms.</description>
+  <synonyms>
+    <synonym>3'-Phosphoadenosine 5'-phosphosulfate</synonym>
+    <synonym>3'-Phosphoadenylyl sulfate</synonym>
+    <synonym>PAPS</synonym>
+    <synonym>3'-Phospho-5'-adenylyl sulfate</synonym>
+    <synonym>3'-Phosphoadenosine 5'-phosphosulfuric acid</synonym>
+    <synonym>3'-Phosphoadenosine 5'-phosphosulphate</synonym>
+    <synonym>3'-Phosphoadenosine 5'-phosphosulphuric acid</synonym>
+    <synonym>3'-Phosphoadenylyl sulfuric acid</synonym>
+    <synonym>3'-Phosphoadenylyl sulphate</synonym>
+    <synonym>3'-Phosphoadenylyl sulphuric acid</synonym>
+    <synonym>3'-Phospho-5'-adenylyl sulfuric acid</synonym>
+    <synonym>3'-Phospho-5'-adenylyl sulphate</synonym>
+    <synonym>3'-Phospho-5'-adenylyl sulphuric acid</synonym>
+    <synonym>Phosphoadenosine phosphosulfuric acid</synonym>
+    <synonym>Phosphoadenosine phosphosulphate</synonym>
+    <synonym>Phosphoadenosine phosphosulphuric acid</synonym>
+    <synonym>3'-Phosphoadenosine-5'-phosphosulfate</synonym>
+    <synonym>3'-Phosphoadenosine-5'-phosphosulphate</synonym>
+    <synonym>3'-Phosphoadenylyl-sulfate</synonym>
+    <synonym>3'-Phosphoadenylyl-sulphate</synonym>
+    <synonym>5-Phosphoadenosine 3-phosphosulfate</synonym>
+    <synonym>5-Phosphoadenosine 3-phosphosulphate</synonym>
+    <synonym>Adenosine 3' phosphate 5' phosphosulfate</synonym>
+    <synonym>Adenosine-3'-phosphate-5'-phosphosulfate</synonym>
+    <synonym>Phosphosulfate, phosphoadenosine</synonym>
+  </synonyms>
+  <chemical_formula>C10H15N5O13P2S</chemical_formula>
+  <average_molecular_weight>507.264</average_molecular_weight>
+  <monisotopic_molecular_weight>506.986229305</monisotopic_molecular_weight>
+  <iupac_name>[({[(2R,3S,4R,5R)-5-(6-amino-9H-purin-9-yl)-4-hydroxy-3-(phosphonooxy)oxolan-2-yl]methoxy}(hydroxy)phosphoryl)oxy]sulfonic acid</iupac_name>
+  <traditional_iupac>3'-phosphoadenylyl sulfate</traditional_iupac>
+  <cas_registry_number>482-67-7</cas_registry_number>
+  <smiles>NC1=NC=NC2=C1N=CN2[C@@H]1O[C@H](COP(O)(=O)OS(O)(=O)=O)[C@@H](OP(O)(O)=O)[C@H]1O</smiles>
+  <inchi>InChI=1S/C10H15N5O13P2S/c11-8-5-9(13-2-12-8)15(3-14-5)10-6(16)7(27-29(17,18)19)4(26-10)1-25-30(20,21)28-31(22,23)24/h2-4,6-7,10,16H,1H2,(H,20,21)(H2,11,12,13)(H2,17,18,19)(H,22,23,24)/t4-,6-,7-,10-/m1/s1</inchi>
+  <inchikey>GACDQMDRPRGCTN-KQYNXXCUSA-N</inchikey>
+  <taxonomy>
+    <description> belongs to the class of organic compounds known as pentose phosphates. These are carbohydrate derivatives containing a pentose substituted by one or more phosphate groups.</description>
+    <direct_parent>Pentose phosphates</direct_parent>
+    <kingdom>Organic compounds</kingdom>
+    <super_class>Organic oxygen compounds</super_class>
+    <class>Organooxygen compounds</class>
+    <sub_class>Carbohydrates and carbohydrate conjugates</sub_class>
+    <molecular_framework>Aliphatic heteromonocyclic compounds</molecular_framework>
+    <alternative_parents>
+      <alternative_parent>1,2-diols</alternative_parent>
+      <alternative_parent>Hemiaminals</alternative_parent>
+      <alternative_parent>Hydrocarbon derivatives</alternative_parent>
+      <alternative_parent>Monoalkyl phosphates</alternative_parent>
+      <alternative_parent>Monoalkylamines</alternative_parent>
+      <alternative_parent>Monosaccharide phosphates</alternative_parent>
+      <alternative_parent>Organic oxides</alternative_parent>
+      <alternative_parent>Organopnictogen compounds</alternative_parent>
+      <alternative_parent>Oxacyclic compounds</alternative_parent>
+      <alternative_parent>Secondary alcohols</alternative_parent>
+      <alternative_parent>Tetrahydrofurans</alternative_parent>
+    </alternative_parents>
+    <substituents>
+      <substituent>1,2-diol</substituent>
+      <substituent>Alcohol</substituent>
+      <substituent>Aliphatic heteromonocyclic compound</substituent>
+      <substituent>Alkyl phosphate</substituent>
+      <substituent>Hemiaminal</substituent>
+      <substituent>Hydrocarbon derivative</substituent>
+      <substituent>Monoalkyl phosphate</substituent>
+      <substituent>Monosaccharide phosphate</substituent>
+      <substituent>Organic nitrogen compound</substituent>
+      <substituent>Organic oxide</substituent>
+      <substituent>Organic phosphoric acid derivative</substituent>
+      <substituent>Organoheterocyclic compound</substituent>
+      <substituent>Organonitrogen compound</substituent>
+      <substituent>Organopnictogen compound</substituent>
+      <substituent>Oxacycle</substituent>
+      <substituent>Pentose phosphate</substituent>
+      <substituent>Pentose-5-phosphate</substituent>
+      <substituent>Phosphoric acid ester</substituent>
+      <substituent>Primary aliphatic amine</substituent>
+      <substituent>Secondary alcohol</substituent>
+      <substituent>Tetrahydrofuran</substituent>
+    </substituents>
+    <external_descriptors>
+      <external_descriptor>5-phospho-D-ribosylamine</external_descriptor>
+    </external_descriptors>
+  </taxonomy>
+  <ontology>
+    <root>
+      <term>Disposition</term>
+      <definition>A concept that describes the origin of a chemical, its location within an organism, or its route of exposure.</definition>
+      <parent_id/>
+      <level>1</level>
+      <type>parent</type>
+      <descendants>
+        <descendant>
+          <term>Source</term>
+          <definition>Natural or synthetic origin of a chemical.</definition>
+          <parent_id>7724</parent_id>
+          <level>2</level>
+          <type>parent</type>
+          <synonyms>
+          </synonyms>
+          <descendants>
+            <descendant>
+              <term>Endogenous</term>
+              <definition/>
+              <parent_id>7735</parent_id>
+              <level>3</level>
+              <type>child</type>
+              <synonyms>
+              </synonyms>
+            </descendant>
+          </descendants>
+        </descendant>
+        <descendant>
+          <term>Biological location</term>
+          <definition>The physiological origin within an organism, including anatomical compnents, biofluids and excreta.</definition>
+          <parent_id>7724</parent_id>
+          <level>2</level>
+          <type>parent</type>
+          <synonyms>
+          </synonyms>
+          <descendants>
+            <descendant>
+              <term>Organ and components</term>
+              <definition>An anatomical organizational level including multiple tissues or substructures, which enables a common biological function.</definition>
+              <parent_id>7725</parent_id>
+              <level>3</level>
+              <type>parent</type>
+              <synonyms>
+              </synonyms>
+              <descendants>
+                <descendant>
+                  <term>Liver</term>
+                  <definition>An abdominal organ that has variable lobation which are composed mainly of hepatic lobules. (nci).</definition>
+                  <parent_id>7727</parent_id>
+                  <level>4</level>
+                  <type>child</type>
+                  <synonyms>
+                  </synonyms>
+                </descendant>
+                <descendant>
+                  <term>Kidney</term>
+                  <definition>The organs of the urinary tract located in the retroperitoneal cavity adjacent to the spine and composed of the renal cortex and the renal medulla. (nci).</definition>
+                  <parent_id>7727</parent_id>
+                  <level>4</level>
+                  <type>child</type>
+                  <synonyms>
+                    <synonym>Kidneys</synonym>
+                  </synonyms>
+                </descendant>
+              </descendants>
+            </descendant>
+            <descendant>
+              <term>Cell and elements</term>
+              <definition>An anatomical organizational level comprising of a single cell (or a fragment in some exceptions). a cell is defined by its type or function. it is the smallest unit of living structure capable of independent existence, composed of a membrane-enclosed mass of protoplasm and containing a nucleus or nucleoid.</definition>
+              <parent_id>7725</parent_id>
+              <level>3</level>
+              <type>parent</type>
+              <synonyms>
+              </synonyms>
+              <descendants>
+                <descendant>
+                  <term>Element</term>
+                  <definition/>
+                  <parent_id>7732</parent_id>
+                  <level>4</level>
+                  <type>parent</type>
+                  <synonyms>
+                  </synonyms>
+                  <descendants>
+                    <descendant>
+                      <term>Platelet</term>
+                      <definition>A fragment of a large bone marrow cell (megakaryocyte) which is present in the blood but is not a blood cell. It is an irregular, disc-shaped element in the blood that assists in blood clotting.</definition>
+                      <parent_id>7733</parent_id>
+                      <level>5</level>
+                      <type>child</type>
+                      <synonyms>
+                        <synonym>Thrombocyte</synonym>
+                      </synonyms>
+                    </descendant>
+                  </descendants>
+                </descendant>
+              </descendants>
+            </descendant>
+            <descendant>
+              <term>Subcellular</term>
+              <definition>An anatomical organizational level including a component within a biological cell .</definition>
+              <parent_id>7725</parent_id>
+              <level>3</level>
+              <type>parent</type>
+              <synonyms>
+              </synonyms>
+              <descendants>
+                <descendant>
+                  <term>Golgi</term>
+                  <definition>A compound membranous cytoplasmic organelle of eukaryotic cells, consisting of flattened, ribosome-free vesicles arranged in a more or less regular stack. Note that the Golgi apparatus can be located in various places in the cytoplasm. </definition>
+                  <parent_id>7730</parent_id>
+                  <level>4</level>
+                  <type>child</type>
+                  <synonyms>
+                    <synonym>Golgi apparatus</synonym>
+                    <synonym>Golgi complex</synonym>
+                    <synonym>Golgi ribbon</synonym>
+                  </synonyms>
+                </descendant>
+              </descendants>
+            </descendant>
+          </descendants>
+        </descendant>
+      </descendants>
+    </root>
+    <root>
+      <term>Process</term>
+      <definition>Biological or chemical events, or a series thereof, leading to a known function or end-product.</definition>
+      <parent_id/>
+      <level>1</level>
+      <type>parent</type>
+      <descendants>
+        <descendant>
+          <term>Naturally occurring process</term>
+          <definition>Naturally-occurring molecular events or a series thereof, leading to a known function or end-product.</definition>
+          <parent_id>7659</parent_id>
+          <level>2</level>
+          <type>parent</type>
+          <synonyms>
+          </synonyms>
+          <descendants>
+            <descendant>
+              <term>Biological process</term>
+              <definition>Biological or chemical events or a series thereof, leading to a known function or end-product within an organism.</definition>
+              <parent_id>7660</parent_id>
+              <level>3</level>
+              <type>parent</type>
+              <synonyms>
+              </synonyms>
+              <descendants>
+                <descendant>
+                  <term>Biochemical pathway</term>
+                  <definition>A linked series of chemical reactions that occur in a defined order within or between organism cells, and lead to a known function or end product.</definition>
+                  <parent_id>7661</parent_id>
+                  <level>4</level>
+                  <type>parent</type>
+                  <synonyms>
+                  </synonyms>
+                  <descendants>
+                    <descendant>
+                      <term>Acetaminophen Metabolism Pathway</term>
+                      <definition> glucuronidation is the main route, accounting for 45-55% of apap metabolism, and is mediatied by ugt1a1, ugt1a6, ugt1a9, ugt2b15 in the liver and ugt1a10 in the gut. apap can also by metabolized via sulfation, accounting for 30-35% of the metabolism.</definition>
+                      <parent_id>7662</parent_id>
+                      <level>5</level>
+                      <type>child</type>
+                      <synonyms>
+                      </synonyms>
+                    </descendant>
+                    <descendant>
+                      <term>Androgen and Estrogen Metabolism</term>
+                      <definition> many steroid hormones are transformed by sulfatases, dehydrogenases and glucuronide transferases to enhance their solubility and to facilitate their elimination. inactivation refers to the metabolic conversion of a biologically active compound into an inactive one.</definition>
+                      <parent_id>7662</parent_id>
+                      <level>5</level>
+                      <type>child</type>
+                      <synonyms>
+                      </synonyms>
+                    </descendant>
+                    <descendant>
+                      <term>Estrone Metabolism</term>
+                      <definition> it is one of three major endogenous estrogens, the others being estradiol and estriol. estrone, as well as the other estrogens, are synthesized from cholesterol and secreted mainly from the gonads, though they can also be formed from adrenal androgens in adipose tissue.</definition>
+                      <parent_id>7662</parent_id>
+                      <level>5</level>
+                      <type>child</type>
+                      <synonyms>
+                      </synonyms>
+                    </descendant>
+                    <descendant>
+                      <term>Globoid Cell Leukodystrophy</term>
+                      <definition> a defect in this enzyme results in accumulation of galactosylceramide and psychosine in central nervous system. infants with krabbe disease are normal at birth.</definition>
+                      <parent_id>7662</parent_id>
+                      <level>5</level>
+                      <type>child</type>
+                      <synonyms>
+                      </synonyms>
+                    </descendant>
+                    <descendant>
+                      <term>Metachromatic Leukodystrophy (MLD)</term>
+                      <definition> a defect in this enzyme results in accumulation of 3-o-sulfogalactosylceramide in urine, neural and non neural tisues like kidney and gallbladder. there are several forms of mld.</definition>
+                      <parent_id>7662</parent_id>
+                      <level>5</level>
+                      <type>child</type>
+                      <synonyms>
+                      </synonyms>
+                    </descendant>
+                    <descendant>
+                      <term>Sphingolipid Metabolism</term>
+                      <definition> the core of sphingolipids is the long-chain amino alcohol, sphingosine. amino acylation, with a long chain fatty acid, at carbon 2 of sphingosine yields a ceramide.</definition>
+                      <parent_id>7662</parent_id>
+                      <level>5</level>
+                      <type>child</type>
+                      <synonyms>
+                      </synonyms>
+                    </descendant>
+                    <descendant>
+                      <term>Sulfate/Sulfite Metabolism</term>
+                      <definition> aps is converted to phosphoadenylyl-sulfate (paps) via adenylylsulfate kinase. aps can also be regenerated from paps by 3'(2'), 5'-bisphosphate nucleotidase 1.</definition>
+                      <parent_id>7662</parent_id>
+                      <level>5</level>
+                      <type>child</type>
+                      <synonyms>
+                      </synonyms>
+                    </descendant>
+                    <descendant>
+                      <term>Tamoxifen Action Pathway</term>
+                      <definition> tamoxifen itself only has weak anti-estrogen effects and must be converted into more active metabolites to have therapeutic activity. metabolism takes place in the liver and is carried out primarily by cytochrome p450 enzymes.</definition>
+                      <parent_id>7662</parent_id>
+                      <level>5</level>
+                      <type>child</type>
+                      <synonyms>
+                      </synonyms>
+                    </descendant>
+                    <descendant>
+                      <term>Tamoxifen Metabolism Pathway</term>
+                      <definition> tamoxifen itself only has weak anti-estrogen effects and must be converted into more active metabolites to have therapeutic activity. metabolism takes place in the liver and is carried out primarily by cytochrome p450 enzymes.</definition>
+                      <parent_id>7662</parent_id>
+                      <level>5</level>
+                      <type>child</type>
+                      <synonyms>
+                      </synonyms>
+                    </descendant>
+                  </descendants>
+                </descendant>
+              </descendants>
+            </descendant>
+          </descendants>
+        </descendant>
+      </descendants>
+    </root>
+    <root>
+      <term>Role</term>
+      <definition>The purpose or function assumed by a chemical, either naturally or as intended by humans .</definition>
+      <parent_id/>
+      <level>1</level>
+      <type>parent</type>
+      <descendants>
+        <descendant>
+          <term>Industrial application</term>
+          <definition>The assumed function of a chemical utilized by human.</definition>
+          <parent_id>7671</parent_id>
+          <level>2</level>
+          <type>parent</type>
+          <synonyms>
+          </synonyms>
+          <descendants>
+            <descendant>
+              <term>Pharmaceutical industry</term>
+              <definition>A pharmacologic activity for which a chemical substance is utilized owing to its biological role.</definition>
+              <parent_id>7678</parent_id>
+              <level>3</level>
+              <type>parent</type>
+              <synonyms>
+              </synonyms>
+              <descendants>
+                <descendant>
+                  <term>Pharmaceutical</term>
+                  <definition/>
+                  <parent_id>7679</parent_id>
+                  <level>4</level>
+                  <type>child</type>
+                  <synonyms>
+                  </synonyms>
+                </descendant>
+              </descendants>
+            </descendant>
+          </descendants>
+        </descendant>
+      </descendants>
+    </root>
+  </ontology>
+  <state>Solid</state>
+  <experimental_properties>
+  </experimental_properties>
+  <predicted_properties>
+    <property>
+      <kind>logp</kind>
+      <value>-0.65</value>
+      <source>ALOGPS</source>
+    </property>
+    <property>
+      <kind>logs</kind>
+      <value>-2.00</value>
+      <source>ALOGPS</source>
+    </property>
+    <property>
+      <kind>solubility</kind>
+      <value>5.05 g/L</value>
+      <source>ALOGPS</source>
+    </property>
+    <property>
+      <kind>logp</kind>
+      <value>-7.1</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>pka_strongest_acidic</kind>
+      <value>-2.1</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>pka_strongest_basic</kind>
+      <value>4.94</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>iupac</kind>
+      <value>[({[(2R,3S,4R,5R)-5-(6-amino-9H-purin-9-yl)-4-hydroxy-3-(phosphonooxy)oxolan-2-yl]methoxy}(hydroxy)phosphoryl)oxy]sulfonic acid</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>average_mass</kind>
+      <value>507.264</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>mono_mass</kind>
+      <value>506.986229305</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>smiles</kind>
+      <value>NC1=NC=NC2=C1N=CN2[C@@H]1O[C@H](COP(O)(=O)OS(O)(=O)=O)[C@@H](OP(O)(O)=O)[C@H]1O</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>formula</kind>
+      <value>C10H15N5O13P2S</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>inchi</kind>
+      <value>InChI=1S/C10H15N5O13P2S/c11-8-5-9(13-2-12-8)15(3-14-5)10-6(16)7(27-29(17,18)19)4(26-10)1-25-30(20,21)28-31(22,23)24/h2-4,6-7,10,16H,1H2,(H,20,21)(H2,11,12,13)(H2,17,18,19)(H,22,23,24)/t4-,6-,7-,10-/m1/s1</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>inchikey</kind>
+      <value>GACDQMDRPRGCTN-KQYNXXCUSA-N</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>polar_surface_area</kind>
+      <value>275.97</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>refractivity</kind>
+      <value>94.93</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>polarizability</kind>
+      <value>39.36</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>rotatable_bond_count</kind>
+      <value>8</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>acceptor_count</kind>
+      <value>14</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>donor_count</kind>
+      <value>6</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>physiological_charge</kind>
+      <value>-4</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>formal_charge</kind>
+      <value>0</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>number_of_rings</kind>
+      <value>3</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>bioavailability</kind>
+      <value>0</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>rule_of_five</kind>
+      <value>Yes</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>ghose_filter</kind>
+      <value>Yes</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>veber_rule</kind>
+      <value>Yes</value>
+      <source>ChemAxon</source>
+    </property>
+    <property>
+      <kind>mddr_like_rule</kind>
+      <value>Yes</value>
+      <source>ChemAxon</source>
+    </property>
+  </predicted_properties>
+  <spectra>
+    <spectrum>
+      <type>Specdb::CMs</type>
+      <spectrum_id>26365</spectrum_id>
+    </spectrum>
+    <spectrum>
+      <type>Specdb::CMs</type>
+      <spectrum_id>37942</spectrum_id>
+    </spectrum>
+    <spectrum>
+      <type>Specdb::MsMs</type>
+      <spectrum_id>27410</spectrum_id>
+    </spectrum>
+    <spectrum>
+      <type>Specdb::MsMs</type>
+      <spectrum_id>27411</spectrum_id>
+    </spectrum>
+    <spectrum>
+      <type>Specdb::MsMs</type>
+      <spectrum_id>27412</spectrum_id>
+    </spectrum>
+    <spectrum>
+      <type>Specdb::MsMs</type>
+      <spectrum_id>33968</spectrum_id>
+    </spectrum>
+    <spectrum>
+      <type>Specdb::MsMs</type>
+      <spectrum_id>33969</spectrum_id>
+    </spectrum>
+    <spectrum>
+      <type>Specdb::MsMs</type>
+      <spectrum_id>33970</spectrum_id>
+    </spectrum>
+  </spectra>
+  <biological_properties>
+    <cellular_locations>
+      <cellular>Golgi apparatus</cellular>
+    </cellular_locations>
+    <biospecimen_locations>
+    </biospecimen_locations>
+    <tissue_locations>
+      <tissue>Kidney</tissue>
+      <tissue>Liver</tissue>
+      <tissue>Platelet</tissue>
+    </tissue_locations>
+    <pathways>
+      <pathway>
+        <name>17-Beta Hydroxysteroid Dehydrogenase III Deficiency</name>
+        <smpdb_id>SMP00356</smpdb_id>
+        <kegg_map_id/>
+      </pathway>
+      <pathway>
+        <name>Acetaminophen Metabolism Pathway</name>
+        <smpdb_id>SMP00640</smpdb_id>
+        <kegg_map_id/>
+      </pathway>
+      <pathway>
+        <name>Androgen and Estrogen Metabolism</name>
+        <smpdb_id>SMP00068</smpdb_id>
+        <kegg_map_id>map00150</kegg_map_id>
+      </pathway>
+      <pathway>
+        <name>Aromatase deficiency</name>
+        <smpdb_id>SMP00565</smpdb_id>
+        <kegg_map_id/>
+      </pathway>
+      <pathway>
+        <name>Estrone Metabolism</name>
+        <smpdb_id>SMP30880</smpdb_id>
+        <kegg_map_id/>
+      </pathway>
+      <pathway>
+        <name>Fabry disease</name>
+        <smpdb_id>SMP00525</smpdb_id>
+        <kegg_map_id/>
+      </pathway>
+      <pathway>
+        <name>Gaucher Disease</name>
+        <smpdb_id>SMP00349</smpdb_id>
+        <kegg_map_id/>
+      </pathway>
+      <pathway>
+        <name>Globoid Cell Leukodystrophy</name>
+        <smpdb_id>SMP00348</smpdb_id>
+        <kegg_map_id/>
+      </pathway>
+      <pathway>
+        <name>Krabbe disease</name>
+        <smpdb_id>SMP00526</smpdb_id>
+        <kegg_map_id/>
+      </pathway>
+      <pathway>
+        <name>Metachromatic Leukodystrophy (MLD)</name>
+        <smpdb_id>SMP00347</smpdb_id>
+        <kegg_map_id/>
+      </pathway>
+      <pathway>
+        <name>Sphingolipid Metabolism</name>
+        <smpdb_id>SMP00034</smpdb_id>
+        <kegg_map_id>map00500</kegg_map_id>
+      </pathway>
+      <pathway>
+        <name>Sulfate/Sulfite Metabolism</name>
+        <smpdb_id>SMP00041</smpdb_id>
+        <kegg_map_id>map00920</kegg_map_id>
+      </pathway>
+      <pathway>
+        <name>Sulfite oxidase deficiency</name>
+        <smpdb_id>SMP00532</smpdb_id>
+        <kegg_map_id/>
+      </pathway>
+      <pathway>
+        <name>Tamoxifen Action Pathway</name>
+        <smpdb_id>SMP00471</smpdb_id>
+        <kegg_map_id/>
+      </pathway>
+      <pathway>
+        <name>Tamoxifen Metabolism Pathway</name>
+        <smpdb_id>SMP00606</smpdb_id>
+        <kegg_map_id/>
+      </pathway>
+    </pathways>
+  </biological_properties>
+  <normal_concentrations>
+  </normal_concentrations>
+  <abnormal_concentrations>
+  </abnormal_concentrations>
+  <diseases>
+  </diseases>
+  <kegg_id>C00053</kegg_id>
+  <chemspider_id>9799</chemspider_id>
+  <foodb_id>FDB022445</foodb_id>
+  <pubchem_compound_id>10214</pubchem_compound_id>
+  <chebi_id>17980</chebi_id>
+  <drugbank_id>DB02902</drugbank_id>
+  <pdb_id/>
+  <knapsack_id>C00007446</knapsack_id>
+  <phenol_explorer_compound_id/>
+  <biocyc_id/>
+  <bigg_id>33679</bigg_id>
+  <wikipedia_id>3'-Phosphoadenosine-5'-phosphosulfate</wikipedia_id>
+  <metlin_id>6028</metlin_id>
+  <vmh_id>PAPS</vmh_id>
+  <fbonto_id/>
+  <synthesis_reference>Lin, Chun-Hung; Shen, Gwo-Jenn; Garcia-Junceda, Eduardo; Wong, Chi-Huey. Enzymic Synthesis and Regeneration of 3'-Phosphoadenosine 5'-Phosphosulfate (PAPS) for Regioselective Sulfation of Oligosaccharides. J. Am. Chem. Soc., 1995, 117 (30), pp 8031-8032</synthesis_reference>
+  <general_references>
+    <reference>
+      <reference_text>Emmi L, Bergamini C, Spinelli A, Liotta F, Marchione T, Caldini A, Fanelli A, De Cristofaro MT, Dal Pozzo G: Possible pathogenetic role of activated platelets in the primary antiphospholipid syndrome involving the central nervous system. Ann N Y Acad Sci. 1997 Aug 14;823:188-200.</reference_text>
+      <pubmed_id>9292045</pubmed_id>
+    </reference>
+    <reference>
+      <reference_text>Fanelli A, Bergamini C, Rapi S, Caldini A, Spinelli A, Buggiani A, Emmi L: Flow cytometric detection of circulating activated platelets in primary antiphospholipid syndrome. Correlation with thrombocytopenia and anticardiolipin antibodies. Lupus. 1997;6(3):261-7.</reference_text>
+      <pubmed_id>9104734</pubmed_id>
+    </reference>
+    <reference>
+      <reference_text>Joseph JE, Harrison P, Mackie IJ, Isenberg DA, Machin SJ: Increased circulating platelet-leucocyte complexes and platelet activation in patients with antiphospholipid syndrome, systemic lupus erythematosus and rheumatoid arthritis. Br J Haematol. 2001 Nov;115(2):451-9.</reference_text>
+      <pubmed_id>11703349</pubmed_id>
+    </reference>
+    <reference>
+      <reference_text>Suarez IM, Diaz RA, Aguayo Canela D, Pujol de la Llave E: Correction of severe thrombocytopenia with chloroquine in the primary antiphospholipid syndrome. Lupus. 1996 Feb;5(1):81-3.</reference_text>
+      <pubmed_id>8646233</pubmed_id>
+    </reference>
+    <reference>
+      <reference_text>Khoo BY, Sit KH, Wong KP: Does PAPS generation determine the overall sulfate conjugation in human platelets? Life Sci. 1988;42(23):2389-95.</reference_text>
+      <pubmed_id>3131608</pubmed_id>
+    </reference>
+    <reference>
+      <reference_text>Wong KP, Khoo BY, Sit KH: Biosynthesis of PAPS in vitro by human liver. Measurement by two independent assay procedures. Biochem Pharmacol. 1991 Jan 1;41(1):63-9.</reference_text>
+      <pubmed_id>1846073</pubmed_id>
+    </reference>
+    <reference>
+      <reference_text>Cappiello M, Franchi M, Rane A, Pacifici GM: Sulphotransferase and its substrate: adenosine-3'-phosphate-5'-phosphosulphate in human fetal liver and placenta. Dev Pharmacol Ther. 1990;14(1):62-5.</reference_text>
+      <pubmed_id>2311482</pubmed_id>
+    </reference>
+    <reference>
+      <reference_text>Cappiello M, Franchi M, Giuliani L, Pacifici GM: Distribution of 2-naphthol sulphotransferase and its endogenous substrate adenosine 3'-phosphate 5'-phosphosulphate in human tissues. Eur J Clin Pharmacol. 1989;37(3):317-20.</reference_text>
+      <pubmed_id>2612547</pubmed_id>
+    </reference>
+    <reference>
+      <reference_text>Carlier M, Squifflet JP, Pirson Y, Gribomont B, Alexandre GP: Maximal hydration during anesthesia increases pulmonary arterial pressures and improves early function of human renal transplants. Transplantation. 1982 Oct;34(4):201-4.</reference_text>
+      <pubmed_id>6755828</pubmed_id>
+    </reference>
+  </general_references>
+  <protein_associations>
+    <protein>
+      <protein_accession>HMDBP00119</protein_accession>
+      <name>Ectonucleotide pyrophosphatase/phosphodiesterase family member 1</name>
+      <uniprot_id>P22413</uniprot_id>
+      <gene_name>ENPP1</gene_name>
+      <protein_type>Unknown</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00194</protein_accession>
+      <name>Ectonucleotide pyrophosphatase/phosphodiesterase family member 3</name>
+      <uniprot_id>O14638</uniprot_id>
+      <gene_name>ENPP3</gene_name>
+      <protein_type>Unknown</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00286</protein_accession>
+      <name>Carbohydrate sulfotransferase 11</name>
+      <uniprot_id>Q9NPF2</uniprot_id>
+      <gene_name>CHST11</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00287</protein_accession>
+      <name>Carbohydrate sulfotransferase 3</name>
+      <uniprot_id>Q7LGC8</uniprot_id>
+      <gene_name>CHST3</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00288</protein_accession>
+      <name>Carbohydrate sulfotransferase 13</name>
+      <uniprot_id>Q8NET6</uniprot_id>
+      <gene_name>CHST13</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00289</protein_accession>
+      <name>Carbohydrate sulfotransferase 12</name>
+      <uniprot_id>Q9NRB3</uniprot_id>
+      <gene_name>CHST12</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00318</protein_accession>
+      <name>Galactosylceramide sulfotransferase</name>
+      <uniprot_id>Q99999</uniprot_id>
+      <gene_name>GAL3ST1</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00339</protein_accession>
+      <name>Heparan sulfate glucosamine 3-O-sulfotransferase 3B1</name>
+      <uniprot_id>Q9Y662</uniprot_id>
+      <gene_name>HS3ST3B1</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00340</protein_accession>
+      <name>Heparan sulfate glucosamine 3-O-sulfotransferase 3A1</name>
+      <uniprot_id>Q9Y663</uniprot_id>
+      <gene_name>HS3ST3A1</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00341</protein_accession>
+      <name>Sulfotransferase 1A1</name>
+      <uniprot_id>P50225</uniprot_id>
+      <gene_name>SULT1A1</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00342</protein_accession>
+      <name>3'(2'),5'-bisphosphate nucleotidase 1</name>
+      <uniprot_id>O95861</uniprot_id>
+      <gene_name>BPNT1</gene_name>
+      <protein_type>Unknown</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00343</protein_accession>
+      <name>Heparan sulfate glucosamine 3-O-sulfotransferase 1</name>
+      <uniprot_id>O14792</uniprot_id>
+      <gene_name>HS3ST1</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00345</protein_accession>
+      <name>Bifunctional 3'-phosphoadenosine 5'-phosphosulfate synthase 1</name>
+      <uniprot_id>O43252</uniprot_id>
+      <gene_name>PAPSS1</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00346</protein_accession>
+      <name>Estrogen sulfotransferase</name>
+      <uniprot_id>P49888</uniprot_id>
+      <gene_name>SULT1E1</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00347</protein_accession>
+      <name>Bile salt sulfotransferase</name>
+      <uniprot_id>Q06520</uniprot_id>
+      <gene_name>SULT2A1</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00348</protein_accession>
+      <name>Carbohydrate sulfotransferase 1</name>
+      <uniprot_id>O43916</uniprot_id>
+      <gene_name>CHST1</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00349</protein_accession>
+      <name>Heparan sulfate glucosamine 3-O-sulfotransferase 4</name>
+      <uniprot_id>Q9Y661</uniprot_id>
+      <gene_name>HS3ST4</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00350</protein_accession>
+      <name>Sulfotransferase 1A2</name>
+      <uniprot_id>P50226</uniprot_id>
+      <gene_name>SULT1A2</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00351</protein_accession>
+      <name>Heparan sulfate glucosamine 3-O-sulfotransferase 5</name>
+      <uniprot_id>Q8IZT8</uniprot_id>
+      <gene_name>HS3ST5</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00352</protein_accession>
+      <name>Heparan sulfate glucosamine 3-O-sulfotransferase 2</name>
+      <uniprot_id>Q9Y278</uniprot_id>
+      <gene_name>HS3ST2</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00353</protein_accession>
+      <name>Bifunctional 3'-phosphoadenosine 5'-phosphosulfate synthase 2</name>
+      <uniprot_id>O95340</uniprot_id>
+      <gene_name>PAPSS2</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00354</protein_accession>
+      <name>Protein-tyrosine sulfotransferase 2</name>
+      <uniprot_id>O60704</uniprot_id>
+      <gene_name>TPST2</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00355</protein_accession>
+      <name>Sulfotransferase family cytosolic 2B member 1</name>
+      <uniprot_id>O00204</uniprot_id>
+      <gene_name>SULT2B1</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00356</protein_accession>
+      <name>Sulfotransferase 1A3/1A4</name>
+      <uniprot_id>P50224</uniprot_id>
+      <gene_name>SULT1A3</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00715</protein_accession>
+      <name>Carbohydrate sulfotransferase 7</name>
+      <uniprot_id>Q9NS84</uniprot_id>
+      <gene_name>CHST7</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP02568</protein_accession>
+      <name>Carbohydrate sulfotransferase 14</name>
+      <uniprot_id>Q8NCH0</uniprot_id>
+      <gene_name>CHST14</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP02991</protein_accession>
+      <name>Heparan-sulfate 6-O-sulfotransferase 1</name>
+      <uniprot_id>O60243</uniprot_id>
+      <gene_name>HS6ST1</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP03073</protein_accession>
+      <name>Heparan-sulfate 6-O-sulfotransferase 2</name>
+      <uniprot_id>Q96MM7</uniprot_id>
+      <gene_name>HS6ST2</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP03254</protein_accession>
+      <name>Adenosine 3'-phospho 5'-phosphosulfate transporter 1</name>
+      <uniprot_id>Q8TB61</uniprot_id>
+      <gene_name>SLC35B2</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP03301</protein_accession>
+      <name>Heparan-sulfate 6-O-sulfotransferase 3</name>
+      <uniprot_id>Q8IZP7</uniprot_id>
+      <gene_name>HS6ST3</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP07252</protein_accession>
+      <name>Carbohydrate sulfotransferase 15</name>
+      <uniprot_id>Q7LFX5</uniprot_id>
+      <gene_name>CHST15</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP08732</protein_accession>
+      <name>Inositol monophosphatase 3</name>
+      <uniprot_id>Q9NX62</uniprot_id>
+      <gene_name>IMPAD1</gene_name>
+      <protein_type>Unknown</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP09340</protein_accession>
+      <name>Tyrosylprotein sulfotransferase 1</name>
+      <uniprot_id>A4D2M0</uniprot_id>
+      <gene_name>TPST1</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP10798</protein_accession>
+      <name>Adenosine 3'-phospho 5'-phosphosulfate transporter 2</name>
+      <uniprot_id>Q9H1N7</uniprot_id>
+      <gene_name>SLC35B3</gene_name>
+      <protein_type>Unknown</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP11788</protein_accession>
+      <name>Heparan sulfate glucosamine 3-O-sulfotransferase 6</name>
+      <uniprot_id>Q96QI5</uniprot_id>
+      <gene_name>HS3ST6</gene_name>
+      <protein_type>Unknown</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP11853</protein_accession>
+      <name>Bifunctional heparan sulfate N-deacetylase/N-sulfotransferase 1</name>
+      <uniprot_id>P52848</uniprot_id>
+      <gene_name>NDST1</gene_name>
+      <protein_type>Unknown</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP11854</protein_accession>
+      <name>Bifunctional heparan sulfate N-deacetylase/N-sulfotransferase 2</name>
+      <uniprot_id>P52849</uniprot_id>
+      <gene_name>NDST2</gene_name>
+      <protein_type>Unknown</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP11855</protein_accession>
+      <name>Bifunctional heparan sulfate N-deacetylase/N-sulfotransferase 3</name>
+      <uniprot_id>O95803</uniprot_id>
+      <gene_name>NDST3</gene_name>
+      <protein_type>Unknown</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP11856</protein_accession>
+      <name>Bifunctional heparan sulfate N-deacetylase/N-sulfotransferase 4</name>
+      <uniprot_id>Q9H3R1</uniprot_id>
+      <gene_name>NDST4</gene_name>
+      <protein_type>Unknown</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP11965</protein_accession>
+      <name>Sulfotransferase 1C3</name>
+      <uniprot_id>Q6IMI6</uniprot_id>
+      <gene_name>SULT1C3</gene_name>
+      <protein_type>Unknown</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP11966</protein_accession>
+      <name>Sulfotransferase 6B1</name>
+      <uniprot_id>Q6IMI4</uniprot_id>
+      <gene_name>SULT6B1</gene_name>
+      <protein_type>Unknown</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP11981</protein_accession>
+      <name>Protein-tyrosine sulfotransferase 1</name>
+      <uniprot_id>O60507</uniprot_id>
+      <gene_name>TPST1</gene_name>
+      <protein_type>Unknown</protein_type>
+    </protein>
+  </protein_associations>
+</metabolite>
