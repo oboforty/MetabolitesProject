@@ -1,8 +1,11 @@
+import json
+
 from api.utils import DBs
 
 
 def parse_PubChem(db_id, c):
-    content, cont_refs = c
+    content = json.loads(c[0])
+    cont_refs = json.loads(c[1])
     dataPUBCHEM = {"refs": {}, "refs_etc": {}, "data": {}, 'names': []}
 
 

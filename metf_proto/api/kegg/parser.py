@@ -11,6 +11,10 @@ def parse_KEGG(db_id, content: list):
 
     state = None
     for line in handle:
+        if line.startswith('///') or line == '':
+            # /// skips idk
+            continue
+
         if not line.startswith("   "):
             # interpret labels as regular lines, but save the label
             state = line.split()[0]

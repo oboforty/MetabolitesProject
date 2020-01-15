@@ -1,8 +1,11 @@
+import json
+
 from api import DBs
 
 
 def parse_ChemSpider(db_id, c):
-    content, cont_refs = c
+    content = json.loads(c[0])
+    cont_refs = json.loads(c[1])
 
     dataSPIDER = {"refs": {}, "refs_etc": {}, "data": {}, 'names': []}
 

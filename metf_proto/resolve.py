@@ -1,4 +1,5 @@
 import queue
+from datetime import datetime
 from time import time
 
 from api import call_api, DBs
@@ -6,6 +7,7 @@ from api import call_api, DBs
 
 #import pandas
 #import numpy as np
+from api.utils import get_http_log
 
 
 def _nil(var):
@@ -66,7 +68,7 @@ def discover(start_db_tag, start_db_id):
                     continue
 
                 # schedule this foreign ID for discovery
-                Q.put((ref_db_tag, ref_db_id, db_tag) )
+                Q.put((ref_db_tag, str(ref_db_id), db_tag) )
 
     # validate consensus regarding ref ids:
 
@@ -82,7 +84,8 @@ def main():
     print("FETCH finished")
     print("Discovered: {}, Undiscovered: {}, Foreign: {}".format(len(result), len(undiscovered), len(foreign)))
 
-    LOG_OUT += "Discovered entries: {}\n".format(len(result))
+    LOG_OUT += "MetaFetcher - " + str(datetime.now())
+    LOG_OUT += "\nDiscovered entries: {}\n".format(len(result))
     for db_tag, dct in result.items():
         if dct:
             LOG_OUT += "    {}({})\n".format(db_tag, dct['id'])
@@ -100,6 +103,10 @@ def main():
 
     with open('logs/log_{}.txt'.format(time()), 'w') as fh:
         fh.write(LOG_OUT)
+
+    # http log
+    with open('logs/http_{}.txt'.format(time()), 'w') as fh:
+        fh.write(get_http_log())
 
 
 if __name__ == "__main__":
