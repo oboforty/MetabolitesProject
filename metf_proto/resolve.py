@@ -1,9 +1,8 @@
 import queue
+from apis import call_api
 
-import pandas
-import numpy as np
-
-from fakeapi import proxy_db
+#import pandas
+#import numpy as np
 
 _DBs = ['hmdb', 'kegg', 'chebi', 'chemspider', 'pubchem', 'metlin']
 
@@ -37,7 +36,7 @@ def discover(start_db_tag, start_db_id):
         db_tag, db_id = Q.get()
 
         # "HTTP call"
-        result = proxy_db[db_tag](db_id)
+        result = call_api(db_tag, db_id)
 
         if result is None:
             #print("  !Foreign ID not found:", db_tag, db_id)

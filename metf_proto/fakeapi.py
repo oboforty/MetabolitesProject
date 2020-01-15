@@ -1,5 +1,4 @@
 import json
-import xml.etree.ElementTree as ET
 import xmltodict
 
 
@@ -14,16 +13,6 @@ def _read_xml(db_tag, met_db_id):
     v = xmltodict.parse(content)
 
     return dict(v)
-    # tree = ET.iterparse()
-    #
-    # # strip annoying HTTP://... prefixes
-    # for _, el in tree:
-    #     prefix, has_namespace, postfix = el.tag.partition('}')
-    #     if has_namespace:
-    #         el.tag = postfix  # strip all namespaces
-    #
-    # root = tree.root
-    # v = XmlDictConfig(root)
 
 
 def call_HMDB(met_db_id):
@@ -152,22 +141,38 @@ def call_PubChem(db_id):
 
     return dataPUBCHEM
 
-def call_Lipidmaps(db_id):
-    pass
-
 def call_ChemSpider(db_id):
+    with open('data/chemspider/{}.json'.format(db_id)) as fh:
+        content = json.load(fh)
+    with open('data/chemspider/{}_refs.json'.format(db_id)) as fh:
+        cont_refs = json.load(fh)
+
+    accepted = []
+
+    dataSPIDER = {"refs": {}, "refs_etc": {}, "data": {}, 'names': []}
+
+    dataSPIDER['names'] = content.pop('commonName')
+
+    dataSPIDER['data'] = content
+
+    # x refs:
+    for xref in cont_refs['externalReferences']:
+        db_tag = xref['source'].lower()
+        db_id = xref['externalId']
+
+        if 'human metabolome database' == db_tag:
+            db_tag = 'hmdb'
+
+        if db_tag in accepted:
+            dataSPIDER['refs'][db_tag] = db_id
+        else:
+            dataSPIDER['refs_etc'][db_tag] = db_id
+
+    return dataSPIDER
+
+def call_Lipidmaps(db_id):
     pass
 
 def call_Metlin(db_id):
     pass
 
-
-proxy_db = {
-    'hmdb': call_HMDB,
-    'chebi': call_ChEBI,
-    'kegg': call_KEGG,
-    'pubchem': call_PubChem,
-    'lipidmaps': call_Lipidmaps,
-    'chemspider': call_ChemSpider,
-    'metlin': call_Metlin,
-}
