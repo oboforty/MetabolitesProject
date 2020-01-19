@@ -1,11 +1,5 @@
-#   http://r-pkgs.had.co.nz/
 
-# Some useful keyboard shortcuts for package authoring:
-#   Install Package:           'Ctrl + Shift + B'
-#   Check Package:             'Ctrl + Shift + E'
-#   Test Package:              'Ctrl + Shift + T'
+# 1. including files
+source('R/mf.R')
 
-hello <- function() {
-  print("Hello, world!")
-}
-
+download("hmdb")

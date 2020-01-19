@@ -1,22 +1,28 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod, ABCMeta
 
 import requests
 
-from metf_proto2.db_imp.utils import download_file
+from ..utils import download_file
 
 
-class FetcherBase(metaclass=ABC):
+class FetcherBase(metaclass=ABCMeta):
 
-    def __init__(self, url_get, url_all):
+    def __init__(self, url_get, url_all, fake=False):
         self.url_get_tpl = url_get
         self.url_all_tpl = url_all
+        self.fake = fake
 
-    def get(self, db_id):
+    def get_metabolite(self, db_id):
         # check local database
-        en = self.get_metabolite(db_id)
+        en = self.query_metabolite(db_id)
 
         if en is None:
-            result = self.download_metabolite(db_id)
+            if self.fake:
+                result = self._fake_it(db_id)
+            else:
+                result = self.download_metabolite(db_id)
+
+            en = self.parse(db_id, result)
 
         return en
 
@@ -31,30 +37,33 @@ class FetcherBase(metaclass=ABC):
             return None
         return r.content.decode('utf-8')
 
-    def download_all(self):
-        """Downloads whole metabolite database"""
-        try:
-            download_file(self.url_all_tpl, 'tmp/{}'.format(self.url_all_tpl))
-        except:
-            raise Exception("Metabolite DB dump not found")
-        #http_log(r)
-
-        return True
-
-    def get_metabolite(self, db_id):
+    def query_metabolite(self, db_id):
         """Gets one entry from local db
         By default it just accesses the core table
         """
 
         # todo: access table with id/names/refs/refetc
+
+        # Todo: translate to common view Metabolite class
         return None
+
+    @abstractmethod
+    def download_all(self):
+        """Downloads whole metabolite database"""
+        ...
 
     @abstractmethod
     def parse(self, db_id, content):
         """Parses custom db content"""
         ...
 
-    @abstractmethod
-    def parse_db(self, filename):
-        """Parses whole database dump"""
-        ...
+    def _fake_it(self, db_id):
+        filename = 'data/fakes/hmdb/{}.xml'.format(db_id)
+
+        try:
+            with open(filename) as fh:
+                content = fh.read()
+        except FileNotFoundError:
+            return None
+
+        return content

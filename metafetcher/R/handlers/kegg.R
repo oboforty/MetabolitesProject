@@ -1,24 +1,24 @@
 
-hmdb <- function(fake = FALSE) {
+kegg <- function(fake = FALSE) {
   return(list(
     download_all = function() {
-      print("download_all hmdb")
+      print("download_all kegg")
     },
 
     parse = function() {
-      print("fake_metabolite hmdb")
+      print("fake_metabolite kegg")
     },
 
     download = function() {
-      print("download hmdb")
+      print("download kegg")
     },
 
     fake = function() {
-      print("fake hmdb")
+      print("fake kegg")
     },
 
     query = function() {
-      print("query hmdb")
+      print("query kegg")
     }
   ))
 }

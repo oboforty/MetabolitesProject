@@ -76,15 +76,11 @@ def discover(start_db_tag, start_db_id):
 
 
 
-def main():
-    result, undiscovered, foreign = discover('hmdb', 'HMDB0001134')
+def log(result, undiscovered, foreign, dt):
 
     LOG_OUT = ''
 
-    print("FETCH finished")
-    print("Discovered: {}, Undiscovered: {}, Foreign: {}".format(len(result), len(undiscovered), len(foreign)))
-
-    LOG_OUT += "MetaFetcher - " + str(datetime.now())
+    LOG_OUT += "MetaFetcher - " + str(datetime.now()) + " - took {} seconds".format(dt)
     LOG_OUT += "\nDiscovered entries: {}\n".format(len(result))
     for db_tag, dct in result.items():
         if dct:
@@ -108,6 +104,14 @@ def main():
     with open('logs/http_{}.txt'.format(time()), 'w') as fh:
         fh.write(get_http_log())
 
+def main():
+    t1 = time()
+    result, undiscovered, foreign = discover('hmdb', 'HMDB0001134')
+    t2 = time()
+    log(result, undiscovered, foreign, round(t2 - t1, 2))
+
+    print("FETCH finished")
+    print("Discovered: {}, Undiscovered: {}, Foreign: {}".format(len(result), len(undiscovered), len(foreign)))
 
 if __name__ == "__main__":
     main()

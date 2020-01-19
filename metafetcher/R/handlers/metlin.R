@@ -1,24 +1,24 @@
 
-hmdb <- function(fake = FALSE) {
+metlin <- function(fake = FALSE) {
   return(list(
     download_all = function() {
-      print("download_all hmdb")
+      print("download_all metlin")
     },
 
     parse = function() {
-      print("fake_metabolite hmdb")
+      print("fake_metabolite metlin")
     },
 
     download = function() {
-      print("download hmdb")
+      print("download metlin")
     },
 
     fake = function() {
-      print("fake hmdb")
+      print("fake metlin")
     },
 
     query = function() {
-      print("query hmdb")
+      print("query metlin")
     }
   ))
 }

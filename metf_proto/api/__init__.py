@@ -25,7 +25,7 @@ from api.lipidmaps.parser import *
 from api.chemspider.parser import *
 from api.metlin.parser import *
 
-fake_http = True
+fake_http = False
 
 
 class DbProxy:

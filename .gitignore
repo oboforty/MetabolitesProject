@@ -1,6 +1,10 @@
 # IDE
 .idea/
 logs/
+metf_proto2/tmp/
+metf_proto2/*.db
+metafetcher/*.db
+
 
 # R ignore
 .Rproj.user
