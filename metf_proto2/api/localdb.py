@@ -41,7 +41,7 @@ class Metabolite(EntityBase):
         self.names = kwargs.get('names', [])
         self.downloaded_at = kwargs.get('downloaded_at')
         self.source = kwargs.get('source')
-        self.source_id = kwargs.get('source_id')
+        #self.source_id = kwargs.get('source_id')
 
         # Xrefs
         self.hmdb_id = kwargs.get('hmdb_id')

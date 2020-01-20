@@ -1,7 +1,7 @@
 # IDE
 .idea/
 logs/
-metf_proto2/tmp/
+metafetcher/tmp/
 metf_proto2/*.db
 metafetcher/*.db
 
