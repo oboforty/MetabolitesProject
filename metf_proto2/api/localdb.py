@@ -25,7 +25,7 @@ class Metabolite(EntityBase):
     source = Column(String(20))
     source_id = Column(String(128))
 
-    hmdb_id = Column(String(128))
+    hmdb_id = Column(String(11))
     chebi_id = Column(String(128))
     kegg_id = Column(String(128))
     pubchem_id = Column(String(128))
