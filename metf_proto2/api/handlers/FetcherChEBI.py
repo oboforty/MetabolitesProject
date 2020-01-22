@@ -3,7 +3,7 @@ from time import time
 import xmltodict
 
 from .. import ctx
-from ..localdb import Metabolite
+from entities.localdb import Metabolite
 from ..utils import download_file_ftp, parse_iter_sdf
 from .FetcherBase import FetcherBase
 

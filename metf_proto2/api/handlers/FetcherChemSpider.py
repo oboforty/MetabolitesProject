@@ -1,7 +1,7 @@
 from time import time
 
 from api import ctx
-from api.localdb import Metabolite
+from entities.localdb import Metabolite
 from api.utils import download_file
 from metf_proto2.api.handlers.FetcherBase import FetcherBase
 

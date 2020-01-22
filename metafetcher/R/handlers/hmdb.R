@@ -36,6 +36,10 @@ parse_xml_iter <- function(filepath) {
   vec_blob <- c(BDFL)
   buffer_size <- 0
 
+  # empty error file
+  er_con <- file('tmp/errors/hmdb_error_xml.txt', "w")
+  close(er_con)
+
   # connect to DB
   drv <- dbDriver("PostgreSQL")
   db_conn <- dbConnect(drv, dbname = "metafetcher", host = "localhost", port = 5432, user = "postgres", password = "postgres")
@@ -60,8 +64,12 @@ parse_xml_iter <- function(filepath) {
       tryCatch({
         x <- xmlToList(xmlParse(xml))
       }, error = function(e) {
+        print(paste("Error in XML. ", i))
 
-        print("Error in XML. ")
+        er_con <- file('tmp/errors/hmdb_error_xml.txt', "a")
+        write(xml, er_con)
+        close(er_con)
+
 
         # todo: itt: dump file
       })

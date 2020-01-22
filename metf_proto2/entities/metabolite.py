@@ -5,7 +5,7 @@ from sqlalchemy import Column, Integer, String, Boolean, SmallInteger, ForeignKe
     TIMESTAMP, func, Float
 from eme.data_access import GUID, JSON_GEN
 
-from .ctx import EntityBase
+from api.ctx import EntityBase
 
 
 def newmid():

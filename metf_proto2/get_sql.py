@@ -1,6 +1,6 @@
 from sqlalchemy.sql.ddl import CreateTable
 
-from api.localdb import Metabolite
+from entities.localdb import Metabolite
 
 
 def get_sql():

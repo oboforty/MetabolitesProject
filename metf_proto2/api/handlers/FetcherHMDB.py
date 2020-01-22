@@ -1,11 +1,10 @@
-import sys
 from time import time
 
 import xmltodict
 import xml.etree.ElementTree as ET
 
 from api import ctx
-from api.localdb import Metabolite
+from entities.localdb import Metabolite
 from api.utils import download_file, parse_xml_recursive
 from metf_proto2.api.handlers.FetcherBase import FetcherBase
 
