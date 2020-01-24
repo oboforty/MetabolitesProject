@@ -2,7 +2,7 @@ library(XML)
 library(iterators)
 
 
-filepath <- "../tmp/hmdb_metabolites.xml"
+filepath <- "../../tmp/hmdb_metabolites.xml"
 
 
 parse_metabolite <- function(x) {

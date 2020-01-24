@@ -4,8 +4,8 @@ import xmltodict
 import xml.etree.ElementTree as ET
 
 from api import ctx
-from entities.localdb import Metabolite
 from api.utils import download_file, parse_xml_recursive
+from api.entities.HMDBData import HMDBData
 from metf_proto2.api.handlers.FetcherBase import FetcherBase
 
 
@@ -17,7 +17,7 @@ class FetcherHMDB(FetcherBase):
             fake=fake
         )
 
-    def parse(self, db_id, content) -> Metabolite:
+    def parse(self, db_id, content) -> HMDBData:
         """Parses custom content"""
         if isinstance(content, dict):
             v = content
@@ -35,32 +35,45 @@ class FetcherHMDB(FetcherBase):
         else:
             print(1)
 
+        # todo: secondary accessions -> to lookup table?
+        # todo: cas_registry_number, pathways
+        # todo: tissue_locations
 
-        meta = Metabolite(names=names, source='hmdb',
-            hmdb_id = v.pop('accession', None),
-            kegg_id = v.pop('kegg_id', None),
-            chebi_id = v.pop('chebi_id', None),
-            chemspider_id = v.pop('chemspider_id', None),
-            pubchem_id = v.pop('pubchem_compound_id', None),
-            metlin_id = v.pop('metlin_id', None),
-            refs_etc={
-            "drugbank": v.pop('drugbank_id', None),
-            "wikipedia": v.pop('wikipedia_id', None),
-            "foodb": v.pop('foodb_id', None),
-            "knapsack": v.pop('knapsack_id', None),
-            "biocyc": v.pop('biocyc_id', None),
-            "bigg": v.pop('bigg_id', None),
-            "pdb": v.pop('pdb_id', None),
-            "phenol_explorer_compound": v.pop('phenol_explorer_compound_id', None),
-        })
+        meta = HMDBData(hmdb_id = v.get('accession'),
+            description = v.get('description'),
 
+            names = names,
+            iupac_name = v.get('iupac_name'),
+            iupac_trad_name = v.get('traditional_iupac'),
+            formula = v.get('chemical_formula'),
+            smiles = v.get('smiles'),
+            inchi = v.get('inchi'),
+            inchikey = v.get('inchikey'),
 
-        # todo: parse data
+            cas_id = v.get('cas_id'),
+            drugbank_id = v.get('drugbank_id'),
+            drugbank_metabolite_id = v.get('drugbank_metabolite_id'),
+            chemspider_id = v.get('chemspider_id'),
+            kegg_id = v.get('kegg_id'),
+            metlin_id = v.get('metlin_id'),
+            pubchem_id = v.get('pubchem_id'),
+            chebi_id = v.get('chebi_id'),
+            avg_mol_weight = v.get('average_molecular_weight'),
+            monoisotopic_mol_weight = v.get('monisotopic_molecular_weight'),
+            state = v.get('state'),
+            biofluid_locations = [f['biofluid'] for f in v.get('biofluid_locations', [])],
+            #tissue_locations = [f['tissue'] for f in v.get('tissue_locations', [])],
+            taxonomy = v.get('taxonomy'),
+            ontology = v.get('ontology'),
+            proteins = v.get('protein_associations'),
+            diseases = v.get('diseases'),
+            synthesis_reference = v.get('synthesis_reference'),
+        )
 
         return meta
 
     def download_all(self):
-        path_fn = 'tmp/hmdb_metabolites.xml'
+        path_fn = '../tmp/hmdb_metabolites.xml'
         t1 = time()
 
         if not self.fake:
@@ -85,11 +98,10 @@ class FetcherHMDB(FetcherBase):
 
                 session.add(metabolite)
 
-                if i % 1000 == 0:
-                    print(i)
-                    session.commit()
-
                 i += 1
+                if i % 5000 == 0:
+                    print("{} entries, {} seconds".format(i, round(time()-t1,2)))
+                    session.commit()
 
                 # debugging
                 #break

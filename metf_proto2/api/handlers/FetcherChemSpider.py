@@ -1,9 +1,8 @@
 from time import time
 
 from api import ctx
-from entities.localdb import Metabolite
 from api.utils import download_file
-from metf_proto2.api.handlers.FetcherBase import FetcherBase
+from .FetcherBase import FetcherBase
 
 
 class FetcherChemSpider(FetcherBase):
@@ -14,7 +13,7 @@ class FetcherChemSpider(FetcherBase):
             fake=fake
         )
 
-    def parse(self, db_id, content) -> Metabolite:
+    def parse(self, db_id, content):
         meta = Metabolite()
         return meta
 

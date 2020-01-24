@@ -8,30 +8,37 @@ conn <- dbConnect(drv, dbname = "metafetcher", host = "localhost", port = 5432, 
 
 # Create PG table
 if (!dbExistsTable(con, "metabolites")) {
-  dbGetQuery(conn, "CREATE TABLE metabolites (
-  	mid INTEGER NOT NULL,
-  	downloaded_at TIMESTAMP DEFAULT now(),
-  	names VARCHAR[40][],
-  	source VARCHAR(20),
+  dbGetQuery(conn, "CREATE TABLE hmdb_data (
+	names ARRAY,
+	iupac_name TEXT,
+	iupac_trad_name TEXT,
+	formula TEXT,
+	smiles TEXT,
+	inchi TEXT,
+	inchikey TEXT,
+	hmdb_id VARCHAR(11) NOT NULL,
+	description TEXT,
+	cas_id VARCHAR(10),
+	drugbank_id VARCHAR(32),
+	drugbank_metabolite_id VARCHAR(32),
+	chemspider_id VARCHAR(32),
+	kegg_id VARCHAR(32),
+	metlin_id VARCHAR(32),
+	pubchem_id VARCHAR(32),
+	chebi_id VARCHAR(32),
+	avg_mol_weight FLOAT,
+	monoisotopic_mol_weight FLOAT,
+	state VARCHAR(32),
+	biofluid_locations ARRAY,
+	tissue_locations ARRAY,
+	taxonomy TEXT,
+	ontology TEXT,
+	proteins TEXT,
+	diseases TEXT,
+	synthesis_reference TEXT,
 
-  	hmdb_id VARCHAR(128),
-  	chebi_id VARCHAR(128),
-  	kegg_id VARCHAR(128),
-  	pubchem_id VARCHAR(128),
-  	chemspider_id VARCHAR(128),
-  	lipidmaps_id VARCHAR(128),
-  	metlin_id VARCHAR(128),
-
-  	formulae TEXT,
-  	SMILES TEXT,
-  	INCHI TEXT,
-
-  	refs_etc json,
-  	data json,
-
-  	PRIMARY KEY (mid)
+	PRIMARY KEY (hmdb_id)
   )")
-
 }
 
 
