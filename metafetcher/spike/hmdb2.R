@@ -1,26 +1,35 @@
-library(XML)
-require("RPostgreSQL")
+library(XML2R)
 
-parse_func <- function (x) {
 
+
+filepath <- "../tmp/hmdb_metabolites.xml"
+
+
+
+doit <- function() {
+
+  doc <- xml2::read_xml(filepath)
+
+  nodeset <- doc %>% xml2::xml_children()
+  L <- length(nodeset)
+
+  for (i in 1:L) {
+    data <- xmlParse(nodeset[[i]])
+
+    metaboliteName <- as.character(xpathApply(data,"/metabolite/name", xmlValue))
+
+    if (mod(i, 5000) == 0) {
+      print(i)
+    }
+  }
 }
 
+print("STARTED")
+start_time <- Sys.time()
 
-con <- file('snoop_dog.xml', "r")
-xml <- paste(readLines(con))
-x <- xmlToList(xmlParse(xml))
+doit()
 
+print("FINISHED")
+end_time <- Sys.time()
+print(round(end_time - start_time,2))
 
-b <- serialize(x,NULL,ascii=F)
-#meta <- parse_func(x)
-length(b)
-nchar(xml)
-
-
-# Insert to DB
-drv <- dbDriver("PostgreSQL")
-conn <- dbConnect(drv, dbname = "metafetcher", host = "localhost", port = 5432, user = "postgres", password = "postgres")
-
-
-df <- data.frame(hmdb_id=c(x$accession), dxml=c(xml))
-dbWriteTable(conn, "hmdb_data", value = df, append = TRUE, row.names = FALSE)

@@ -1,17 +1,17 @@
 library(XML)
 library(iterators)
-library(jsonlite)
 require("RPostgreSQL")
 
 # String buffer size
 BL <- 1000
-
 # Commit buffer size
 BDFL <- 100
 
 # the script commits to database after reaching this many bytes in the buffer
 #COMMIT_SIZE <- 200*1024*1024
 
+
+# todo: ITT: fix
 
 create_empty_dfvec <- function (N) {
   df_vect <- list(
@@ -47,11 +47,46 @@ create_empty_dfvec <- function (N) {
   return(df_vect)
 }
 
-nna <- function(v) {
+null2na <- function(v) {
   if (is.null(v))
     return(NA)
   else
     return(v)
+}
+
+remigrate <- function (conn) {
+  dbGetQuery(conn, "CREATE TABLE hmdb_data (
+	names ARRAY,
+	iupac_name TEXT,
+	iupac_trad_name TEXT,
+	formula TEXT,
+	smiles TEXT,
+	inchi TEXT,
+	inchikey TEXT,
+	hmdb_id VARCHAR(11) NOT NULL,
+	description TEXT,
+	cas_id VARCHAR(10),
+	drugbank_id VARCHAR(32),
+	drugbank_metabolite_id VARCHAR(32),
+	chemspider_id VARCHAR(32),
+	kegg_id VARCHAR(32),
+	metlin_id VARCHAR(32),
+	pubchem_id VARCHAR(32),
+	chebi_id VARCHAR(32),
+	avg_mol_weight FLOAT,
+	monoisotopic_mol_weight FLOAT,
+	state VARCHAR(32),
+	biofluid_locations ARRAY,
+	tissue_locations ARRAY,
+	taxonomy TEXT,
+	ontology TEXT,
+	proteins TEXT,
+	diseases TEXT,
+	synthesis_reference TEXT,
+
+	PRIMARY KEY (hmdb_id)
+  )")
+
 }
 
 parse_xml_iter <- function(filepath) {
@@ -86,10 +121,12 @@ parse_xml_iter <- function(filepath) {
   drv <- dbDriver("PostgreSQL")
   db_conn <- dbConnect(drv, dbname = "metafetcher", host = "localhost", port = 5432, user = "postgres", password = "postgres")
 
+  remigrate(db_conn)
+
   repeat {
+    i <- i + 1
     line <- nextElem(it)
     buffer[i] <- line
-    i <- i + 1
 
     if (i >= BL) {
       # empty buffer
@@ -117,28 +154,28 @@ parse_xml_iter <- function(filepath) {
       })
 
       # add entry to DF:
-      vec_df$hmdb_id[j] <- nna(x$accession)
-      vec_df$description[j] <- nna(x$description)
+      vec_df$hmdb_id[j] <- null2na(x$accession)
+      vec_df$description[j] <- null2na(x$description)
 
       vec_df$names[j] <- NA
-      vec_df$iupac_name[j] <- nna(x$iupac_name)
-      vec_df$iupac_trad_name[j] <- nna(x$traditional_iupac)
-      vec_df$formula[j] <- nna(x$chemical_formula)
-      vec_df$smiles[j] <- nna(x$smiles)
-      vec_df$inchi[j] <- nna(x$inchi)
-      vec_df$inchikey[j] <- nna(x$inchikey)
+      vec_df$iupac_name[j] <- null2na(x$iupac_name)
+      vec_df$iupac_trad_name[j] <- null2na(x$traditional_iupac)
+      vec_df$formula[j] <- null2na(x$chemical_formula)
+      vec_df$smiles[j] <- null2na(x$smiles)
+      vec_df$inchi[j] <- null2na(x$inchi)
+      vec_df$inchikey[j] <- null2na(x$inchikey)
 
-      vec_df$cas_id[j] <- nna(x$cas_id)
-      vec_df$drugbank_id[j] <- nna(x$drugbank_id)
-      vec_df$drugbank_metabolite_id[j] <- nna(x$drugbank_metabolite_id)
-      vec_df$chemspider_id[j] <- nna(x$chemspider_id)
-      vec_df$kegg_id[j] <- nna(x$kegg_id)
-      vec_df$metlin_id[j] <- nna(x$metlin_id)
-      vec_df$pubchem_id[j] <- nna(x$pubchem_id)
-      vec_df$chebi_id[j] <- nna(x$chebi_id)
-      vec_df$avg_mol_weight[j] <- nna(x$average_molecular_weight)
-      vec_df$monoisotopic_mol_weight[j] <- nna(x$monisotopic_molecular_weight)
-      vec_df$state[j] <- nna(x$state)
+      vec_df$cas_id[j] <- null2na(x$cas_id)
+      vec_df$drugbank_id[j] <- null2na(x$drugbank_id)
+      vec_df$drugbank_metabolite_id[j] <- null2na(x$drugbank_metabolite_id)
+      vec_df$chemspider_id[j] <- null2na(x$chemspider_id)
+      vec_df$kegg_id[j] <- null2na(x$kegg_id)
+      vec_df$metlin_id[j] <- null2na(x$metlin_id)
+      vec_df$pubchem_id[j] <- null2na(x$pubchem_id)
+      vec_df$chebi_id[j] <- null2na(x$chebi_id)
+      vec_df$avg_mol_weight[j] <- null2na(x$average_molecular_weight)
+      vec_df$monoisotopic_mol_weight[j] <- null2na(x$monisotopic_molecular_weight)
+      vec_df$state[j] <- null2na(x$state)
       # [f['biofluid'] for f in x$biofluid_locations [])]
       vec_df$biofluid_locations[j] <- NA
       # [f['tissue'] for f in x$tissue_locations [])]
@@ -150,7 +187,7 @@ parse_xml_iter <- function(filepath) {
       vec_df$diseases[j] <- toJSON(x$diseases)
 
 
-      vec_df$synthesis_reference[j] <- nna(x$synthesis_reference)
+      vec_df$synthesis_reference[j] <- null2na(x$synthesis_reference)
 
 
       # keep DF buffer
@@ -187,7 +224,7 @@ parse_xml_iter <- function(filepath) {
 
   print("Closing DB & File")
   close(con)
-  close(db_conn)
+  dbDisconnect(db_conn)
 
 
   end_time <- Sys.time()
