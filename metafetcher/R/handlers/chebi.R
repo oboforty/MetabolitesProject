@@ -1,15 +1,13 @@
 library(iterators)
 require("RPostgreSQL")
+source("R/handlers/utils.R")
 
-# Commit buffer size
-BDFL <- 5000
-
-attribs <- c(
+chebi_attribs <- c(
     "chebi_id",
     "smiles",
     "charge", "mass", "monoisotopic_mass"
 )
-attribs_vec <- c(
+chebi_attribs_vec <- c(
     "names", "iupac_names", "iupac_trad_names",
     "formulas", "inchis", "inchikeys",
     "description", "quality",
@@ -17,31 +15,17 @@ attribs_vec <- c(
 )
 
 create_chebi_record <- function () {
-  df <- data.frame(matrix(ncol = length(attribs)+length(attribs_vec), nrow = 1))
-  colnames(df) <- c(attribs, attribs_vec)
+  df <- data.frame(matrix(ncol = length(chebi_attribs)+length(chebi_attribs_vec), nrow = 1))
+  colnames(df) <- c(chebi_attribs, chebi_attribs_vec)
 
-  for (attri in attribs_vec) {
+  for (attri in chebi_attribs_vec) {
     df[[attri]] <- list(vector(length=0))
   }
 
   return(df)
 }
 
-is.empty <- function(v) {
-  return(is.null(v) || is.na(v) || v == "" || v == "\n")
-}
-
-lstrip <- function(sr, sub) {
-  return(substring(sr, nchar(sub)+1, nchar(sr)))
-}
-
-join <- function(v) {
-  st <- paste(c('{"',paste(v, collapse = '","'),'"}'), collapse="")
-
-  return(st)
-}
-
-remigrate <- function (conn) {
+remigrate_chebi <- function (conn) {
   # temporal: delete table
   if (dbExistsTable(conn, "chebi_data")) {
     dbRemoveTable(conn, "chebi_data")
@@ -77,7 +61,7 @@ remigrate <- function (conn) {
 
 
 parse_sdf_iter <- function(filepath) {
-  start_time <- proc.time()
+  start_time <- Sys.time()
 
   # read file line by line
   f_con <- file(filepath, "r")
@@ -91,7 +75,7 @@ parse_sdf_iter <- function(filepath) {
   drv <- dbDriver("PostgreSQL")
   db_conn <- dbConnect(drv, dbname = "metafetcher", host = "localhost", port = 5432, user = "postgres", password = "postgres")
 
-  remigrate(db_conn)
+  remigrate_chebi(db_conn)
   dbBegin(db_conn)
 
   # data frame buffer for the DB
@@ -106,7 +90,7 @@ parse_sdf_iter <- function(filepath) {
       # metabolite parsing has ended, save to DB
 
       # transform vectors to postgres ARRAY input strings
-      for (attr in attribs_vec) {
+      for (attr in chebi_attribs_vec) {
         v <- df_chebi[[attr]][[1]]
 
         if (length(v) > 0) {
@@ -122,18 +106,14 @@ parse_sdf_iter <- function(filepath) {
       j <- j + 1
       df_chebi <- create_chebi_record()
 
-      if (j >= BDFL) {
+      if (mod(j, 5000) == 0) {
         # commit every once in a while
-        now <- proc.time()
-        # round(now - start_time, 2)
-        log <- paste(c("Inserting to DB...", j), collapse=" ")
+        log <- paste(c("Inserting to DB...", j, (round(Sys.time() - start_time,2)), "seconds"), collapse=" ")
         print(log)
 
         # on buffer full commit & reset DB buffer
         dbCommit(db_conn)
         dbBegin(db_conn)
-
-        j <- 1
       }
     } else if (is.empty(line)) {
       next
@@ -188,6 +168,7 @@ parse_sdf_iter <- function(filepath) {
   dbDisconnect(db_conn)
 
   end_time <- Sys.time()
+  print(round(end_time - start_time,2))
 }
 
 chebi <- function(fake = FALSE) {

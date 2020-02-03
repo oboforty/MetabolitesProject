@@ -1,5 +1,5 @@
 library(XML)
-#library(iterators)
+
 
 filepath <- "../tmp/hmdb_metabolites.xml"
 
@@ -28,7 +28,7 @@ create_df <- function() {
     chemspider_id = NA,
     kegg_id = NA,
     metlin_id = NA,
-    pubchem_idd = NA,
+    pubchem_id = NA,
     chebi_id = NA,
     avg_mol_weight = NA,
     monoisotopic_mol_weight = NA,
@@ -50,6 +50,7 @@ doit <- function() {
   i <- 0
   tag_state <- "none"
 
+  qqpp <- 123
 
   xmlEventParse(
     file = filepath,
@@ -58,6 +59,9 @@ doit <- function() {
         #cat("Starting document\n")
       },
       startElement = function(name,attr) {
+        print(qqpp)
+
+
         if (name == "metabolite") {
           # new metabolite XML
 

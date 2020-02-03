@@ -16,3 +16,11 @@ install.packages("rlist")
 #BiocManager::install("hmdbQuery")
 
 #install.packages('XML2R')
+
+
+
+# Parallel
+install.packages("parallel")
+install.packages("MASS")
+install.packages("foreach")
+install.packages("doParallel")

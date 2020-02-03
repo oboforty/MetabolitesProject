@@ -1,62 +1,46 @@
 library(XML)
-library(iterators)
 require("RPostgreSQL")
+source("R/handlers/utils.R")
 
-# String buffer size
-BL <- 1000
-# Commit buffer size
-BDFL <- 100
+hmdb_attribs <- c(
+    "hmdb_id",
+    "names", "iupac_name", "iupac_trad_name",
+    "smiles", "formula", "inchi", "inchikey",
 
-# the script commits to database after reaching this many bytes in the buffer
-#COMMIT_SIZE <- 200*1024*1024
+    "cas_id", "drugbank_id", "drugbank_metabolite_id", "chemspider_id", "kegg_id", "metlin_id", "pubchem_id", "chebi_id",
+    "avg_mol_weight", "monoisotopic_mol_weight",
+    "state", "description",
 
+    "biofluid_locations",  "tissue_locations",
+    "taxonomy", "ontology", "proteins", "diseases",
+    "synthesis_reference"
+)
 
-# todo: ITT: fix
+# hmdb_attribs_vec <- c(
+# )
 
-create_empty_dfvec <- function (N) {
-  df_vect <- list(
-    hmdb_id = character(N),
-    description = character(N),
-    names = character(N),
-    iupac_name = character(N),
-    iupac_trad_name = character(N),
-    formula = character(N),
-    smiles = character(N),
-    inchi = character(N),
-    inchikey = character(N),
-    cas_id = character(N),
-    drugbank_id = character(N),
-    drugbank_metabolite_id = character(N),
-    chemspider_id = character(N),
-    kegg_id = character(N),
-    metlin_id = character(N),
-    pubchem_idd = character(N),
-    chebi_id = character(N),
-    avg_mol_weight = numeric(N),
-    monoisotopic_mol_weight = numeric(N),
-    state = character(N),
-    biofluid_locations = character(N),
-    tissue_locations = character(N),
-    taxonomy = character(N),
-    ontology = character(N),
-    proteins = character(N),
-    diseases = character(N),
-    synthesis_reference = character(N)
-  )
+create_hmdb_record <- function () {
+  df <- data.frame(matrix(ncol = length(hmdb_attribs), nrow = 1))
+  #colnames(df) <- c(hmdb_attribs, hmdb_attribs_vec)
+  colnames(df) <- hmdb_attribs
 
-  return(df_vect)
+  # for (attri in hmdb_attribs_vec) {
+  #   df[[attri]] <- list(vector(length=0))
+  # }
+
+  return(df)
 }
 
-null2na <- function(v) {
-  if (is.null(v))
-    return(NA)
-  else
-    return(v)
-}
 
-remigrate <- function (conn) {
+remigrate_hmdb <- function (conn) {
+  # temporal: delete table
+  if (dbExistsTable(conn, "hmdb_data")) {
+    dbRemoveTable(conn, "hmdb_data")
+  }
+
+  # recreate table
   dbGetQuery(conn, "CREATE TABLE hmdb_data (
-	names ARRAY,
+	names TEXT[],
 	iupac_name TEXT,
 	iupac_trad_name TEXT,
 	formula TEXT,
@@ -76,8 +60,8 @@ remigrate <- function (conn) {
 	avg_mol_weight FLOAT,
 	monoisotopic_mol_weight FLOAT,
 	state VARCHAR(32),
-	biofluid_locations ARRAY,
-	tissue_locations ARRAY,
+	biofluid_locations TEXT[],
+	tissue_locations TEXT[],
 	taxonomy TEXT,
 	ontology TEXT,
 	proteins TEXT,
@@ -86,149 +70,126 @@ remigrate <- function (conn) {
 
 	PRIMARY KEY (hmdb_id)
   )")
-
 }
 
+
 parse_xml_iter <- function(filepath) {
-  start_time <- proc.time()
-
-  n_parsed <- 0
-
-  # read file line by line
-  con <- file(filepath, "r")
-  it <- ireadLines(con)
-
-  # ignore first two lines
-  nextElem(it)
-  nextElem(it)
-
-  # buffer for the XML parsing
-  i <- 1
-  buffer <- character(BL)
-  xml <- ""
-
-  # data frame buffer for the DB
-  j <- 1
-  vec_df <- create_empty_dfvec(BDFL)
-
-  buffer_size <- 0
-
-  # empty error file
-  er_con <- file('../tmp/errors/hmdb_error_xml.txt', "w")
-  close(er_con)
+  start_time <- Sys.time()
 
   # connect to DB
   drv <- dbDriver("PostgreSQL")
   db_conn <- dbConnect(drv, dbname = "metafetcher", host = "localhost", port = 5432, user = "postgres", password = "postgres")
 
-  remigrate(db_conn)
+  remigrate_hmdb(db_conn)
+  dbBegin(db_conn)
 
-  repeat {
-    i <- i + 1
-    line <- nextElem(it)
-    buffer[i] <- line
+  i <- 0
+  tag_state <- "none"
+  hmdb_df <- NA
 
-    if (i >= BL) {
-      # empty buffer
-      xml <- paste(xml, paste(buffer, collapse=''))
-      i <- 1
-    }
-    else if (line == "</metabolite>") {
-      xmlend <- paste(buffer[1:i-1], collapse='')
-      xml <- paste(xml, xmlend, collapse='')
+  # Iterative XML parsing. this iterates on each xml tag individually
+  # And we store the appropriate values to our dataframe.
 
-      i <- 1
+  xmlEventParse(
+    file = filepath,
+    handlers = list(
+      startDocument = function() {
+        #cat("Starting document\n")
+      },
+      startElement = function(name,attr) {
+        if (name == "metabolite") {
+          # new metabolite XML
+          hmdb_df <<- create_hmdb_record()
+          tag_state <<- "none"
+        } else if (name == "accession")
+          tag_state <<- "hmdb_id"
+        else if (name == "description")
+          tag_state <<- "description"
+        else if (name == "iupac_name")
+          tag_state <<- "iupac_name"
+        else if (name == "traditional_iupac")
+          tag_state <<- "iupac_trad_name"
+        else if (name == "chemical_formula")
+          tag_state <<- "formula"
+        else if (name == "smiles")
+          tag_state <<- "smiles"
+        else if (name == "inchi")
+          tag_state <<- "inchi"
+        else if (name == "inchikey")
+          tag_state <<- "inchikey"
+        else if (name == "cas_id")
+          tag_state <<- "cas_id"
+        else if (name == "drugbank_id")
+          tag_state <<- "drugbank_id"
+        else if (name == "drugbank_metabolite_id")
+          tag_state <<- "drugbank_metabolite_id"
+        else if (name == "chemspider_id")
+          tag_state <<- "chemspider_id"
+        else if (name == "kegg_id")
+          tag_state <<- "kegg_id"
+        else if (name == "metlin_id")
+          tag_state <<- "metlin_id"
+        else if (name == "pubchem_id")
+          tag_state <<- "pubchem_id"
+        else if (name == "chebi_id")
+          tag_state <<- "chebi_id"
+        else if (name == "average_molecular_weight")
+          tag_state <<- "avg_mol_weight"
+        else if (name == "monisotopic_molecular_weight")
+          tag_state <<- "monoisotopic_mol_weight"
+        else if (name == "state")
+          tag_state <<- "state"
+        else if (name == "synthesis_reference")
+          tag_state <<- "synthesis_reference"
+        else
+          tag_state <<- "none"
+      },
+      text = function(text) {
+        # todo: @later: check data cardinality
+        if (tag_state != "none")
+          hmdb_df[[tag_state]][[1]] <<- text
 
-      # parse xml
-      tryCatch({
-        x <- xmlToList(xmlParse(xml))
-      }, error = function(e) {
-        print(paste("Error in XML. ", i))
+        # hmdb_df[[tag_state]] <<- c(hmdb_df[[tag_state]], text)
+        #if (is.na(hmdb_df[[tag_state]])) {
+        #  hmdb_df[[tag_state]] <<- c(text)
+        #}
+      },
+      endElement = function (name) {
+        if (name == "metabolite") {
+          i <<- i + 1
 
-        er_con <- file('../tmp/errors/hmdb_error_xml.txt', "a")
-        write(xml, er_con)
-        close(er_con)
+          dbWriteTable(db_conn, "hmdb_data", value = hmdb_df, append = TRUE, row.names = FALSE)
 
+          if (mod(i, 5000) == 0) {
+            log <- paste(c("Inserting to DB...", i, (round(Sys.time() - start_time,2)), "seconds"), collapse=" ")
+            print(log)
 
-        # todo: itt: dump file
-      })
-
-      # add entry to DF:
-      vec_df$hmdb_id[j] <- null2na(x$accession)
-      vec_df$description[j] <- null2na(x$description)
-
-      vec_df$names[j] <- NA
-      vec_df$iupac_name[j] <- null2na(x$iupac_name)
-      vec_df$iupac_trad_name[j] <- null2na(x$traditional_iupac)
-      vec_df$formula[j] <- null2na(x$chemical_formula)
-      vec_df$smiles[j] <- null2na(x$smiles)
-      vec_df$inchi[j] <- null2na(x$inchi)
-      vec_df$inchikey[j] <- null2na(x$inchikey)
-
-      vec_df$cas_id[j] <- null2na(x$cas_id)
-      vec_df$drugbank_id[j] <- null2na(x$drugbank_id)
-      vec_df$drugbank_metabolite_id[j] <- null2na(x$drugbank_metabolite_id)
-      vec_df$chemspider_id[j] <- null2na(x$chemspider_id)
-      vec_df$kegg_id[j] <- null2na(x$kegg_id)
-      vec_df$metlin_id[j] <- null2na(x$metlin_id)
-      vec_df$pubchem_id[j] <- null2na(x$pubchem_id)
-      vec_df$chebi_id[j] <- null2na(x$chebi_id)
-      vec_df$avg_mol_weight[j] <- null2na(x$average_molecular_weight)
-      vec_df$monoisotopic_mol_weight[j] <- null2na(x$monisotopic_molecular_weight)
-      vec_df$state[j] <- null2na(x$state)
-      # [f['biofluid'] for f in x$biofluid_locations [])]
-      vec_df$biofluid_locations[j] <- NA
-      # [f['tissue'] for f in x$tissue_locations [])]
-      vec_df$tissue_locations[j] <- NA
-
-      vec_df$taxonomy[j] <- toJSON(x$taxonomy)
-      vec_df$ontology[j] <- toJSON(x$ontology)
-      vec_df$proteins[j] <- toJSON(x$protein_associations)
-      vec_df$diseases[j] <- toJSON(x$diseases)
-
-
-      vec_df$synthesis_reference[j] <- null2na(x$synthesis_reference)
-
-
-      # keep DF buffer
-      j <- j + 1
-      buffer_size <- buffer_size + nchar(xml)
-
-      #if (j >= BDFL || buffer_size >= COMMIT_SIZE) {
-      if (j >= BDFL) {
-        # save DB buffer as dataframe
-        df <- data.frame(
-          hmdb_id=vec_df$hmdb_id,description=vec_df$description,names=vec_df$names,iupac_name=vec_df$iupac_name,iupac_trad_name=vec_df$iupac_trad_name,formula=vec_df$formula,smiles=vec_df$smiles,inchi=vec_df$inchi,inchikey=vec_df$inchikey,cas_id=vec_df$cas_id,drugbank_id=vec_df$drugbank_id,drugbank_metabolite_id=vec_df$drugbank_metabolite_id,chemspider_id=vec_df$chemspider_id,kegg_id=vec_df$kegg_id,metlin_id=vec_df$metlin_id,pubchem_id=vec_df$pubchem_id,chebi_id=vec_df$chebi_id,avg_mol_weight=vec_df$avg_mol_weight,monoisotopic_mol_weight=vec_df$monoisotopic_mol_weight,state=vec_df$state,biofluid_locations=vec_df$biofluid_locations,tissue_locations=vec_df$tissue_locations,taxonomy=vec_df$taxonomy,ontology=vec_df$ontology,proteins=vec_df$proteins,diseases=vec_df$diseases,synthesis_reference=vec_df$synthesis_reference
-        )
-        #dbWriteTable(db_conn, "hmdb_data", value = head(df, j), append = TRUE, row.names = FALSE)
-        dbWriteTable(db_conn, "hmdb_data", value = df, append = TRUE, row.names = FALSE)
-
-        now <- proc.time()
-        log <- paste("Inserting to DB... ", j, " ", round(now - start_time, 2), " seconds")
-        print(log)
-
-        # reset db buffers
-        df_vect <- create_empty_dfvec(BDFL)
-        j <- 1
-        buffer_size <- 0
-
-        # try to fight memory issues
-        gc()
+            # on buffer full commit & reset DB buffer
+            dbCommit(db_conn)
+            dbBegin(db_conn)
+          }
+        }
+      },
+      endDocument = function() {
+        print("ending document")
       }
+    ),
+    addContext = FALSE,
+    useTagName = FALSE,
+    ignoreBlanks = TRUE,
+    trim = TRUE
+  )
 
-      # clear buffer
-      n_parsed <- n_parsed + 1
-      xml <- ""
-    }
-  }
-
-  print("Closing DB & File")
-  close(con)
+  # disconnect from DB
+  print("Closing DB")
+  dbCommit(db_conn)
   dbDisconnect(db_conn)
 
-
   end_time <- Sys.time()
+  print(round(end_time - start_time,2))
 }
+
+
 
 hmdb <- function(fake = FALSE) {
   return(list(

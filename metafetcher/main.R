@@ -2,4 +2,4 @@
 
 source('R/mf.R')
 
-download("chebi")
+download("hmdb")

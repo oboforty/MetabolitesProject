@@ -63,6 +63,23 @@ df_chebi[[attr]] <- c(join(v))
 
 
 
+rr <- function () {
+  a <- a + 1
+
+  print(a)
+}
+a <- 1
+rr()
+
+
+
+
+
+
+
+
+
+
 
 
 
