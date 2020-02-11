@@ -1,6 +1,6 @@
 # MetabolitesProject
 
-## Usage
+## Installation and usage
 
 To include the package you can do this (temporal solution, until we publish to CRAN). You can't find the package in CRAN yet.
 ```R
@@ -22,6 +22,7 @@ List of supported databases:
 * metlin
 * lipidmaps
 
+## Find missing IDs
 
 To find the missing IDs for a single compound ID, use:
 ```R
@@ -39,3 +40,12 @@ df_metas <- data.frame(
 
 find_missing(df_metas)
 ```
+
+## Access data based on ID
+
+todo
+
+## Example code: enrichment analysis
+
+todo
+
