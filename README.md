@@ -41,6 +41,11 @@ df_metas <- data.frame(
 find_missing(df_metas)
 ```
 
+## Find missing IDs without downloading the whole database
+This feature is experimental and relies on using the APIs of the metabolome databases. **We do not take any responsibility for any restrictions of service you get for using our code.**
+
+todo
+
 ## Access data based on ID
 
 todo
