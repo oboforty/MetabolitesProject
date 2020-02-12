@@ -1,6 +1,6 @@
 library(iterators)
-require("RPostgreSQL")
-source("R/handlers/utils.R")
+source("R/db_ctx.R")
+source("R/utils.R")
 
 chebi_attribs <- c(
     "chebi_id",
@@ -59,7 +59,6 @@ remigrate_chebi <- function (conn) {
   )")
 }
 
-
 parse_sdf_iter <- function(filepath) {
   start_time <- Sys.time()
 
@@ -73,14 +72,14 @@ parse_sdf_iter <- function(filepath) {
 
   # connect to DB
   drv <- dbDriver("PostgreSQL")
-  db_conn <- dbConnect(drv, dbname = "metafetcher", host = "localhost", port = 5432, user = "postgres", password = "postgres")
+  db_conn <- dbConnect(drv, dbname = "../..", host = "localhost", port = 5432, user = "postgres", password = "postgres")
 
   remigrate_chebi(db_conn)
   dbBegin(db_conn)
 
   # data frame buffer for the DB
   j <- 1
-  df_chebi <- create_chebi_record()
+  df.chebi <- create_chebi_record()
   state <- "something"
 
   repeat {
@@ -91,24 +90,24 @@ parse_sdf_iter <- function(filepath) {
 
       # transform vectors to postgres ARRAY input strings
       for (attr in chebi_attribs_vec) {
-        v <- df_chebi[[attr]][[1]]
+        v <- df.chebi[[attr]][[1]]
 
         if (length(v) > 0) {
-          df_chebi[[attr]] <- c(join(v))
+          df.chebi[[attr]] <- c(join(v))
         } else {
-          df_chebi[[attr]] <- c(NA)
+          df.chebi[[attr]] <- c(NA)
         }
       }
 
-      dbWriteTable(db_conn, "chebi_data", value = df_chebi, append = TRUE, row.names = FALSE)
+      dbWriteTable(db_conn, "chebi_data", value = df.chebi, append = TRUE, row.names = FALSE)
 
       # iterate on parsed records counter
       j <- j + 1
-      df_chebi <- create_chebi_record()
+      df.chebi <- create_chebi_record()
 
-      if (mod(j, 5000) == 0) {
+      if (mod(j, 500) == 0) {
         # commit every once in a while
-        log <- paste(c("Inserting to DB...", j, (round(Sys.time() - start_time,2)), "seconds"), collapse=" ")
+        log <- paste(c("Inserting to DB...", j, round(as.numeric(Sys.time() - start_time),2), "seconds"), collapse=" ")
         print(log)
 
         # on buffer full commit & reset DB buffer
@@ -123,42 +122,42 @@ parse_sdf_iter <- function(filepath) {
     } else {
       # todo: add names!
       if (state == 'ChEBI ID')
-        df_chebi$chebi_id[[1]] <- lstrip(line, "CHEBI:")
+        df.chebi$chebi_id[[1]] <- lstrip(line, "CHEBI:")
       else if (state == 'IUPAC Names') {
-        vec <- df_chebi$iupac_names[[1]]
-        df_chebi$iupac_names[[1]] <- c(vec, line)
+        #df.chebi$iupac_names[[1]] <- c(df.chebi$iupac_names[[1]], line)
 
-        # vec <- df_chebi$iupac_names[[1]]
-        # df_chebi$iupac_names[[1]] <- c(vec, "line 2 man")
+        # vec <- df.chebi$iupac_names[[1]]
+        # df.chebi$iupac_names[[1]] <- c(vec, "line 2 man")
       }
-      # else if (state == 'Formulae')
-      #   df_chebi$formulas <- c(df_chebi$formulas, line)
-      # else if (state == 'InChI')
-      #   df_chebi$inchis <- c(df_chebi$inchis, lstrip(line, "InChI:"))
-      # else if (state == 'InChIKey')
-      #   df_chebi$inchikeys <- c(df_chebi$inchikeys, line)
-      # else if (state == 'Definition')
-      #   df_chebi$description <- c(df_chebi$description, line)
+      else if (state == 'Formulae')
+        df.chebi$formulas[[1]] <- c(df.chebi$formulas[[1]], line)
+      else if (state == 'InChI')
+        df.chebi$inchis[[1]] <- c(df.chebi$inchis[[1]], line)
+      else if (state == 'InChIKey')
+        df.chebi$inchikeys[[1]] <- c(df.chebi$inchikeys[[1]], line)
+      else if (state == 'Definition')
+        df.chebi$description[[1]] <- c(df.chebi$description[[1]], line)
+      # todo: star doesn't work
       # else if (state == 'Star')
-      #   df_chebi$quality <- c(df_chebi$quality, line)
-      # else if (state == 'PubChem Database Links' || state == 'Pubchem Database Links')
-      #   df_chebi$pubchem_ids <- c(df_chebi$pubchem_ids, line)
-      # else if (state == 'KEGG COMPOUND Database Links')
-      #   df_chebi$kegg_ids <- c(df_chebi$kegg_ids, line)
-      # else if (state == 'HMDB Database Links')
-      #   df_chebi$hmdb_ids <- c(df_chebi$hmdb_ids, line)
-      # else if (state == 'LIPID MAPS instance Database Links')
-      #   df_chebi$lipidmaps_ids <- c(df_chebi$lipidmaps_ids, line)
-      # else if (state == 'CAS Registry Numbers')
-      #   df_chebi$cas_ids <- c(df_chebi$cas_ids, line)
+      #   df.chebi$quality[[1]] <- c(df.chebi$quality[[1]], strtoi(line))
+      else if (state == 'PubChem Database Links' || state == 'Pubchem Database Links')
+        df.chebi$pubchem_ids[[1]] <- c(df.chebi$pubchem_ids[[1]], line)
+      else if (state == 'KEGG COMPOUND Database Links')
+        df.chebi$kegg_ids[[1]] <- c(df.chebi$kegg_ids[[1]], line)
+      else if (state == 'HMDB Database Links')
+        df.chebi$hmdb_ids[[1]] <- c(df.chebi$hmdb_ids[[1]], line)
+      else if (state == 'LIPID MAPS instance Database Links')
+        df.chebi$lipidmaps_ids[[1]] <- c(df.chebi$lipidmaps_ids[[1]], line)
+      else if (state == 'CAS Registry Numbers')
+        df.chebi$cas_ids[[1]] <- c(df.chebi$cas_ids[[1]], line)
       else if (state == 'SMILES')
-        df_chebi$smiles <- line
+        df.chebi$smiles <- line
       else if (state == 'Charge')
-        df_chebi$charge <- line
+        df.chebi$charge <- line
       else if (state == 'Mass')
-        df_chebi$mass <- line
+        df.chebi$mass <- line
       else if (state == 'Monoisotopic Mass')
-        df_chebi$monoisotopic_mass <- line
+        df.chebi$monoisotopic_mass <- line
     }
   }
 
@@ -167,8 +166,8 @@ parse_sdf_iter <- function(filepath) {
   dbCommit(db_conn)
   dbDisconnect(db_conn)
 
-  end_time <- Sys.time()
-  print(round(end_time - start_time,2))
+  log <- paste(c("Done! Took", round(as.numeric(Sys.time() - start_time),2), "seconds"), collapse=" ")
+  print(log)
 }
 
 chebi <- function(fake = FALSE) {
@@ -184,20 +183,30 @@ chebi <- function(fake = FALSE) {
       parse_sdf_iter(filepath)
     },
 
-    parse = function() {
-      print("fake_metabolite chebi")
-    },
+    query_metabolite = function(db_id) {
+      # Queries a ChEBI metabolite record and converts it to a common interface
+      SQL <- paste(c("SELECT chebi_id, names,
+            formulas, smiles, inchis, inchikeys,
+            cas_ids, kegg_ids, hmdb_ids, pubchem_ids, lipidmaps_ids
+        FROM chebi_data WHERE chebi_id = '", db_id ,"'"), collapse = "")
+      df.chebi <- db.query(SQL)
 
-    download = function() {
-      print("download chebi")
-    },
+      # convert pg array strings to R vectors:
+      for (attr in chebi_attribs_vec) {
+        v <- df.chebi[[attr]][[1]]
 
-    fake = function() {
-      print("fake chebi")
-    },
+        if (!is.empty(v)) {
+          df.chebi[[attr]] <- list(pg_str2vector(v))
+        }
+      }
 
-    query = function() {
-      print("query chebi")
+      # convert to common interface:
+      df.chebi$source = c("chebi")
+
+      names(df.chebi)[names(df.chebi) == "chebi_id"] <- "chebi_ids"
+
+      return (df.chebi)
     }
+
   ))
 }

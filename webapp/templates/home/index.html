@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Example</title>
+</head>
+<body>
+
+  <div class="container">
+    <table>
+      <thead>
+        <tr>
+          <th>hmdb_id</th>
+          <th>chebi_id</th>
+          <th>kegg_id</th>
+          <th>names</th>
+          <th>smiles</th>
+          <th>inchis</th>
+          <th>formulae</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input id="hmdb0"></td>
+          <td><input id="chebi0" value="36"></td>
+          <td><input id="kegg0"></td>
+          <td><textarea id="names0"></textarea></td>
+          <td><textarea id="smiles0"></textarea></td>
+          <td><textarea id="inchis0"></textarea></td>
+          <td><textarea id="formulas0"></textarea></td>
+        </tr>
+        <tr>
+          <td><input id="hmdb1" value="HMDB0001134"></td>
+          <td><input id="chebi1"></td>
+          <td><input id="kegg1"></td>
+          <td><textarea id="names1"></textarea></td>
+          <td><textarea id="smiles1"></textarea></td>
+          <td><textarea id="inchis1"></textarea></td>
+          <td><textarea id="formulas1"></textarea></td>
+        </tr>
+        <tr>
+          <td><input id="hmdb2" value="HMDB0001024"></td>
+          <td><input id="chebi2"></td>
+          <td><input id="kegg2"></td>
+          <td><textarea id="names2"></textarea></td>
+          <td><textarea id="smiles2"></textarea></td>
+          <td><textarea id="inchis2"></textarea></td>
+          <td><textarea id="formulas2"></textarea></td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <button onclick="resolve()">Resolve</button>
+  </div>
+  <script>
+  window.onload = function() {
+
+  }
+
+  function aa(resp, astr, idx) {
+    if (resp[astr] && resp[astr].length > 0) {
+      let elem = document.getElementById(astr+idx);
+
+      if (elem) {
+        elem.value = resp[astr].join("\n");
+      } else {
+        console.error(astr, idx, elem);
+      }
+    }
+  }
+
+  function resolve() {
+    console.log("Fetching");
+
+    const data = [];
+
+    for (let i = 0; i < 3; i++) {
+      data[i] = {
+        hmdb: document.getElementById("hmdb"+i).value,
+        chebi: document.getElementById("chebi"+i).value,
+        kegg: document.getElementById("kegg"+i).value,
+      };
+    }
+
+    fetch("/home/resolve", { method: 'POST', mode: 'cors', redirect: 'follow', referrerPolicy: 'no-referrer',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(r=>r.json()).then((response)=>{
+
+      for (const [idx, resp] of response.resolve.entries()) {
+        for (let tag of ["hmdb", "chebi", "kegg"]) {
+          aa(resp, tag, idx);
+        }
+
+        aa(resp, "names", idx);
+        aa(resp, "smiles", idx);
+        aa(resp, "inchis", idx);
+        aa(resp, "formulas", idx);
+      }
+    });
+  }
+  </script>
+</body>
+</html>

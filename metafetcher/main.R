@@ -1,5 +1,5 @@
 
-
 source('R/mf.R')
 
-download("hmdb")
+df.res <- discover("chebi", "36")
+
