@@ -26,7 +26,6 @@ db.disconnect <- function () {
   print("Closing DB connection...")
 
   dbDisconnect(db_conn)
-  db_conn <-- NULL
 }
 
 db.transaction <- function () {

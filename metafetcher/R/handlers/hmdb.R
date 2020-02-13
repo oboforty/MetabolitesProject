@@ -154,8 +154,8 @@ hmdb <- function(fake = FALSE) {
     query_metabolite = function(db_id) {
       # Queries an HMDB metabolite record and converts it to a common interface
       SQL <- paste(c("SELECT hmdb_id, names,
-            formula, smiles, inchi, inchikey,
-            cas_id, kegg_id, chebi_id, pubchem_id
+            formula as formulas, smiles, inchi as inchis, inchikey as inchikeys,
+            cas_id as cas_ids, kegg_id as kegg_ids, chebi_id as chebi_ids, pubchem_id as pubchem_ids
         FROM hmdb_data WHERE hmdb_id = '", db_id ,"'"), collapse = "")
       df.hmdb <- db.query(SQL)
 

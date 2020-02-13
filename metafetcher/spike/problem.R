@@ -1,12 +1,3 @@
-source("R/queue.R")
-library(sets)
+source("R/utils.R")
 
-Q <- Queue()
-
-
-Q$push(tuple("hmdb", "HMDB0000002", "root"))
-Q$size()
-v <- Q$pop()
-Q$size()
-
-f <- v[[1]]
+list(pg_str2vector(NA))

@@ -70,6 +70,8 @@ download <- function(db_tag) {
 
 
 discover <- function(start_db_tag, start_db_id) {
+  db.connect()
+
   # downloads whole database
   discovered <- set()
   undiscovered <- set()
@@ -109,7 +111,7 @@ discover <- function(start_db_tag, start_db_id) {
       old.val <- df.discovered[[attr]][[1]]
 
       if (length(new.val) > 0 && !is.na(new.val)) {
-         df.discovered[[attr]][[1]] <- c(old.val, new.val)
+        df.discovered[[attr]][[1]] <- c(old.val, new.val)
       }
     }
 

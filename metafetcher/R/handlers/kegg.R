@@ -70,7 +70,7 @@ parse_sdf_iter <- function(filepath) {
 
   # data frame buffer for the DB
   j <- 1
-  df.chebi <- create_chebi_record()
+  df.kegg <- create_chebi_record()
   state <- "something"
 
   repeat {
@@ -81,20 +81,20 @@ parse_sdf_iter <- function(filepath) {
 
       # transform vectors to postgres ARRAY input strings
       for (attr in chebi_attribs_vec) {
-        v <- df.chebi[[attr]][[1]]
+        v <- df.kegg[[attr]][[1]]
 
         if (length(v) > 0) {
-          df.chebi[[attr]] <- c(join(v))
+          df.kegg[[attr]] <- c(join(v))
         } else {
-          df.chebi[[attr]] <- c(NA)
+          df.kegg[[attr]] <- c(NA)
         }
       }
 
-      db.write_df("chebi_data", df.chebi)
+      db.write_df("chebi_data", df.kegg)
 
       # iterate on parsed records counter
       j <- j + 1
-      df.chebi <- create_chebi_record()
+      df.kegg <- create_chebi_record()
 
       if (mod(j, 500) == 0) {
         # commit every once in a while
@@ -119,9 +119,9 @@ parse_sdf_iter <- function(filepath) {
       else if (!is.null(attr)) {
         if (attr %in% chebi_attribs_vec) {
           # cardinality > 1
-          df.chebi[[attr]][[1]] <- c(df.chebi[[attr]][[1]], line)
+          df.kegg[[attr]][[1]] <- c(df.kegg[[attr]][[1]], line)
         } else {
-          df.chebi[[attr]] <- line
+          df.kegg[[attr]] <- line
         }
       }
     }
@@ -136,10 +136,10 @@ parse_sdf_iter <- function(filepath) {
   print(log)
 }
 
-chebi <- function(fake = FALSE) {
+kegg <- function(fake = FALSE) {
   return(list(
     download_all = function() {
-      filepath <- "../tmp/ChEBI_complete.sdf"
+      filepath <- "../tmp/kegg_complete.sdf"
 
       if (!fake) {
         # todo: download that large xml
@@ -151,27 +151,25 @@ chebi <- function(fake = FALSE) {
 
     query_metabolite = function(db_id) {
       # Queries a ChEBI metabolite record and converts it to a common interface
-      SQL <- paste(c("SELECT chebi_id, names,
-            formulas, smiles, inchis, inchikeys,
-            cas_ids, kegg_ids, hmdb_ids, pubchem_ids, lipidmaps_ids
-        FROM chebi_data WHERE chebi_id = '", db_id ,"'"), collapse = "")
-      df.chebi <- db.query(SQL)
+      SQL <- paste(c("SELECT ...
+        FROM kegg_data WHERE kegg_id = '", db_id ,"'"), collapse = "")
+      df.kegg <- db.query(SQL)
 
       # convert pg array strings to R vectors:
       for (attr in chebi_attribs_vec) {
-        v <- df.chebi[[attr]][[1]]
+        v <- df.kegg[[attr]][[1]]
 
         if (!is.empty(v)) {
-          df.chebi[[attr]] <- list(pg_str2vector(v))
+          df.kegg[[attr]] <- list(pg_str2vector(v))
         }
       }
 
       # convert to common interface:
-      df.chebi$source = c("chebi")
+      df.chebi$source = c("kegg")
 
-      names(df.chebi)[names(df.chebi) == "chebi_id"] <- "chebi_ids"
+      names(df.kegg)[names(df.kegg) == "chebi_id"] <- "chebi_ids"
 
-      return (df.chebi)
+      return (df.kegg)
     }
 
   ))

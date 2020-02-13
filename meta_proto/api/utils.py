@@ -82,6 +82,8 @@ def parse_xml_recursive(context, cur_elem=None):
             items[tag].append(parse_xml_recursive(context, elem))
         elif action == "end":
             text = elem.text.strip() if elem.text else ""
+
+            elem.clear()
             break
 
     if len(items) == 0:
@@ -92,7 +94,7 @@ def parse_xml_recursive(context, cur_elem=None):
 
 def parse_iter_sdf(fn):
 
-    with open(fn, 'r') as fh:
+    with open(fn, 'r', encoding='utf8') as fh:
         buffer = {}
         state = None
 
@@ -120,3 +122,24 @@ def parse_iter_sdf(fn):
                         buffer[state] = [val, line]
                 else:
                     buffer[state] = line
+
+def los(v, f=None):
+    if isinstance(v, list):
+        if f is not None:
+            return [f(e) for e in v]
+        return v
+    elif v is None:
+        return None
+    else:
+        if f is not None:
+            return f(v)
+        return [v]
+
+
+def rlen(v):
+    if isinstance(v, list):
+        return len(v)
+    elif v is None:
+        return 0
+    else:
+        return 1
