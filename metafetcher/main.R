@@ -1,5 +1,5 @@
 
 source('R/mf.R')
 
-df.res <- discover("chebi", "36")
+df.res <- discover("hmdb", "HMDB0001942")
 

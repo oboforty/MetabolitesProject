@@ -14,6 +14,10 @@ chebi_attribs_vec <- c(
     "pubchem_ids", "kegg_ids", "hmdb_ids", "lipidmaps_ids", "cas_ids"
 )
 
+chebi_mapping <- list(
+
+)
+
 create_chebi_record <- function () {
   df <- data.frame(matrix(ncol = length(chebi_attribs)+length(chebi_attribs_vec), nrow = 1))
   colnames(df) <- c(chebi_attribs, chebi_attribs_vec)
@@ -23,40 +27,6 @@ create_chebi_record <- function () {
   }
 
   return(df)
-}
-
-remigrate_chebi <- function (conn) {
-  # temporal: delete table
-  if (dbExistsTable(conn, "chebi_data")) {
-    dbRemoveTable(conn, "chebi_data")
-  }
-
-  # recreate table
-  dbGetQuery(conn, "CREATE TABLE chebi_data (
-	names TEXT[],
-	iupac_names TEXT[],
-	iupac_trad_names TEXT[],
-	formulas TEXT[],
-	smiles TEXT,
-	inchis TEXT[],
-	inchikeys TEXT[],
-	chebi_id VARCHAR(20) NOT NULL,
-	description TEXT,
-	quality INTEGER,
-	comments TEXT,
-	cas_ids VARCHAR[],
-	kegg_ids VARCHAR[],
-	hmdb_ids VARCHAR[],
-	lipidmaps_ids VARCHAR[],
-	pubchem_ids VARCHAR[],
-	charge FLOAT,
-	mass FLOAT,
-	monoisotopic_mass FLOAT,
-	list_of_pathways TEXT,
-	kegg_details TEXT,
-
-	PRIMARY KEY (chebi_id)
-  )")
 }
 
 parse_sdf_iter <- function(filepath) {
@@ -71,11 +41,9 @@ parse_sdf_iter <- function(filepath) {
   close(er_con)
 
   # connect to DB
-  drv <- dbDriver("PostgreSQL")
-  db_conn <- dbConnect(drv, dbname = "../..", host = "localhost", port = 5432, user = "postgres", password = "postgres")
-
+  db.connect()
   remigrate_chebi(db_conn)
-  dbBegin(db_conn)
+  db.transaction()
 
   # data frame buffer for the DB
   j <- 1
@@ -99,7 +67,7 @@ parse_sdf_iter <- function(filepath) {
         }
       }
 
-      dbWriteTable(db_conn, "chebi_data", value = df.chebi, append = TRUE, row.names = FALSE)
+      db.write_df("chebi_data", df.chebi)
 
       # iterate on parsed records counter
       j <- j + 1
@@ -111,8 +79,8 @@ parse_sdf_iter <- function(filepath) {
         print(log)
 
         # on buffer full commit & reset DB buffer
-        dbCommit(db_conn)
-        dbBegin(db_conn)
+        db.commit()
+        db.transaction()
       }
     } else if (is.empty(line)) {
       next
@@ -163,8 +131,8 @@ parse_sdf_iter <- function(filepath) {
 
   print("Closing DB & File")
   close(f_con)
-  dbCommit(db_conn)
-  dbDisconnect(db_conn)
+  db.commit()
+  db.disconnect()
 
   log <- paste(c("Done! Took", round(as.numeric(Sys.time() - start_time),2), "seconds"), collapse=" ")
   print(log)

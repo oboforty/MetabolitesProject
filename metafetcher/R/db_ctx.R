@@ -26,4 +26,21 @@ db.disconnect <- function () {
   print("Closing DB connection...")
 
   dbDisconnect(db_conn)
+  db_conn <-- NULL
+}
+
+db.transaction <- function () {
+  dbBegin(db_conn)
+}
+
+db.commit <- function () {
+  dbCommit(db_conn)
+}
+
+db.rollback <- function () {
+  dbRollback(db_conn)
+}
+
+db.write_df <- function (table, df) {
+  dbWriteTable(db_conn, table, value = df, append = TRUE, row.names = FALSE)
 }

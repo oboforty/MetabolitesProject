@@ -1,0 +1,76 @@
+
+remigrate_hmdb <- function (conn) {
+  # temporal: delete table
+  if (dbExistsTable(conn, "hmdb_data")) {
+    dbRemoveTable(conn, "hmdb_data")
+  }
+
+  # recreate table
+  dbGetQuery(conn, "CREATE TABLE hmdb_data (
+	names TEXT[],
+	iupac_name TEXT,
+	iupac_trad_name TEXT,
+	formula TEXT,
+	smiles TEXT,
+	inchi TEXT,
+	inchikey TEXT,
+	hmdb_id VARCHAR(11) NOT NULL,
+	description TEXT,
+	cas_id VARCHAR(10),
+	drugbank_id VARCHAR(32),
+	drugbank_metabolite_id VARCHAR(32),
+	chemspider_id VARCHAR(32),
+	kegg_id VARCHAR(32),
+	metlin_id VARCHAR(32),
+	pubchem_id VARCHAR(32),
+	chebi_id VARCHAR(32),
+	avg_mol_weight FLOAT,
+	monoisotopic_mol_weight FLOAT,
+	state VARCHAR(32),
+	biofluid_locations TEXT[],
+	tissue_locations TEXT[],
+	taxonomy TEXT,
+	ontology TEXT,
+	proteins TEXT,
+	diseases TEXT,
+	synthesis_reference TEXT,
+
+	PRIMARY KEY (hmdb_id)
+  )")
+}
+
+
+
+remigrate_chebi <- function (conn) {
+  # temporal: delete table
+  if (dbExistsTable(conn, "chebi_data")) {
+    dbRemoveTable(conn, "chebi_data")
+  }
+
+  # recreate table
+  dbGetQuery(conn, "CREATE TABLE chebi_data (
+	names TEXT[],
+	iupac_names TEXT[],
+	iupac_trad_names TEXT[],
+	formulas TEXT[],
+	smiles TEXT,
+	inchis TEXT[],
+	inchikeys TEXT[],
+	chebi_id VARCHAR(20) NOT NULL,
+	description TEXT,
+	quality INTEGER,
+	comments TEXT,
+	cas_ids VARCHAR[],
+	kegg_ids VARCHAR[],
+	hmdb_ids VARCHAR[],
+	lipidmaps_ids VARCHAR[],
+	pubchem_ids VARCHAR[],
+	charge FLOAT,
+	mass FLOAT,
+	monoisotopic_mass FLOAT,
+	list_of_pathways TEXT,
+	kegg_details TEXT,
+
+	PRIMARY KEY (chebi_id)
+  )")
+}

@@ -1,6 +1,8 @@
 library(XML)
-require("RPostgreSQL")
-source("R/handlers/utils.R")
+source("R/db_ctx.R")
+source("R/utils.R")
+source("R/migrate.R")
+
 
 hmdb_attribs <- c(
     "hmdb_id",
@@ -31,57 +33,13 @@ create_hmdb_record <- function () {
   return(df)
 }
 
-
-remigrate_hmdb <- function (conn) {
-  # temporal: delete table
-  if (dbExistsTable(conn, "hmdb_data")) {
-    dbRemoveTable(conn, "hmdb_data")
-  }
-
-  # recreate table
-  dbGetQuery(conn, "CREATE TABLE hmdb_data (
-	names TEXT[],
-	iupac_name TEXT,
-	iupac_trad_name TEXT,
-	formula TEXT,
-	smiles TEXT,
-	inchi TEXT,
-	inchikey TEXT,
-	hmdb_id VARCHAR(11) NOT NULL,
-	description TEXT,
-	cas_id VARCHAR(10),
-	drugbank_id VARCHAR(32),
-	drugbank_metabolite_id VARCHAR(32),
-	chemspider_id VARCHAR(32),
-	kegg_id VARCHAR(32),
-	metlin_id VARCHAR(32),
-	pubchem_id VARCHAR(32),
-	chebi_id VARCHAR(32),
-	avg_mol_weight FLOAT,
-	monoisotopic_mol_weight FLOAT,
-	state VARCHAR(32),
-	biofluid_locations TEXT[],
-	tissue_locations TEXT[],
-	taxonomy TEXT,
-	ontology TEXT,
-	proteins TEXT,
-	diseases TEXT,
-	synthesis_reference TEXT,
-
-	PRIMARY KEY (hmdb_id)
-  )")
-}
-
-
 parse_xml_iter <- function(filepath) {
   start_time <- Sys.time()
 
   # connect to DB
-  drv <- dbDriver("PostgreSQL")
-  db_conn <- dbConnect(drv, dbname = "../..", host = "localhost", port = 5432, user = "postgres", password = "postgres")
-
+  db.connect()
   remigrate_hmdb(db_conn)
-  dbBegin(db_conn)
+  db.transaction()
 
   i <- 0
   tag_state <- "none"
@@ -144,15 +102,15 @@ parse_xml_iter <- function(filepath) {
         if (name == "metabolite") {
           i <<- i + 1
 
-          dbWriteTable(db_conn, "hmdb_data", value = hmdb_df, append = TRUE, row.names = FALSE)
+          db.write_df("hmdb_data", hmdb_df)
 
           if (mod(i, 500) == 0) {
             log <- paste(c("Inserting to DB...", i, round(as.numeric(Sys.time() - start_time),2), "seconds"), collapse=" ")
             print(log)
 
             # on buffer full commit & reset DB buffer
-            dbCommit(db_conn)
-            dbBegin(db_conn)
+            db.commit()
+            db.transaction()
           }
         } else if (name == "secondary_accessions") {
           # close parent
@@ -171,8 +129,8 @@ parse_xml_iter <- function(filepath) {
 
   # disconnect from DB
   print("Closing DB")
-  dbCommit(db_conn)
-  dbDisconnect(db_conn)
+  db.commit()
+  db.disconnect()
 
   log <- paste(c("Done! Took", round(as.numeric(Sys.time() - start_time),2), "seconds"), collapse=" ")
   print(log)
@@ -193,20 +151,29 @@ hmdb <- function(fake = FALSE) {
       parse_xml_iter(filepath)
     },
 
-    parse = function() {
-      print("fake_metabolite hmdb")
-    },
+    query_metabolite = function(db_id) {
+      # Queries an HMDB metabolite record and converts it to a common interface
+      SQL <- paste(c("SELECT hmdb_id, names,
+            formula, smiles, inchi, inchikey,
+            cas_id, kegg_id, chebi_id, pubchem_id
+        FROM hmdb_data WHERE hmdb_id = '", db_id ,"'"), collapse = "")
+      df.hmdb <- db.query(SQL)
 
-    download = function() {
-      print("download hmdb")
-    },
+      # convert pg array strings to R vectors:
+      for (attr in c("names")) {
+        v <- df.hmdb[[attr]][[1]]
 
-    fake = function() {
-      print("fake hmdb")
-    },
+        if (!is.empty(v)) {
+          df.hmdb[[attr]] <- list(pg_str2vector(v))
+        }
+      }
 
-    query = function() {
-      print("query hmdb")
+      # convert to common interface:
+      df.hmdb$source = c("hmdb")
+      names(df.hmdb)[names(df.hmdb) == "hmdb_id"] <- "hmdb_ids"
+
+      return (df.hmdb)
     }
+
   ))
 }

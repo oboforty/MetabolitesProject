@@ -1,4 +1,7 @@
-# source("R/handlers/hmdb.R")
+library(sets)
+source("R/queue.R")
+
+source("R/handlers/hmdb.R")
 source("R/handlers/chebi.R")
 # source("R/handlers/kegg.R")
 # source("R/handlers/chemspider.R")
@@ -6,33 +9,31 @@ source("R/handlers/chebi.R")
 # source("R/handlers/lipidmaps.R")
 # source("R/handlers/metlin.R")
 
-library(sets)
-source("R/queue.R")
-
 
 get_db <- function (db_tag) {
   if (db_tag == "chebi") {
     return(chebi())
+  } else if (db_tag == "hmdb") {
+    return(hmdb())
+  } else if (db_tag == "kegg") {
+    return(NULL)
+    # return(kegg())
+  } else if (db_tag == "chemspider") {
+    return(NULL)
+    # return(chemspider())
+  } else if (db_tag == "pubchem") {
+    return(NULL)
+    # return(pubchem())
+  } else if (db_tag == "lipidmaps") {
+    return(NULL)
+    # return(lipidmaps())
+  } else if (db_tag == "metlin") {
+    return(NULL)
+    # return(metlin())
   }
 
   # database is not supported by this package:
   return(NULL)
-
-  # if (db_tag == "hmdb") {
-  #   return(hmdb())
-  # } else else if (db_tag == "kegg") {
-  #   return(kegg())
-  # } else if (db_tag == "chemspider") {
-  #   return(chemspider())
-  # } else if (db_tag == "pubchem") {
-  #   return(pubchem())
-  # } else if (db_tag == "lipidmaps") {
-  #   return(lipidmaps())
-  # } else if (db_tag == "metlin") {
-  #   return(metlin())
-  # } else {
-  #   stop(paste("Unknown database ", db_tag))
-  # }
 }
 
 attr.refs <- c(
