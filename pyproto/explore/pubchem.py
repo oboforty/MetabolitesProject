@@ -5,7 +5,7 @@ url = 'ftp://ftp.ncbi.nlm.nih.gov/pubchem/Compound/CURRENT-Full/SDF/'
 
 ftp = ftplib.FTP(url)
 
-from api.utils import parse_iter_sdf, rlen
+from pyproto.utils import parse_iter_sdf, rlen
 
 files = ftp.nlst()
 

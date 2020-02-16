@@ -1,11 +1,9 @@
 import json
 from collections import defaultdict
 
-import requests
+from pyproto.utils import parse_iter_sdf, rlen
 
-from api.utils import parse_iter_sdf, rlen
-
-path_fn = '../tmp/lipidmaps.sdf'
+path_fn = '../../tmp/lipidmaps.sdf'
 
 i = 0
 card_SDF = defaultdict(int)
@@ -23,6 +21,7 @@ for k,v in idmap.items():
 N_secondary = 0
 N_primary = 0
 N_none = 0
+nchar = defaultdict(int)
 
 
 
@@ -50,13 +49,20 @@ for me in parse_iter_sdf(path_fn):
             #duplicates.add(tuple(val))
             count_SDF[attr] += 1
 
+        if isinstance(val, str):
+            nc = len(val)
+        else:
+            nc = max([len(f) for f in val])
+        if nc > nchar[attr]:
+            nchar[attr] = nc
+
     i += 1
     if i % 5000 == 0:
-
         print(i)
 
 print("LipidMaps SDF")
 print(N_primary, N_secondary, N_none)
 print(dict(card_SDF))
 print(dict(count_SDF))
+print(dict(nchar))
 

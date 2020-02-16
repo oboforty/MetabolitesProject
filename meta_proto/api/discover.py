@@ -2,12 +2,9 @@ import queue
 
 from .handlers.FetcherBase import FetcherBase
 from .handlers.FetcherChEBI import FetcherChEBI
-from .handlers.FetcherChemSpider import FetcherChemSpider
 from .handlers.FetcherHMDB import FetcherHMDB
-from .handlers.FetcherKEGG import FetcherKEGG
-from .handlers.FetcherPubChem import FetcherPubChem
 
-from .utils import _nil
+from pyproto.utils import _nil
 
 proxy_db = {
     'hmdb': FetcherHMDB(fake=True),

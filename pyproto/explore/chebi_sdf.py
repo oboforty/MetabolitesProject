@@ -1,15 +1,14 @@
 import json
 from collections import defaultdict
 
-import requests
+from pyproto.utils import parse_iter_sdf, rlen
 
-from api.utils import parse_iter_sdf, rlen
-
-path_fn = '../tmp/ChEBI_complete.sdf'
+path_fn = '../../tmp/ChEBI_complete.sdf'
 
 i = 0
 card_SDF = defaultdict(int)
 count_SDF = defaultdict(int)
+nchar = defaultdict(int)
 
 duplicates = set()
 
@@ -50,6 +49,13 @@ for me in parse_iter_sdf(path_fn):
 
             count_SDF[attr] += 1
 
+        if isinstance(val, str):
+            nc = len(val)
+        else:
+            nc = max([len(f) for f in val])
+        if nc > nchar[attr]:
+            nchar[attr] = nc
+
     i += 1
     if i % 5000 == 0:
         print(i)
@@ -58,6 +64,7 @@ print("CHEBI SDF")
 print(N_primary, N_secondary, N_none)
 print(dict(card_SDF))
 print(dict(count_SDF))
+print(dict(nchar))
 
 #url = 'https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity?chebiId={}'
 

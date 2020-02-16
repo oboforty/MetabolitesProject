@@ -10,7 +10,7 @@ Session = sessionmaker(bind=db_engine)
 EntityBase = declarative_base()
 
 
-def migrate():
+def create_database():
     EntityBase.metadata.create_all(db_engine)
 
 
@@ -18,11 +18,19 @@ def drop_all():
     EntityBase.metadata.drop_all(db_engine)
 
 
+def truncate(table):
+    db_engine.execute(text('''TRUNCATE TABLE {}'''.format(table)).execution_options(autocommit=True))
+
+def table_exists(table):
+    return db_engine.dialect.has_table(db_engine, table)
+
+
 def is_db_empty():
     table_names = set(inspect(db_engine).get_table_names())
 
     tables_to_have = {
-        'users',
+        'chebi_data',
+        'hmdb_data'
     }
 
     return not tables_to_have.issubset(table_names)
@@ -45,3 +53,4 @@ def query(sql, **par):
     r = session.execute(text(sql), params=par)
 
     return r
+

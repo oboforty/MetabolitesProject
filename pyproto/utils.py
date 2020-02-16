@@ -123,7 +123,46 @@ def parse_iter_sdf(fn):
                 else:
                     buffer[state] = line
 
-def los(v, f=None):
+
+def compile_names(*args):
+    names = []
+
+    for syn in args:
+        if syn:
+            if isinstance(syn, str):
+                names.append(syn)
+            else:
+                for sy in syn:
+                    names.append(sy)
+    return list(set(names))
+
+
+def compile_extra_refs(dc, value, attr, parse=None):
+
+    if isinstance(value, list):
+        if len(value) == 1:
+            return pp(value[0], parse)
+        elif len(value) == 0:
+            return None
+        else:
+            # return None, because the rest of Ids area stored in a json
+            dc[attr] = [pp(el, parse) for el in value]
+            return None
+
+    # scalar type:
+    return pp(value, parse)
+
+
+def pp(val, parse=None):
+    if parse is None:
+        return val
+    if val is None:
+        return None
+    return parse(val)
+
+
+def force_list(v, f=None):
+
     if isinstance(v, list):
         if f is not None:
             return [f(e) for e in v]

@@ -2,11 +2,10 @@ from time import time
 
 import pandas as pd
 import xmltodict
-import xml.etree.ElementTree as ET
 
-from api import ctx
-from api.utils import download_file, parse_xml_recursive
-from api.entities.HMDBData import HMDBData
+from pyproto import ctx
+from pyproto.utils import download_file, parse_xml_recursive
+from pyproto.entities.HMDBData import HMDBData
 from api.handlers.FetcherBase import FetcherBase
 
 
@@ -104,44 +103,3 @@ class FetcherHMDB(FetcherBase):
         )
 
         return meta
-
-    def download_all(self):
-        path_fn = '../tmp/hmdb_metabolites.xml'
-        t1 = time()
-
-        if not self.fake:
-            download_file(self.url_all_tpl, path_fn)
-
-        # parse XML file:
-        context = ET.iterparse(path_fn, events=("start", "end"))
-        context = iter(context)
-
-        # Open DB connection
-        session = ctx.Session()
-
-        ev_1, xroot = next(context)
-        i = 0
-
-        while True:
-            try:
-                ev_2, xmeta = next(context)
-
-                xdict = parse_xml_recursive(context)
-                metabolite = self.parse(None, xdict)
-
-                session.add(metabolite)
-
-                i += 1
-                if i % 5000 == 0:
-                    print("{} entries, {} seconds".format(i, round(time()-t1,2)))
-                    session.commit()
-
-                # debugging
-                #break
-            except StopIteration:
-                break
-
-        # save parsed entries into database
-        print("Parsing HMDB finished! Took {} seconds".format(round(time() - t1,2)))
-        session.commit()
-        session.close()

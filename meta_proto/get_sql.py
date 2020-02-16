@@ -1,8 +1,8 @@
 from sqlalchemy.sql.ddl import CreateTable
 
-from api.entities.HMDBData import HMDBData
-from api.entities.ChEBIData import CHEBIData
-from api.entities.metabolite import Metabolite
+from pyproto.entities.HMDBData import HMDBData
+from pyproto.entities import CHEBIData
+from pyproto.entities.metabolite import Metabolite
 
 
 def get_sql():

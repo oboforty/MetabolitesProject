@@ -1,7 +1,7 @@
 from time import time
 
-from api import ctx
-from api.utils import download_file
+from pyproto import ctx
+from pyproto.utils import download_file
 from api.handlers.FetcherBase import FetcherBase
 
 

@@ -1,7 +1,7 @@
 import sys
 
 from api.discover import get_db
-from api.ctx import is_db_empty, migrate, drop_all
+from pyproto.ctx import is_db_empty, migrate, drop_all
 
 
 def download(db_tag):

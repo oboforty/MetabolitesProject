@@ -1,11 +1,10 @@
 import json
 from collections import defaultdict
-import xmltodict
 import xml.etree.ElementTree as ET
 
-from api.utils import parse_xml_recursive, rlen
+from pyproto.utils import parse_xml_recursive, rlen
 
-path_fn = '../tmp/hmdb_metabolites.xml'
+path_fn = '../../tmp/hmdb_metabolites.xml'
 
 
 # parse XML file:
@@ -17,6 +16,10 @@ i = 0
 
 card_XML = defaultdict(int)
 idmap = {}
+count_SDF = defaultdict(int)
+nchar = defaultdict(int)
+
+duplicates = set()
 
 
 
@@ -56,16 +59,22 @@ while True:
             if c > card_XML[attr]:
                 card_XML[attr] = c
 
+            if c > 1:
+                # mark multiple cardinalities, see if they're duplicates
+                count_SDF[attr] += 1
 
 
         if i % 5000 == 0:
             print(i)
+            print(dict(card_XML))
+            print(dict(count_SDF))
 
     except StopIteration:
         break
 
 print("HMDB XML")
 print(dict(card_XML))
+print(dict(count_SDF))
 
 with open('hmdb_secondary.json', 'w') as fh:
     json.dump(dict(idmap), fh)

@@ -1,4 +1,4 @@
-from api.ctx import EntityBase
+from pyproto.ctx import EntityBase
 
 from sqlalchemy import Column, String, Float, TEXT, ARRAY, Integer
 from eme.data_access import JSON_GEN
@@ -7,60 +7,60 @@ from eme.data_access import JSON_GEN
 class CHEBIData(EntityBase):
     __tablename__ = 'chebi_data'
 
-    names = Column(ARRAY(TEXT))
-    iupac_names = Column(ARRAY(TEXT))
-    iupac_trad_names = Column(ARRAY(TEXT))
-    formulas = Column(ARRAY(TEXT))
-    smiles = Column(TEXT)
-    inchis = Column(ARRAY(TEXT))
-    inchikeys = Column(ARRAY(TEXT))
-
     # Metadata - from compounds.tsv
     chebi_id = Column(String(20), primary_key=True)
+    chebi_ids_alt = Column(ARRAY(String(20)))
+
+    #chebi_name = Column(TEXT)
+    names = Column(ARRAY(TEXT))
 
     description = Column(TEXT)
     quality = Column(Integer)
-
-    # from comments.tsv
-    comments = Column(TEXT)
-
-    # RefIds - from database_accession.tsv
-    cas_ids = Column(ARRAY(String(12)))
-    kegg_ids = Column(ARRAY(String(32)))
-    hmdb_ids = Column(ARRAY(String(11)))
-    lipidmaps_ids = Column(ARRAY(String(32)))
-    pubchem_ids = Column(ARRAY(String(32)))
 
     # Fun facts - from chemical_data.tsv
     charge = Column(Float)
     mass = Column(Float)
     monoisotopic_mass = Column(Float)
 
-    # Complex data
-    list_of_pathways = Column(JSON_GEN)
-    # ? might be omitted
-    kegg_details = Column(JSON_GEN)
+    # structure info -
+    smiles = Column(TEXT)
+    inchi = Column(TEXT)
+    inchikey = Column(String(27))
+    formula = Column(ARRAY(String(256)))
+
+    # from comments.tsv
+    comments = Column(TEXT)
+
+    # RefIds - from database_accession.tsv
+    cas_id = Column(String(20))
+    kegg_id = Column(String(20))
+    hmdb_id = Column(String(20))
+    lipidmaps_id = Column(String(20))
+    pubchem_id = Column(String(20))
+
+    ref_etc = Column(JSON_GEN())
 
     def __init__(self, **kwargs):
         self.chebi_id = kwargs.get('chebi_id')
-
+        self.chebi_id_alt = kwargs.get('chebi_id_alt')
+        self.chebi_name = kwargs.get('chebi_name')
         self.names = kwargs.get('names')
-        self.iupac_names = kwargs.get('iupac_names')
-        self.iupac_trad_names = kwargs.get('iupac_trad_names')
-        self.formulas = kwargs.get('formulas')
-        self.smiles = kwargs.get('smiles')
-        self.inchis = kwargs.get('inchis')
-        self.inchikeys = kwargs.get('inchikeys')
         self.description = kwargs.get('description')
         self.quality = kwargs.get('quality')
-        self.pubchem_ids = kwargs.get('pubchem_ids')
-        self.kegg_ids = kwargs.get('kegg_ids')
-        self.hmdb_ids = kwargs.get('hmdb_ids')
-        self.lipidmaps_ids = kwargs.get('lipidmaps_ids')
-        self.cas_ids = kwargs.get('cas_ids')
         self.charge = kwargs.get('charge')
         self.mass = kwargs.get('mass')
         self.monoisotopic_mass = kwargs.get('monoisotopic_mass')
+        self.smiles = kwargs.get('smiles')
+        self.inchi = kwargs.get('inchi')
+        self.inchikey = kwargs.get('inchikey')
+        self.formula = kwargs.get('formula')
+        self.comments = kwargs.get('comments')
+        self.cas_id = kwargs.get('cas_id')
+        self.kegg_id = kwargs.get('kegg_id')
+        self.hmdb_id = kwargs.get('hmdb_id')
+        self.lipidmaps_id = kwargs.get('lipidmaps_id')
+        self.pubchem_id = kwargs.get('pubchem_id')
+        self.ref_etc = kwargs.get('ref_etc')
 
         if isinstance(self.monoisotopic_mass, str):
             if not self.monoisotopic_mass:
