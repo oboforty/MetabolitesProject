@@ -2,7 +2,7 @@ source("R/db_ctx.R")
 source("R/utils.R")
 
 
-ChebiHandler <- setRefClass(Class = "ChebiHandler",
+LipidmapsHandler <- setRefClass(Class = "LipidmapsHandler",
   fields = list(
     name = "character"
   ),
@@ -18,21 +18,21 @@ ChebiHandler <- setRefClass(Class = "ChebiHandler",
       SQL <- paste(c("SELECT
         pubchem_id, chebi_id, kegg_id, hmdb_id, lipidmaps_id,
         smiles, inchi, inchikey, formula, names,
-        mass, monoisotopic_mass
-        FROM chebi_data WHERE chebi_id = '", db_id ,"'"), collapse = "")
-      df.chebi <- db.query(SQL)
+        mass
+        FROM lipidmaps_data WHERE chebi_id = '", db_id ,"'"), collapse = "")
+      df.lipidmaps <- db.query(SQL)
 
-      if(length(df.chebi) == 0)
+      if(length(df.lipidmaps) == 0)
         return(NULL)
 
       # convert to common interface:
-      # convert pg array strings to R vectors:
-      df.chebi$names <- list(pg_str2vector(df.chebi$names[[1]]))
-      df.chebi$source <- c("chebi")
-      df.chebi$metlin_id = c(NA)
-      df.chebi$cas_id = c(NA)
+      df.lipidmaps$names <- list(pg_str2vector(df.hmdb$names[[1]]))
+      df.lipidmaps$source = c("lipidmaps")
+      df.lipidmaps$metlin_id = c(NA)
+      df.lipidmaps$cas_id = c(NA)
+      df.lipidmaps$monoisotopic_mass = c(NA)
 
-      return (df.chebi)
+      return (df.lipidmaps)
     }
   )
 )

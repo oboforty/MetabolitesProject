@@ -171,7 +171,7 @@ def force_list(v, f=None):
         return None
     else:
         if f is not None:
-            return f(v)
+            return [f(v)]
         return [v]
 
 

@@ -14,11 +14,15 @@ def sdfdict_to_entity(v):
         v.get('SYNONYMS'),
         v.get('ABBREVIATION')
     )
-    lipidmap_id = v.get('LM_ID')
+    lipidmaps_id = v.get('LM_ID')
     lipidbank_id = v.get('LIPIDBANK_ID')
 
+    inchi = v.get('INCHI')
+    if inchi is not None:
+        inchi = inchi.lstrip('InChI=')
+
     meta = LipidMapsData(
-        lipidmap_id = lipidmap_id,
+        lipidmaps_id = lipidmaps_id,
         names = names,
         category = v.get('CATEGORY'),
         main_class = v.get('MAIN_CLASS'),
@@ -26,7 +30,7 @@ def sdfdict_to_entity(v):
         lvl4_class = v.get('CLASS_LEVEL4'),
         mass = v.get('EXACT_MASS'),
         smiles = v.get('SMILES'),
-        inchi = v.get('INCHI').lstrip('InChI='),
+        inchi = inchi,
         inchikey = v.get('INCHI_KEY'),
         formula = v.get('FORMULA'),
         kegg_id = v.get('KEGG_ID'),

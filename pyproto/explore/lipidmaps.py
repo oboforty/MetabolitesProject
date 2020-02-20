@@ -18,9 +18,10 @@ idmap_inv = defaultdict(set)
 for k,v in idmap.items():
     idmap_inv[v].add(k)
 
+
 N_secondary = 0
+N_has_secondary = 0
 N_primary = 0
-N_none = 0
 nchar = defaultdict(int)
 
 
@@ -31,13 +32,12 @@ for me in parse_iter_sdf(path_fn):
         # check if referenced HMDB_ID is primary or secondary:
         hmdb_id = me['HMDB_ID']
 
-        if not isinstance(hmdb_id, list):
-            if hmdb_id in idmap:
-                N_secondary += 1
-            elif hmdb_id in idmap_inv:
-                N_primary += 1
-            else:
-                N_none += 1
+        if isinstance(hmdb_id, list):
+            N_secondary += len(hmdb_id)
+        else:
+            N_secondary += 1
+        N_has_secondary += 1
+    N_primary += 1
 
     for attr, val in me.items():
         c = rlen(val)
@@ -61,7 +61,7 @@ for me in parse_iter_sdf(path_fn):
         print(i)
 
 print("LipidMaps SDF")
-print(N_primary, N_secondary, N_none)
+print(N_primary, N_has_secondary, N_secondary)
 print(dict(card_SDF))
 print(dict(count_SDF))
 print(dict(nchar))

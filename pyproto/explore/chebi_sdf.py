@@ -21,22 +21,58 @@ for k,v in idmap.items():
     idmap_inv[v].add(k)
 
 N_secondary = 0
+N_has_secondary = 0
 N_primary = 0
-N_none = 0
+
+foreign = set()
+
 
 for me in parse_iter_sdf(path_fn):
+    if 'KEGG COMPOUND Database Links' in me:
+        kegg = me['KEGG COMPOUND Database Links']
 
+        if isinstance(kegg, list):
+            for k in kegg:
+                foreign.add(('kegg', k))
+        else:
+            foreign.add(('kegg', kegg))
+
+    if 'LIPID MAPS instance Database Links' in me:
+        lipidmaps = me['LIPID MAPS instance Database Links']
+
+        if isinstance(lipidmaps, list):
+            for k in lipidmaps:
+                foreign.add(('lipidmaps', k))
+        else:
+            foreign.add(('lipidmaps', lipidmaps))
+
+    if 'Chemspider Database Links' in me:
+        chemspider = me['Chemspider Database Links']
+
+        if isinstance(chemspider, list):
+            for k in chemspider:
+                foreign.add(('chemspider', k))
+        else:
+            foreign.add(('chemspider', chemspider))
+    #if 'PubChem Database Links' in me:
+    #    foreign.add(('pubchem', me['
     if 'HMDB Database Links' in me:
         # check if referenced HMDB_ID is primary or secondary:
-        hmdb_id = me['HMDB Database Links']
+        hmdb_id = me.get('HMDB Database Links')
 
-        if not isinstance(hmdb_id, list):
-            if hmdb_id in idmap:
-                N_secondary += 1
-            elif hmdb_id in idmap_inv:
-                N_primary += 1
-            else:
-                N_none += 1
+        if isinstance(hmdb_id, list):
+            for k in hmdb_id:
+                foreign.add(('hmdb_id', k))
+        else:
+            foreign.add(('hmdb_id', hmdb_id))
+
+
+        if isinstance(hmdb_id, list):
+            N_secondary += len(hmdb_id)
+        else:
+            N_secondary += 1
+        N_has_secondary += 1
+    N_primary += 1
 
     for attr, val in me.items():
         c = rlen(val)
@@ -61,10 +97,11 @@ for me in parse_iter_sdf(path_fn):
         print(i)
 
 print("CHEBI SDF")
-print(N_primary, N_secondary, N_none)
+print(N_primary, N_has_secondary, N_secondary)
 print(dict(card_SDF))
 print(dict(count_SDF))
 print(dict(nchar))
+print(len(foreign))
 
 #url = 'https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity?chebiId={}'
 

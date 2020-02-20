@@ -1,19 +1,19 @@
 require("RPostgreSQL")
 
 db_conn <- NULL
-
+is_connected <- FALSE
 
 db.connect <- function () {
-  print("Opening DB connection...")
   # connect to DB
   drv <- dbDriver("PostgreSQL")
   db_conn <<- dbConnect(drv, dbname = "metafetcher", host = "localhost", port = 5432, user = "postgres", password = "postgres")
+  is_connected <<- TRUE
 
   return (db_conn)
 }
 
 db.query <- function (SQL) {
-  if (is.null(db_conn)) {
+  if (!is_connected) {
     db.connect()
   }
 
@@ -23,9 +23,9 @@ db.query <- function (SQL) {
 
 
 db.disconnect <- function () {
-  print("Closing DB connection...")
-
   dbDisconnect(db_conn)
+
+  is_connected <<- FALSE
 }
 
 db.transaction <- function () {

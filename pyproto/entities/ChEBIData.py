@@ -9,7 +9,7 @@ class CHEBIData(EntityBase):
 
     # Metadata - from compounds.tsv
     chebi_id = Column(String(20), primary_key=True)
-    chebi_ids_alt = Column(ARRAY(String(20)))
+    chebi_id_alt = Column(ARRAY(String(20)))
 
     #chebi_name = Column(TEXT)
     names = Column(ARRAY(TEXT))
@@ -26,13 +26,13 @@ class CHEBIData(EntityBase):
     smiles = Column(TEXT)
     inchi = Column(TEXT)
     inchikey = Column(String(27))
-    formula = Column(ARRAY(String(256)))
+    formula = Column(String(256))
 
     # from comments.tsv
     comments = Column(TEXT)
 
     # RefIds - from database_accession.tsv
-    cas_id = Column(String(20))
+    #cas_id = Column(String(20))
     kegg_id = Column(String(20))
     hmdb_id = Column(String(20))
     lipidmaps_id = Column(String(20))
@@ -55,7 +55,7 @@ class CHEBIData(EntityBase):
         self.inchikey = kwargs.get('inchikey')
         self.formula = kwargs.get('formula')
         self.comments = kwargs.get('comments')
-        self.cas_id = kwargs.get('cas_id')
+        #self.cas_id = kwargs.get('cas_id')
         self.kegg_id = kwargs.get('kegg_id')
         self.hmdb_id = kwargs.get('hmdb_id')
         self.lipidmaps_id = kwargs.get('lipidmaps_id')

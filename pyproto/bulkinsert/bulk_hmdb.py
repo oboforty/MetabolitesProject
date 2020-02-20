@@ -17,6 +17,9 @@ def xml_to_entity(v):
     hmdb_id = v.get('accession')
     hmdb_id_alt = force_list(v['secondary_accessions']['accession']) if v.get('secondary_accessions') else None
 
+    # remove trivial IDs
+    hmdb_id_alt = list(filter(lambda x: len(x) != 7 and x[4:] != hmdb_id[6:], hmdb_id_alt))
+
     inchi = nono(v.get('inchi'))
     if inchi is not None:
         inchi = inchi.lstrip('InChI=')

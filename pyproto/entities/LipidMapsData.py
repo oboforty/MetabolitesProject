@@ -8,7 +8,7 @@ class LipidMapsData(EntityBase):
     __tablename__ = 'lipidmaps_data'
 
     # Metadata - from compounds.tsv
-    lipidmap_id = Column(String(20), primary_key=True)
+    lipidmaps_id = Column(String(20), primary_key=True)
 
     names = Column(ARRAY(TEXT))
     category = Column(String(32))
@@ -31,7 +31,7 @@ class LipidMapsData(EntityBase):
 
 
     def __init__(self, **kwargs):
-        self.lipidmap_id = kwargs.get('lipidmap_id')
+        self.lipidmaps_id = kwargs.get('lipidmaps_id')
         self.names = kwargs.get('names')
         self.category = kwargs.get('category')
         self.main_class = kwargs.get('main_class')

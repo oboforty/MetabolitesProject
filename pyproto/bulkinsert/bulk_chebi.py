@@ -18,7 +18,7 @@ def sdfdict_to_entity(v):
     if 'PubChem Database Links' not in v and 'Pubchem Database Links' in v:
         v['PubChem Database Links'] = v['Pubchem Database Links']
     if 'PubChem Database Links' in v:
-        v['PubChem Database Links'] = list(filter(lambda x: x.startswith('CID: '), v['PubChem Database Links']))
+        v['PubChem Database Links'] = [x.lstrip('CID: ') for x in v['PubChem Database Links'] if x.startswith('CID: ')]
 
     # todo: comments?
     # todo: pubchem SID filter out?
@@ -28,7 +28,7 @@ def sdfdict_to_entity(v):
         chebi_id_alt = chebi_id_alt,
         names = names,
 
-        description = v.get('definition'),
+        description = v.get('Definition'),
         quality = int(v.get('Star', 0)),
         charge = v.get('Charge'),
         mass = v.get('Mass'),
@@ -47,7 +47,8 @@ def sdfdict_to_entity(v):
     )
 
     # in some extra cases there's multiple cardinality
-    meta.ref_etc = refs_multiple
+    if refs_multiple:
+        meta.ref_etc = refs_multiple
 
     return meta
 

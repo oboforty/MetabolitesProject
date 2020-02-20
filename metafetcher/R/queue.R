@@ -35,6 +35,11 @@ Queue <- setRefClass(Class = "Queue",
                          if (length(pos) == 1) return(data[[pos]])
                          else return(data[pos])
                        },
+                       clear = function() {
+                         'Clears queue.'
+
+                         data <<- list()
+                       },
                        initialize=function(...) {
                          callSuper(...)
                          #
