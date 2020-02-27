@@ -18,35 +18,14 @@ get_handler <- function (db_tag) {
     return(HmdbHandler())
   } else if (db_tag == "lipidmaps_id") {
     return(LipidmapsHandler())
+  } else if (db_tag == "kegg_id") {
+    return(KeggHandler())
   }
 
   # database is not supported by this package:
   return(NULL)
 }
 
-
-attr.refs <- c(
-    "chebi_id", "hmdb_id", "lipidmaps_id",
-    "kegg_id", "metlin_id", "pubchem_id", "cas_id"
-)
-
-attr.meta <- c(
-    "names", "mass", "monoisotopic_mass",
-    "formula", "inchi", "inchikey", "smiles",
-
-    attr.refs
-)
-
-create_empty_record <- function () {
-  df <- data.frame(matrix(ncol = length(attr.meta), nrow = 1))
-  colnames(df) <- attr.meta
-
-  # for (attr in attr.meta) {
-  #   df[[attr]] <- list(vector(length=0))
-  # }
-
-  return(df)
-}
 
 transform_df <- function (df){
   attrs <- names(df)

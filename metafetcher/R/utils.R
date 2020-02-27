@@ -46,3 +46,27 @@ mod<-function(x,m) {
   t1<-floor(x/m)
   return(x-t1*m)
 }
+
+
+attr.refs <- c(
+    "chebi_id", "hmdb_id", "lipidmaps_id",
+    "kegg_id", "metlin_id", "pubchem_id", "cas_id"
+)
+
+attr.meta <- c(
+    "names", "mass", "monoisotopic_mass",
+    "formula", "inchi", "inchikey", "smiles",
+
+    attr.refs
+)
+
+create_empty_record <- function () {
+  df <- data.frame(matrix(ncol = length(attr.meta), nrow = 1))
+  colnames(df) <- attr.meta
+
+  # for (attr in attr.meta) {
+  #   df[[attr]] <- list(vector(length=0))
+  # }
+
+  return(df)
+}
