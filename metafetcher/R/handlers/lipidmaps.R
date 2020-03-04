@@ -15,12 +15,12 @@ LipidmapsHandler <- setRefClass(Class = "LipidmapsHandler",
 
     query_metabolite = function(db_id) {
       # Queries a ChEBI metabolite record and converts it to a common interface
-      SQL <- paste(c("SELECT
+      SQL <- "SELECT
         pubchem_id, chebi_id, kegg_id, hmdb_id, lipidmaps_id,
         smiles, inchi, inchikey, formula, names,
         mass
-        FROM lipidmaps_data WHERE chebi_id = '", db_id ,"'"), collapse = "")
-      df.lipidmaps <- db.query(SQL)
+        FROM lipidmaps_data WHERE lipidmaps_id = '%s'"
+      df.lipidmaps <- db.query(sprintf(SQL, db_id))
 
       if(length(df.lipidmaps) == 0)
         return(NULL)

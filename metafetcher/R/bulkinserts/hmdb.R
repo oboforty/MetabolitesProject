@@ -105,8 +105,7 @@ parse_xml_iter <- function(filepath) {
           db.write_df("hmdb_data", hmdb_df)
 
           if (mod(i, 500) == 0) {
-            log <- paste(c("Inserting to DB...", i, round(as.numeric(Sys.time() - start_time),2), "seconds"), collapse=" ")
-            print(log)
+            print(sprintf("Inserting to DB... #%d %d seconds", i, round(as.numeric(Sys.time() - start_time),2)))
 
             # on buffer full commit & reset DB buffer
             db.commit()
@@ -132,8 +131,7 @@ parse_xml_iter <- function(filepath) {
   db.commit()
   db.disconnect()
 
-  log <- paste(c("Done! Took", round(as.numeric(Sys.time() - start_time),2), "seconds"), collapse=" ")
-  print(log)
+  print(sprintf("Done! Took %d seconds", round(as.numeric(Sys.time() - start_time),2)))
 }
 
 

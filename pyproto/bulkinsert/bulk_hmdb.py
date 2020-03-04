@@ -17,8 +17,6 @@ def xml_to_entity(v):
     hmdb_id = v.get('accession')
     hmdb_id_alt = force_list(v['secondary_accessions']['accession']) if v.get('secondary_accessions') else None
 
-    # remove trivial IDs
-    hmdb_id_alt = list(filter(lambda x: len(x) != 7 and x[4:] != hmdb_id[6:], hmdb_id_alt))
 
     inchi = nono(v.get('inchi'))
     if inchi is not None:
@@ -28,7 +26,6 @@ def xml_to_entity(v):
 
     meta = HMDBData(
         hmdb_id = hmdb_id,
-        hmdb_id_alt = hmdb_id_alt,
         names = names,
 
         description = v.get('description'),
@@ -50,6 +47,10 @@ def xml_to_entity(v):
         # drugbank_id=v.get('drugbank_id'),
         # drugbank_metabolite_id=v.get('drugbank_metabolite_id'),
     )
+
+    # remove redundant secondary IDs
+    if hmdb_id_alt:
+        meta.hmdb_id_alt = list(filter(lambda x: not (len(x) == 9 and ('HMDB00'+x[4:] in hmdb_id_alt or 'HMDB00'+x[4:] == hmdb_id)), hmdb_id_alt))
 
     # in some extra cases there's multiple cardinality
     #meta.ref_etc = refs_multiple
@@ -83,6 +84,10 @@ while True:
         ev_2, xmeta = next(context)
 
         xdict = parse_xml_recursive(context)
+        if isinstance(xdict, str) and xdict =='':
+            # end of xml
+            continue
+
         metabolite = xml_to_entity(xdict)
 
         session.add(metabolite)

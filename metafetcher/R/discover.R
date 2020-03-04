@@ -4,14 +4,15 @@ source("R/utils.R")
 
 source("R/handlers/hmdb.R")
 source("R/handlers/chebi.R")
+source("R/handlers/kegg.R")
 source("R/handlers/lipidmaps.R")
-# source("R/handlers/kegg.R")
 # source("R/handlers/chemspider.R")
 # source("R/handlers/pubchem.R")
 # source("R/handlers/metlin.R")
 
 
 get_handler <- function (db_tag) {
+
   if (db_tag == "chebi_id") {
     return(ChebiHandler())
   } else if (db_tag == "hmdb_id") {
@@ -109,13 +110,29 @@ resolve <- function(df.discovered) {
 
     # Query metabolite record from local database or web api
     if (!resolve.options$suppress)
-      print(paste(c("Fetching:", db_tag, db_id), collapse=" "))
+      print(sprintf("Fetching: %s %s", db_tag, db_id))
     df.result <- hand$query_metabolite(db_id)
     # attributes of common meta interface:
     # pubchem_id chebi_id kegg_id hmdb_id metlin_id lipidmaps_id cas_id
     # smiles inchi inchikey formula names mass
 
     if (is.null(df.result)) {
+      # resolve primary id from 'db_id' as secondary id
+      SQL2 <- "SELECT primary_id FROM secondary_id
+        WHERE db_tag = '%s' AND secondary_id = '%s'"
+      df.second <- db.query(sprintf(SQL2, db_tag, db_id))
+
+      if (length(df.second) > 0 && !is.na(df.second$primary_id[[1]])) {
+        db_id1 <- df.second$primary_id[[1]]
+        if (!resolve.options$suppress)
+          print(sprintf("Resolved secondary %s id: %s > %s", db_tag, db_id, db_id1))
+
+        # we got a hit treating 'db_id' as a secondary id
+        # put the alternate ID in the queue again
+        Q$push(tuple(db_tag, db_id1, sprintf("secondary_%s", db_tag)))
+        next
+      }
+
       # add to undiscovered set if not found
       undiscovered <- c(undiscovered, tpl)
       next

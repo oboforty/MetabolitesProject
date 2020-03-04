@@ -98,8 +98,7 @@ parse_sdf_iter <- function(filepath) {
 
       if (mod(j, 500) == 0) {
         # commit every once in a while
-        log <- paste(c("Inserting to DB...", j, round(as.numeric(Sys.time() - start_time),2), "seconds"), collapse=" ")
-        print(log)
+        print(sprintf("Inserting to DB... #%d %d seconds", j, round(as.numeric(Sys.time() - start_time),2)))
 
         # on buffer full commit & reset DB buffer
         db.commit()
@@ -132,8 +131,7 @@ parse_sdf_iter <- function(filepath) {
   db.commit()
   db.disconnect()
 
-  log <- paste(c("Done! Took", round(as.numeric(Sys.time() - start_time),2), "seconds"), collapse=" ")
-  print(log)
+  print(sprintf("Done! Took %d seconds", round(as.numeric(Sys.time() - start_time),2)))
 }
 
 chebi <- function(fake = FALSE) {

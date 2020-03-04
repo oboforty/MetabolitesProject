@@ -1,11 +1,33 @@
 library(httr)
+library(stringi)
 
 source("R/db_ctx.R")
 source("R/utils.R")
 
 
+create_kegg_record <- function () {
+  kegg_attribs <- c(
+    "exact_mass", "mol_weight",
+    "comments", "formula", "names",
 
-ChebiHandler <- setRefClass(Class = "ChebiHandler",
+    "kegg_id", "chebi_id",  "lipidmaps_id", "pubchem_id",
+    "ref_etc"
+  )
+
+  df <- data.frame(matrix(ncol = length(kegg_attribs), nrow = 1))
+  colnames(df) <- kegg_attribs
+
+  # for (attri in kegg_attribs_vec) {
+  #   df[[attri]] <- list(vector(length=0))
+  # }
+  # vector fields: names
+  df$names <- list(vector(length=0))
+
+  return(df)
+}
+
+
+KeggHandler <- setRefClass(Class = "KeggHandler",
   fields = list(
     name = "character"
   ),
@@ -17,20 +39,27 @@ ChebiHandler <- setRefClass(Class = "ChebiHandler",
     },
 
     query_metabolite = function(db_id) {
-      # Queries a ChEBI metabolite record and converts it to a common interface
-      SQL <- paste(c("SELECT
-        kegg_id,hmdb_id,cas_id,chebi_id,lipidmaps_id,pubchem_id,
+      # Queries a KEGG metabolite record and converts it to a common interface
+      SQL <- "SELECT
+        kegg_id,chebi_id,lipidmaps_id,pubchem_id,
         names,formula,
         exact_mass,mol_weight,
         comments
-        FROM chebi_data WHERE chebi_id = '", db_id ,"'"), collapse = "")
-      df.kegg <- db.query(SQL)
+        FROM kegg_data WHERE kegg_id = '%s'"
+      df.kegg <- db.query(sprintf(SQL, db_id))
 
       if(length(df.kegg) == 0) {
-        .self$call_api(db_id)
+        df.kegg <- .self$call_api(db_id)
 
-        # todo: find in api
-        return(NULL)
+        # if api response is still empty, then the record doesn't exist
+        if(is.null(df.kegg) || length(df.kegg) == 0)
+          return(NULL)
+
+        # Save to db
+        if (length(df.kegg$names[[1]]) > 0)
+          df.kegg$names[[1]] <- c(join(df.kegg$names[[1]]))
+
+        #db.write_df("kegg_data", df.kegg)
       }
 
       # convert to common interface:
@@ -38,14 +67,87 @@ ChebiHandler <- setRefClass(Class = "ChebiHandler",
       df.kegg$names <- list(pg_str2vector(df.kegg$names[[1]]))
       df.kegg$source <- c("kegg")
       df.kegg$metlin_id = c(NA)
+      df.kegg$hmdb_id = c(NA)
       df.kegg$smiles = c(NA)
       df.kegg$inchi = c(NA)
       df.kegg$inchikey = c(NA)
 
-      colnames(df.kegg)["exact_mass"] <- "monoisotopic_mass"
-      colnames(df.kegg)["mol_weight"] <- "mass"
+      colnames(df.kegg)[colnames(df.kegg)=="exact_mass"]  <-"monoisotopic_mass"
+      colnames(df.kegg)[colnames(df.kegg)=="mol_weight"]  <-"mass"
 
       return (df.kegg)
+    },
+
+    call_api = function(db_id) {
+      'Calls KEGG api to retrieve record.'
+
+      df.kegg <- create_kegg_record()
+
+      url <- 'http://rest.kegg.jp/get/cpd:%s'
+      r <- GET(sprintf(url,db_id))
+
+      if (r$status != 200)
+        return (NULL)
+      lines <- strsplit(content(r), "\n", fixed = TRUE, useBytes=TRUE)
+
+      state <- NA
+
+      for (line in lines[[1]]) {
+        if (line == "///" || line == "") {
+          next
+        }
+
+        parts <- strsplit(line, "\\s+")[[1]]
+
+        if (parts[[1]] == "") {
+          # remove first empty part in line:
+          parts <- parts[-1]
+        }
+
+        if (!startsWith(line, "   ")) {
+          # new label starts in line:
+          state <- parts[[1]]
+          parts <- parts[-1]
+        }
+
+        if ("ENTRY" == state)
+          df.kegg$kegg_id <- parts[[1]]
+        else if ("NAME" == state) {
+          df.kegg$names[[1]] <- c(df.kegg$names[[1]], parts)
+        }
+        else if ("FORMULA" == state)
+          df.kegg$formula[[1]] <- parts[[1]]
+        else if ("EXACT_MASS" == state)
+          df.kegg$exact_mass[[1]] <- parts[[1]]
+        else if ("MOL_WEIGHT" == state)
+          df.kegg$mol_weight[[1]] <- parts[[1]]
+        else if ("DBLINKS" == state) {
+          db_tag <- tolower(parts[[1]])
+          db_tag <- substr(db_tag, 1, nchar(db_tag)-1)
+
+          if (!endsWith(db_tag, "_id"))
+            db_tag <- paste(c(db_tag, "_id"), collapse = "")
+
+          if (!db_tag %in% c("kegg_id", "chebi_id", "lipidmaps_id", "pubchem_id"))
+            next
+
+          # remove db_tag and parse the rest of line as db_id
+          parts <- parts[-1]
+
+          if (length(parts) == 1) {
+            # simply store
+            df.kegg[[db_tag]][[1]] <- parts[[1]]
+          } else {
+            # todo: store in json string for refs
+            # for (db_id in parts) {
+            #   df.kegg[[db_tag]][[1]] <- c(df.kegg[[db_tag]][[1]], db_id)
+            # }
+          }
+        }
+      }
+
+      return(df.kegg)
     }
+
   )
 )

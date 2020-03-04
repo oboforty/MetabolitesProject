@@ -48,7 +48,13 @@ def sdfdict_to_entity(v):
 
     # in some extra cases there's multiple cardinality
     if refs_multiple:
-        meta.ref_etc = refs_multiple
+        meta.ref_etc = refs_multiple.copy()
+
+        if 'hmdb_id' in refs_multiple:
+            for hmdb_id in refs_multiple['hmdb_id']:
+                if len(hmdb_id) == 9 and 'HMDB00'+hmdb_id[4:] in meta.ref_etc['hmdb_id']:
+                    # redundant secondary HMDB id
+                    meta.ref_etc['hmdb_id'].remove(hmdb_id)
 
     return meta
 

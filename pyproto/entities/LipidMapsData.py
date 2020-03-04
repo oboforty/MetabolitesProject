@@ -21,7 +21,7 @@ class LipidMapsData(EntityBase):
     smiles = Column(TEXT)
     inchi = Column(TEXT)
     inchikey = Column(String(27))
-    formula = Column(ARRAY(String(256)))
+    formula = Column(String(256))
 
     kegg_id = Column(String(20))
     hmdb_id = Column(String(20))

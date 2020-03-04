@@ -1,11 +1,9 @@
 
 
-source('R/discover.R')
-
 #df.res <- read.csv("discovery.csv", stringsAsFactors=FALSE)
 
-#df.res <- resolve(df.res)
 
+source('R/discover.R')
 
+df.res <- resolve_single_id('chebi_id', '16336')
 
-df.res <- resolve_single_id('hmdb_id', 'HMDB0006112')

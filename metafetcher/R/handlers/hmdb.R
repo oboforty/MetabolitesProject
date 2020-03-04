@@ -14,16 +14,22 @@ HmdbHandler <- setRefClass(Class = "HmdbHandler",
     },
 
     query_metabolite = function(db_id) {
+      # treat obvious cases of secondary HMDB id:
+      if (nchar(db_id) == 9) {
+        db_id <- sprintf('HMDB00%s',substr(db_id, 5, nchar(db_id)))
+      }
+
       # Queries an HMDB metabolite record and converts it to a common interface
-      SQL <- paste(c("SELECT
+      SQL <- "SELECT
         pubchem_id, chebi_id, kegg_id, hmdb_id, metlin_id,
         smiles, inchi, inchikey, formula, names,
         avg_mol_weight as mass, monoisotopic_mol_weight as monoisotopic_mass
-        FROM hmdb_data WHERE hmdb_id = '", db_id ,"'"), collapse = "")
-      df.hmdb <- db.query(SQL)
+        FROM hmdb_data WHERE hmdb_id = '%s'"
+      df.hmdb <- db.query(sprintf(SQL, db_id))
 
-      if(length(df.hmdb) == 0)
+      if(length(df.hmdb) == 0) {
         return(NULL)
+      }
 
       # convert to common interface:
       # convert pg array strings to R vectors:
