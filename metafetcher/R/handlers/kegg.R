@@ -57,9 +57,11 @@ KeggHandler <- setRefClass(Class = "KeggHandler",
 
         # Save to db
         if (length(df.kegg$names[[1]]) > 0)
-          df.kegg$names[[1]] <- c(join(df.kegg$names[[1]]))
+          df.kegg$names <- c(join(df.kegg$names[[1]]))
 
-        #db.write_df("kegg_data", df.kegg)
+        # cache kegg record
+        #saveRDS(df.kegg, "kegg_data.rds")
+        db.write_df("kegg_data", df.kegg)
       }
 
       # convert to common interface:

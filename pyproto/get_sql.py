@@ -4,6 +4,7 @@ from pyproto.entities.ChEBIData import CHEBIData
 from pyproto.entities.HMDBData import HMDBData
 from pyproto.entities.KEGGData import KeggData
 from pyproto.entities.LipidMapsData import LipidMapsData
+from pyproto.entities.PubChemData import PubChemData
 from pyproto.entities.SecondaryID import SecondaryID
 
 
@@ -16,6 +17,7 @@ def get_sql():
     print(CreateTable(CHEBIData.__table__))
     print(CreateTable(LipidMapsData.__table__))
     print(CreateTable(KeggData.__table__))
+    print(CreateTable(PubChemData.__table__))
     print(CreateTable(SecondaryID.__table__))
 
     # lm = f(LipidMapsData)

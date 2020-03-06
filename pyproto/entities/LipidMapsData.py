@@ -27,7 +27,7 @@ class LipidMapsData(EntityBase):
     hmdb_id = Column(String(20))
     chebi_id = Column(String(20))
     pubchem_id = Column(String(20))
-    lipidbank_id = Column(ARRAY(String(20)))
+    lipidbank_id = Column(String(20))
 
 
     def __init__(self, **kwargs):

@@ -6,8 +6,8 @@ source("R/handlers/hmdb.R")
 source("R/handlers/chebi.R")
 source("R/handlers/kegg.R")
 source("R/handlers/lipidmaps.R")
+source("R/handlers/pubchem.R")
 # source("R/handlers/chemspider.R")
-# source("R/handlers/pubchem.R")
 # source("R/handlers/metlin.R")
 
 
@@ -21,6 +21,8 @@ get_handler <- function (db_tag) {
     return(LipidmapsHandler())
   } else if (db_tag == "kegg_id") {
     return(KeggHandler())
+  } else if (db_tag == "pubchem_id") {
+    return(PubchemHandler())
   }
 
   # database is not supported by this package:

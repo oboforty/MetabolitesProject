@@ -1,4 +1,5 @@
 import json
+import re
 from collections import defaultdict
 
 import requests
@@ -14,22 +15,28 @@ def parse_pubchem(db_id, c0,c1):
     cont_refs = json.loads(c1)
 
     # parse xrefs:
+
     INF = cont_refs['InformationList']['Information'][0]
-    for db_tag, db_id in zip(INF['SourceName'], INF['RegistryID']):
-        db_tag = db_tag.lower()
 
-        if db_tag == 'human metabolome database (hmdb)':
+    # todo: itt: smart guess IDs and insert
+    for db_id in INF['RegistryID']:
+        if db_id.startswith('CHEBI:'):
+            db_tag = 'chebi_id'
+        elif db_id.startswith('HMDB'):
             db_tag = 'hmdb'
-
+        elif re.match('C\d{4,9}', db_id):
+            db_tag = 'kegg_id'
+        else:
+            continue
         refsKEGG[db_tag].append(db_id)
 
-    # parse name:
-    # INF = content['PC_Compounds'][0]['props']
-    # names= []
-    # for q in INF:
-    #     # discover names in this weird json
-    #     if 'name' in q['urn']['label'].lower():
-    #         names.append(q['value']['sval'])
+    # for db_tag, db_id in zip(INF['SourceName'], INF['RegistryID']):
+    #     db_tag = db_tag.lower()
+    #
+    #     if db_tag == 'human metabolome database (hmdb)':
+    #         db_tag = 'hmdb'
+    #
+    #     refsKEGG[db_tag].append(db_id)
 
     dataKEGG.update(content['PC_Compounds'][0])
     props = dataKEGG.pop('props')
@@ -65,7 +72,7 @@ def parse_pubchem(db_id, c0,c1):
 
 
 if __name__ == "__main__":
-    db_id = '71362326'
+    db_id = '442306'
     r = requests.get(url='https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/{}/json'.format(db_id))
     r2 = requests.get(url='https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/{}/xrefs/SourceName,RegistryID/JSON'.format(db_id))
 
@@ -73,5 +80,5 @@ if __name__ == "__main__":
     if r.content is not None:
         data, refs = parse_pubchem(db_id, r.content.decode('utf-8'), r2.content.decode('utf-8'))
 
-        print(data)
+        print(refs)
 
