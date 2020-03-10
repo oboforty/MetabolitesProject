@@ -39,6 +39,12 @@ HmdbHandler <- setRefClass(Class = "HmdbHandler",
       df.hmdb$cas_id = c(NA)
 
       return (df.hmdb)
+    },
+
+    query_reverse = function(df.res) {
+      # todo: itt
+
+      return(NULL)
     }
   )
 )

@@ -45,11 +45,11 @@ PubchemHandler <- setRefClass(Class = "PubchemHandler",
         FROM pubchem_data WHERE pubchem_id = '%s'"
       df.pubchem <- db.query(sprintf(SQL, db_id))
 
-      if(length(df.pubchem) == 0) {
+      if (length(df.pubchem) == 0) {
         df.pubchem <- .self$call_api(db_id)
 
         # if api response is still empty, then the record doesn't exist
-        if(is.null(df.pubchem) || length(df.pubchem) == 0)
+        if (is.null(df.pubchem) || length(df.pubchem) == 0)
           return(NULL)
 
         # Save to db
@@ -75,6 +75,12 @@ PubchemHandler <- setRefClass(Class = "PubchemHandler",
       return (df.pubchem)
     },
 
+    query_reverse = function(df.res) {
+      # todo: itt
+
+      return(NULL)
+    },
+
     call_api = function(db_id) {
       'Calls PubChem api to retrieve record.'
       df.pubchem <- create_pubchem_record()
@@ -82,10 +88,10 @@ PubchemHandler <- setRefClass(Class = "PubchemHandler",
       # 1. Parse properties
       url <- 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/%s/json'
       r <- GET(sprintf(url,db_id))
+
       if (r$status != 200)
         return (NULL)
       v <- content(r)
-
       df.pubchem$pubchem_id <- v$PC_Compounds[[1]]$id$id$cid
 
       props <- v$PC_Compounds[[1]]$props
@@ -120,6 +126,7 @@ PubchemHandler <- setRefClass(Class = "PubchemHandler",
       r <- GET(sprintf(url,db_id))
       if (r$status != 200)
         return (NULL)
+
       v <- content(r)
 
       ids <- v$InformationList$Information[[1]]$RegistryID
@@ -134,7 +141,7 @@ PubchemHandler <- setRefClass(Class = "PubchemHandler",
         else if (substr(xdb_id, 1, 1) == 'C' && str_detect(xdb_id, '^C\\d{4,9}$'))
           df.pubchem$kegg_id <- xdb_id
       }
-
+      print(df.pubchem)
       return(df.pubchem)
     }
 

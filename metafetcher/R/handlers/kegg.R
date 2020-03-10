@@ -80,6 +80,12 @@ KeggHandler <- setRefClass(Class = "KeggHandler",
       return (df.kegg)
     },
 
+    query_reverse = function(df.res) {
+      # todo: itt
+
+      return(NULL)
+    },
+
     call_api = function(db_id) {
       'Calls KEGG api to retrieve record.'
 
