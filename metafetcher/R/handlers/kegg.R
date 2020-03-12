@@ -143,8 +143,13 @@ KeggHandler <- setRefClass(Class = "KeggHandler",
           parts <- parts[-1]
 
           if (length(parts) == 1) {
+            db_id <- parts[[1]]
+
+            if (db_tag == 'chebi_id' && startsWith(db_id, 'CHEBI:'))
+              db_id <- lstrip(db_id, "CHEBI:")
+
             # simply store
-            df.kegg[[db_tag]][[1]] <- parts[[1]]
+            df.kegg[[1, db_tag]] <- db_id
           } else {
             # todo: store in json string for refs
             # for (db_id in parts) {

@@ -68,7 +68,7 @@ resolve <- function(df.discovered) {
     # insert all reference IDs to the queue
     db_id <- df.discovered[[i, attr]]
 
-    if (!is.null(db_id) && length(db_id) > 0 && !is.na(db_id)) {
+    if (!is.empty(db_id)) {
       Q$push(tuple(attr, db_id, "root"))
     }
   }
@@ -127,7 +127,7 @@ resolve <- function(df.discovered) {
       new.val <- df.result[[1, attr]]
       old.val <- df.discovered[[i, attr]]
 
-      if (length(new.val) > 0 && !is.na(new.val)) {
+      if (!is.empty(new.val)) {
         df.discovered[[i, attr]] <- c(old.val, new.val)
       }
     }
@@ -201,7 +201,7 @@ find_by_secondary_id <- function(db_tag, db_id) {
     WHERE db_tag = '%s' AND secondary_id = '%s'"
   df.second <- db.query(sprintf(SQL2, db_tag, db_id))
 
-  if (length(df.second) > 0 && !is.na(df.second$primary_id[[1]])) {
+  if (length(df.second) > 0 && !is.empty(df.second$primary_id[[1]])) {
     db_id1 <- df.second$primary_id[[1]]
     if (!resolve.options$suppress)
       print(sprintf("Resolved secondary %s id: %s > %s", db_tag, db_id, db_id1))

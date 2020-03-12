@@ -102,7 +102,7 @@ PubchemHandler <- setRefClass(Class = "PubchemHandler",
         val <- prop$value
 
         if (label == 'InChI')
-            df.pubchem$inchi <- val$sval
+            df.pubchem$inchi <- lstrip(val$sval, "InChI=")
         else if (label == 'InChIKey')
             df.pubchem$inchikey <- val$sval
         else if (label == 'SMILES')
@@ -111,10 +111,10 @@ PubchemHandler <- setRefClass(Class = "PubchemHandler",
             df.pubchem$names[[1]] <- c(df.pubchem$names[[1]], val$sval)
         else if (label == 'Molecular Formula')
             df.pubchem$formula <- val$sval
-        else if (label == 'Mass')
-            df.pubchem$mass <- val$fval
+        # else if (label == 'Mass')
+        #     df.pubchem$mass <- val$fval
         else if (label == 'Molecular Weight')
-            df.pubchem$weight <- val$fval
+            df.pubchem$mass <- val$fval
         else if (label == 'Weight' && prop$urn$name == 'MonoIsotopic')
             df.pubchem$monoisotopic_mass <- val$fval
         else if (label == 'Log P')
@@ -135,13 +135,14 @@ PubchemHandler <- setRefClass(Class = "PubchemHandler",
         # todo: rest, e.g. chemspider?
 
         if (startsWith(xdb_id, 'CHEBI:'))
-          df.pubchem$chebi_id <- xdb_id
+          df.pubchem$chebi_id <- lstrip(xdb_id, "CHEBI:")
         else if (startsWith(xdb_id, 'HMDB'))
           df.pubchem$hmdb_id <- xdb_id
         else if (substr(xdb_id, 1, 1) == 'C' && str_detect(xdb_id, '^C\\d{4,9}$'))
           df.pubchem$kegg_id <- xdb_id
       }
-      print(df.pubchem)
+      #print(df.pubchem)
+
       return(df.pubchem)
     }
 

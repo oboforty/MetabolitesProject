@@ -1,6 +1,6 @@
 from pyproto.ctx import EntityBase
 
-from sqlalchemy import Column, String, Float, TEXT, ARRAY
+from sqlalchemy import Column, String, Float, TEXT, ARRAY, ForeignKey
 from eme.data_access import JSON_GEN
 
 
@@ -28,10 +28,10 @@ class HMDBData(EntityBase):
 
     # RefIds
     chemspider_id = Column(String(32))
-    kegg_id = Column(String(32))
+    kegg_id = Column(String(32), ForeignKey('kegg_data.kegg_id'))
     metlin_id = Column(String(32))
-    pubchem_id = Column(String(32))
-    chebi_id = Column(String(20))
+    pubchem_id = Column(String(32), ForeignKey('pubchem_data.pubchem_id'))
+    chebi_id = Column(String(20), ForeignKey('chebi_data.chebi_id'))
 
     # cas_id = Column(String(20))
     # drugbank_id = Column(String(32))

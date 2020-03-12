@@ -1,6 +1,6 @@
 from pyproto.ctx import EntityBase
 
-from sqlalchemy import Column, String, Float, TEXT, ARRAY, Integer
+from sqlalchemy import Column, String, Float, TEXT, ARRAY, Integer, ForeignKey
 from eme.data_access import JSON_GEN
 
 
@@ -23,10 +23,10 @@ class LipidMapsData(EntityBase):
     inchikey = Column(String(27))
     formula = Column(String(256))
 
-    kegg_id = Column(String(20))
-    hmdb_id = Column(String(20))
-    chebi_id = Column(String(20))
-    pubchem_id = Column(String(20))
+    kegg_id = Column(String(20), ForeignKey('kegg_data.kegg_id'))
+    hmdb_id = Column(String(20), ForeignKey('hmdb_data.hmdb_id'))
+    chebi_id = Column(String(20), ForeignKey('chebi_data.chebi_id'))
+    pubchem_id = Column(String(20), ForeignKey('pubchem_data.pubchem_id'))
     lipidbank_id = Column(String(20))
 
 

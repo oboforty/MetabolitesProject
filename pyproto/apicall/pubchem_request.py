@@ -55,10 +55,10 @@ def parse_pubchem(db_id, c0,c1):
             dataKEGG['names'].append(prop['value']['sval'])
         elif label == 'Molecular Formula':
             dataKEGG['formula'].append(prop['value']['sval'])
-        elif label == 'Mass':
-            dataKEGG['mass'].append(prop['value']['fval'])
+        # elif label == 'Mass':
+        #     dataKEGG['mass'].append(prop['value']['fval'])
         elif label == 'Molecular Weight':
-            dataKEGG['weight'].append(prop['value']['fval'])
+            dataKEGG['mass'].append(prop['value']['fval'])
         elif label == 'Weight' and prop['urn']['name'] == 'MonoIsotopic':
             dataKEGG['monoisotopic'].append(prop['value']['fval'])
         elif label == 'Log P':
@@ -72,7 +72,7 @@ def parse_pubchem(db_id, c0,c1):
 
 
 if __name__ == "__main__":
-    db_id = '442306'
+    db_id = '66868'
     r = requests.get(url='https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/{}/json'.format(db_id))
     r2 = requests.get(url='https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/{}/xrefs/SourceName,RegistryID/JSON'.format(db_id))
 

@@ -41,7 +41,7 @@ do_coverage_test <- function (db_tag, records) {
     for (attr in names(resolved)) {
       v <- df.res[[attr]][[1]]
 
-      if (length(v) != 0 && !is.na(v)) {
+      if (!is.empty(v)) {
         if (length(v) == 1) {
           resolved[[attr]] <- resolved[[attr]] + 1
         } else {

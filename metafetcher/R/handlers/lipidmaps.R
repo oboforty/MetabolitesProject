@@ -37,32 +37,32 @@ LipidmapsHandler <- setRefClass(Class = "LipidmapsHandler",
 
     query_reverse = function(df.res) {
       SQL <- "SELECT %s FROM lipidmaps_data WHERE"
-
-      hmdb_id <- df.res$hmdb_id[[1]]
-      pubchem_id <- df.res$pubchem_id[[1]]
-      kegg_id <- df.res$kegg_id[[1]]
-      lipidmaps_id <- df.res$lipidmaps_id[[1]]
-
-      # construct complex reverse query
-      if (!is.na(hmdb_id))
-        SQL <- paste(SQL, sprintf(" hmdb_id = '%s'", hmdb_id))
-      if (!is.na(pubchem_id))
-        SQL <- paste(SQL, sprintf(" pubchem_id = '{}'", pubchem_id))
-      if (!is.na(kegg_id))
-        SQL <- paste(SQL, sprintf(" kegg_id = '{}'", kegg_id))
-      if (!is.na(lipidmaps_id))
-        SQL <- paste(SQL, sprintf(" lipidmaps_id = '{}'", lipidmaps_id))
-
-      df.chebi <- db.query(sprintf(SQL, .self$sql_select))
-
-      if(length(df.chebi) == 0) {
-        return(NULL)
-      }
-
-      df.chebi$names <- list(pg_str2vector(df.chebi$names[[1]]))
-      df.chebi$source <- c("chebi")
-
-      return(df.chebi)
+      #
+      # hmdb_id <- df.res$hmdb_id[[1]]
+      # pubchem_id <- df.res$pubchem_id[[1]]
+      # kegg_id <- df.res$kegg_id[[1]]
+      # lipidmaps_id <- df.res$lipidmaps_id[[1]]
+      #
+      # # construct complex reverse query
+      # if (!is.na(hmdb_id))
+      #   SQL <- paste(SQL, sprintf(" hmdb_id = '%s'", hmdb_id))
+      # if (!is.na(pubchem_id))
+      #   SQL <- paste(SQL, sprintf(" pubchem_id = '{}'", pubchem_id))
+      # if (!is.na(kegg_id))
+      #   SQL <- paste(SQL, sprintf(" kegg_id = '{}'", kegg_id))
+      # if (!is.na(lipidmaps_id))
+      #   SQL <- paste(SQL, sprintf(" lipidmaps_id = '{}'", lipidmaps_id))
+      #
+      # df.chebi <- db.query(sprintf(SQL, .self$sql_select))
+      #
+      # if(length(df.chebi) == 0) {
+      #   return(NULL)
+      # }
+      #
+      # df.chebi$names <- list(pg_str2vector(df.chebi$names[[1]]))
+      # df.chebi$source <- c("chebi")
+      #
+      # return(df.chebi)
     }
   )
 )

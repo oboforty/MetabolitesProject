@@ -8,8 +8,10 @@ null2na <- function(v) {
 }
 
 is.empty <- function(v) {
-  return(is.null(v) || is.na(v) || v == "" || v == "\n")
+  # + is.null(v)
+  return(length(v) == 0 || is.na(v) || v == "" || v == "\n")
 }
+
 
 lstrip <- function(sr, sub) {
   return(substring(sr, nchar(sub)+1, nchar(sr)))
@@ -62,7 +64,7 @@ transform_df <- function (df){
   colnames(df2) <- attrs
 
   for (attr in attrs) {
-    if(is.na(df[[attr]][[1]])) {
+    if (is.na(df[[1, attr]])) {
       df2[[attr]] <- list(vector(length=0))
     } else {
       df2[[attr]] <- list(df[[attr]])

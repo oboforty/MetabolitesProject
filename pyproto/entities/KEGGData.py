@@ -1,6 +1,6 @@
 from pyproto.ctx import EntityBase
 
-from sqlalchemy import Column, String, Float, TEXT, ARRAY, Integer
+from sqlalchemy import Column, String, Float, TEXT, ARRAY, Integer, ForeignKey
 from eme.data_access import JSON_GEN
 
 
@@ -21,9 +21,9 @@ class KeggData(EntityBase):
 
     # RefIds - from database_accession.tsv
     #cas_id = Column(String(20))
-    chebi_id = Column(String(20))
-    lipidmaps_id = Column(String(20))
-    pubchem_id = Column(String(20))
+    chebi_id = Column(String(20), ForeignKey('chebi_data.chebi_id'))
+    lipidmaps_id = Column(String(20), ForeignKey('lipidmaps_data.lipidmaps_id'))
+    pubchem_id = Column(String(20), ForeignKey('pubchem_data.pubchem_id'))
 
     ref_etc = Column(JSON_GEN())
 
