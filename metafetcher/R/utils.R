@@ -59,17 +59,30 @@ create_empty_record <- function () {
 }
 
 transform_df <- function (df){
+  L <- nrow(df)
   attrs <- names(df)
-  df2 <- data.frame(matrix(ncol = length(attrs), nrow = 1))
+  df2 <- data.frame(matrix(ncol = length(attrs), nrow = L))
   colnames(df2) <- attrs
 
   for (attr in attrs) {
-    if (is.na(df[[1, attr]])) {
-      df2[[attr]] <- list(vector(length=0))
-    } else {
-      df2[[attr]] <- list(df[[attr]])
-    }
+    df2[[attr]] <- list(vector(length=0))
   }
+
+  idx <- !is.na(df)
+  df2[idx] <- df[idx]
+
+
+  #df2[length(df2)>0 & is.na(df2)] <- vector(length=0)
+  # list(vector(length=0))
+  #   if (is.na(df[[1, attr]])) {
+  #     df2[[attr]] <-
+  #   } else {
+  #   }
+  # }
+  #
+  # for (i in 1:L) {
+  #   # todo: itt: nemnyo
+  # }
 
   return(df2)
 }

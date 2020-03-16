@@ -44,16 +44,22 @@ ChebiHandler <- setRefClass(Class = "ChebiHandler",
 
       # construct complex reverse query
       SQL <- "SELECT chebi_id FROM chebi_data WHERE"
+      clauses <- character()
+
       # todo: itt: construct proper is empty!
       if (!is.empty(hmdb_id))
-        SQL <- paste(SQL, sprintf(" hmdb_id = '%s'", hmdb_id))
+        clauses <- c(clauses, sprintf("hmdb_id = '%s'", hmdb_id))
       if (!is.empty(pubchem_id))
-        SQL <- paste(SQL, sprintf(" pubchem_id = '%s'", pubchem_id))
+        clauses <- c(clauses, sprintf("pubchem_id = '%s'", pubchem_id))
       if (!is.empty(kegg_id))
-        SQL <- paste(SQL, sprintf(" kegg_id = '%s'", kegg_id))
+        clauses <- c(clauses, sprintf("kegg_id = '%s'", kegg_id))
       if (!is.empty(lipidmaps_id))
-        SQL <- paste(SQL, sprintf(" lipidmaps_id = '%s'", lipidmaps_id))
+        clauses <- c(clauses, sprintf("lipidmaps_id = '%s'", lipidmaps_id))
 
+      if (length(clauses) == 0)
+        return(NULL)
+
+      SQL <- paste(SQL, paste(clauses, collapse = " OR "))
       df.chebi <- db.query(SQL)
 
       if(length(df.chebi) == 0) {

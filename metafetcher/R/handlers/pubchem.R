@@ -76,9 +76,33 @@ PubchemHandler <- setRefClass(Class = "PubchemHandler",
     },
 
     query_reverse = function(df.res) {
-      # todo: itt
+      chebi_id <- df.res$chebi_id[[1]]
+      kegg_id <- df.res$kegg_id[[1]]
+      hmdb_id <- df.res$hmdb_id[[1]]
 
-      return(NULL)
+      # construct complex reverse query
+      SQL <- "SELECT pubchem_id FROM pubchem_data WHERE"
+      clauses <- character()
+
+      # todo: itt: construct proper is empty!
+      if (!is.empty(chebi_id))
+        clauses <- c(clauses, sprintf("chebi_id = '%s'", chebi_id))
+      if (!is.empty(hmdb_id))
+        clauses <- c(clauses, sprintf("hmdb_id = '%s'", hmdb_id))
+      if (!is.empty(kegg_id))
+        clauses <- c(clauses, sprintf("kegg_id = '%s'", kegg_id))
+
+      if (length(clauses) == 0)
+        return(NULL)
+
+      SQL <- paste(SQL, paste(clauses, collapse = " OR "))
+      df.lipidmaps <- db.query(SQL)
+
+      if(length(df.lipidmaps) == 0) {
+        return(NULL)
+      }
+
+      return(df.lipidmaps$chebi_id)
     },
 
     call_api = function(db_id) {

@@ -35,8 +35,8 @@ HmdbHandler <- setRefClass(Class = "HmdbHandler",
       # convert pg array strings to R vectors:
       df.hmdb$names <- list(pg_str2vector(df.hmdb$names[[1]]))
       df.hmdb$source <- c("hmdb")
-      df.hmdb$lipidmaps_id <- c(NA)
-      df.hmdb$cas_id = c(NA)
+      # df.hmdb$lipidmaps_id <- c(NA)
+      # df.hmdb$cas_id = c(NA)
 
       return (df.hmdb)
     },
@@ -45,20 +45,23 @@ HmdbHandler <- setRefClass(Class = "HmdbHandler",
       chebi_id <- df.res$chebi_id[[1]]
       pubchem_id <- df.res$pubchem_id[[1]]
       kegg_id <- df.res$kegg_id[[1]]
-      lipidmaps_id <- df.res$lipidmaps_id[[1]]
 
       # construct complex reverse query
       SQL <- "SELECT chebi_id FROM chebi_data WHERE"
+      clauses <- character()
+
       # todo: itt: construct proper is empty!
       if (!is.empty(chebi_id))
-        SQL <- paste(SQL, sprintf(" chebi_id = '%s'", chebi_id))
+        clauses <- c(clauses, sprintf("chebi_id = '%s'", chebi_id))
       if (!is.empty(pubchem_id))
-        SQL <- paste(SQL, sprintf(" pubchem_id = '%s'", pubchem_id))
+        clauses <- c(clauses, sprintf("pubchem_id = '%s'", pubchem_id))
       if (!is.empty(kegg_id))
-        SQL <- paste(SQL, sprintf(" kegg_id = '%s'", kegg_id))
-      if (!is.empty(lipidmaps_id))
-        SQL <- paste(SQL, sprintf(" lipidmaps_id = '%s'", lipidmaps_id))
+        clauses <- c(clauses, sprintf("kegg_id = '%s'", kegg_id))
 
+      if (length(clauses) == 0)
+        return(NULL)
+
+      SQL <- paste(SQL, paste(clauses, collapse = " OR "))
       df.hmdb <- db.query(SQL)
 
       if(length(df.hmdb) == 0) {

@@ -26,7 +26,7 @@ LipidmapsHandler <- setRefClass(Class = "LipidmapsHandler",
         return(NULL)
 
       # convert to common interface:
-      df.lipidmaps$names <- list(pg_str2vector(df.hmdb$names[[1]]))
+      df.lipidmaps$names <- list(pg_str2vector(df.lipidmaps$names[[1]]))
       df.lipidmaps$source = c("lipidmaps")
       df.lipidmaps$metlin_id = c(NA)
       df.lipidmaps$cas_id = c(NA)
@@ -36,33 +36,36 @@ LipidmapsHandler <- setRefClass(Class = "LipidmapsHandler",
     },
 
     query_reverse = function(df.res) {
-      SQL <- "SELECT %s FROM lipidmaps_data WHERE"
-      #
-      # hmdb_id <- df.res$hmdb_id[[1]]
-      # pubchem_id <- df.res$pubchem_id[[1]]
-      # kegg_id <- df.res$kegg_id[[1]]
-      # lipidmaps_id <- df.res$lipidmaps_id[[1]]
-      #
-      # # construct complex reverse query
-      # if (!is.na(hmdb_id))
-      #   SQL <- paste(SQL, sprintf(" hmdb_id = '%s'", hmdb_id))
-      # if (!is.na(pubchem_id))
-      #   SQL <- paste(SQL, sprintf(" pubchem_id = '{}'", pubchem_id))
-      # if (!is.na(kegg_id))
-      #   SQL <- paste(SQL, sprintf(" kegg_id = '{}'", kegg_id))
-      # if (!is.na(lipidmaps_id))
-      #   SQL <- paste(SQL, sprintf(" lipidmaps_id = '{}'", lipidmaps_id))
-      #
-      # df.chebi <- db.query(sprintf(SQL, .self$sql_select))
-      #
-      # if(length(df.chebi) == 0) {
-      #   return(NULL)
-      # }
-      #
-      # df.chebi$names <- list(pg_str2vector(df.chebi$names[[1]]))
-      # df.chebi$source <- c("chebi")
-      #
-      # return(df.chebi)
+      pubchem_id <- df.res$pubchem_id[[1]]
+      chebi_id <- df.res$chebi_id[[1]]
+      kegg_id <- df.res$kegg_id[[1]]
+      hmdb_id <- df.res$hmdb_id[[1]]
+
+      # construct complex reverse query
+      SQL <- "SELECT lipidmaps_id FROM lipidmaps_data WHERE"
+      clauses <- character()
+
+      # todo: itt: construct proper is empty!
+      if (!is.empty(pubchem_id))
+        clauses <- c(clauses, sprintf("pubchem_id = '%s'", pubchem_id))
+      if (!is.empty(chebi_id))
+        clauses <- c(clauses, sprintf("chebi_id = '%s'", chebi_id))
+      if (!is.empty(hmdb_id))
+        clauses <- c(clauses, sprintf("hmdb_id = '%s'", hmdb_id))
+      if (!is.empty(kegg_id))
+        clauses <- c(clauses, sprintf("kegg_id = '%s'", kegg_id))
+
+      if (length(clauses) == 0)
+        return(NULL)
+
+      SQL <- paste(SQL, paste(clauses, collapse = " OR "))
+      df.lipidmaps <- db.query(SQL)
+
+      if(length(df.lipidmaps) == 0) {
+        return(NULL)
+      }
+
+      return(df.lipidmaps$chebi_id)
     }
   )
 )

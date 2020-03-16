@@ -81,9 +81,33 @@ KeggHandler <- setRefClass(Class = "KeggHandler",
     },
 
     query_reverse = function(df.res) {
-      # todo: itt
+      chebi_id <- df.res$chebi_id[[1]]
+      pubchem_id <- df.res$pubchem_id[[1]]
+      lipidmaps_id <- df.res$lipidmaps_id[[1]]
 
-      return(NULL)
+      # construct complex reverse query
+      SQL <- "SELECT kegg_id FROM kegg_data WHERE"
+      clauses <- character()
+
+      # todo: itt: construct proper is empty!
+      if (!is.empty(chebi_id))
+        clauses <- c(clauses, sprintf("chebi_id = '%s'", chebi_id))
+      if (!is.empty(pubchem_id))
+        clauses <- c(clauses, sprintf("pubchem_id = '%s'", pubchem_id))
+      if (!is.empty(lipidmaps_id))
+        clauses <- c(clauses, sprintf("lipidmaps_id = '%s'", lipidmaps_id))
+
+      if (length(clauses) == 0)
+        return(NULL)
+
+      SQL <- paste(SQL, paste(clauses, collapse = " OR "))
+      df.kegg <- db.query(SQL)
+
+      if(length(df.kegg) == 0) {
+        return(NULL)
+      }
+
+      return(df.kegg$chebi_id)
     },
 
     call_api = function(db_id) {

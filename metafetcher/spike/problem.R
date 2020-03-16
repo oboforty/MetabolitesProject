@@ -1,9 +1,9 @@
 
+source('R/utils.R')
 
-drv <- dbDriver("PostgreSQL")
-con <<- dbConnect(drv, dbname = "metafetcher", host = "localhost", port = 5432, user = "postgres", password = "postgres")
+df.res <- read.csv("discovery.csv", stringsAsFactors=FALSE)
+
+df.new <- transform_df(df.res)
 
 
-
-a <- dbGetQuery(con, "SELECT chebi_id from chebi_data LIMIT 2")
-
+df.new[[2, 'hmdb_id']] <- c(df.new[[2, 'hmdb_id']], "asd")
