@@ -116,11 +116,12 @@ KeggHandler <- setRefClass(Class = "KeggHandler",
       df.kegg <- create_kegg_record()
 
       url <- 'http://rest.kegg.jp/get/cpd:%s'
-      r <- GET(sprintf(url,db_id))
+      v <- http_call_api(url, db_id)
 
-      if (r$status != 200)
-        return (NULL)
-      lines <- strsplit(content(r), "\n", fixed = TRUE, useBytes=TRUE)
+      if (is.null(v))
+        return(NULL)
+
+      lines <- strsplit(v, "\n", fixed = TRUE, useBytes=TRUE)
 
       state <- NA
 

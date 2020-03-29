@@ -1,3 +1,4 @@
+library(httr)
 library(stringr)
 
 null2na <- function(v) {
@@ -18,8 +19,7 @@ lstrip <- function(sr, sub) {
 }
 
 join <- function(v) {
-  st <- paste(c('{"',paste(v, collapse = '","'),'"}'), collapse="")
-
+  st <- paste0('{"', paste(v, collapse = '","'), '"}')
   return(st)
 }
 
@@ -43,22 +43,19 @@ pg_str2vector <- function (x) {
   return(m)
 }
 
-
 mod<-function(x,m) {
   t1<-floor(x/m)
   return(x-t1*m)
 }
 
-
-
-create_empty_record <- function () {
-  df <- data.frame(matrix(ncol = length(attr.meta), nrow = 1))
+create_empty_record <- function (n=1) {
+  df <- data.frame(matrix(ncol = length(attr.meta), nrow = n))
   colnames(df) <- attr.meta
 
   return(df)
 }
 
-transform_df <- function (df){
+transform_df <- function (df) {
   L <- nrow(df)
   attrs <- names(df)
   df2 <- data.frame(matrix(ncol = length(attrs), nrow = L))
@@ -71,18 +68,31 @@ transform_df <- function (df){
   idx <- !is.na(df)
   df2[idx] <- df[idx]
 
-
-  #df2[length(df2)>0 & is.na(df2)] <- vector(length=0)
-  # list(vector(length=0))
-  #   if (is.na(df[[1, attr]])) {
-  #     df2[[attr]] <-
-  #   } else {
-  #   }
-  # }
-  #
-  # for (i in 1:L) {
-  #   # todo: itt: nemnyo
-  # }
-
   return(df2)
+}
+
+revert_df <- function (df) {
+  for (attr in names(df)) {
+    df[[attr]] <- unlist(lapply(df[[attr]], join))
+  }
+
+  return(df)
+}
+
+http_call_api <- function (url, db_id) {
+  out <- tryCatch({
+    r <- GET(sprintf(url,db_id), timeout(resolve.options$http_timeout))
+
+    if (r$status != 200)
+      return (NULL)
+    return(content(r))
+  },
+  error=function(cond) {
+    print(sprintf("HTTP timeout: %s %s", url, db_id))
+    return(NULL)
+  })
+
+  if (is.null(out))
+    return(NULL)
+  return(out)
 }

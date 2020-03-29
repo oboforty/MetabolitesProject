@@ -1,4 +1,3 @@
-library(httr)
 library(stringi)
 
 source("R/db_ctx.R")
@@ -111,13 +110,12 @@ PubchemHandler <- setRefClass(Class = "PubchemHandler",
 
       # 1. Parse properties
       url <- 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/%s/json'
-      r <- GET(sprintf(url,db_id))
+      v <- http_call_api(url, db_id)
 
-      if (r$status != 200)
-        return (NULL)
-      v <- content(r)
+      if (is.null(v))
+        return(NULL)
+
       df.pubchem$pubchem_id <- v$PC_Compounds[[1]]$id$id$cid
-
       props <- v$PC_Compounds[[1]]$props
 
       # todo: multiple cardinality?
@@ -147,11 +145,10 @@ PubchemHandler <- setRefClass(Class = "PubchemHandler",
 
       # 2. parse external references
       url <- 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/%s/xrefs/SourceName,RegistryID/JSON'
-      r <- GET(sprintf(url,db_id))
-      if (r$status != 200)
-        return (NULL)
+      v <- http_call_api(url, db_id)
 
-      v <- content(r)
+      if (is.null(v))
+        return(NULL)
 
       ids <- v$InformationList$Information[[1]]$RegistryID
 

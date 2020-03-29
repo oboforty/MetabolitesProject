@@ -31,8 +31,10 @@ attr.meta <- c(
 
 resolve.options <- list(
   suppress = FALSE,
-  open_connection = TRUE
+  open_connection = TRUE,
+  http_timeout = 3
 )
+
 
 resolve_single_id <- function(start_db_tag, start_db_id) {
   'Discover from single database ID'
@@ -154,6 +156,8 @@ resolve <- function(df.discovered) {
         }
       }
 
+      # todo: if we have all db ids, skip reverse query
+      # todo: only run the reverse query once??!? maybe not
       if (Q$size() == 0) {
         # once we ran out of ids to explore, try reverse queries
         for (db_tag_missing in attr.refs) {

@@ -5,7 +5,7 @@ library(stringi)
 db_id = '71362326'
 
 url <- 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/%s/json'
-r <- GET(sprintf(url,db_id))
+r <- GET(sprintf(url,db_id), timeout(resolve.options$http_timeout))
 if (r$status != 200)
   return (NULL)
 v <- content(r)
@@ -59,7 +59,7 @@ for (prop in props) {
 
 # 2. parse external references
 url <- 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/%s/xrefs/SourceName,RegistryID/JSON'
-r <- GET(sprintf(url,db_id))
+r <- GET(sprintf(url,db_id), timeout(resolve.options$http_timeout))
 if (r$status != 200)
   return (NULL)
 v <- content(r)

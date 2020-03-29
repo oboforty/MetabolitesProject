@@ -12,7 +12,7 @@ attr_to_check <- names(db_handlers)
 
 do_consistency_test <- function (db, n) {
   db_tag <- paste(c(db,'_id'),collapse="")
-  records <- db.query(sprintf("SELECT %s FROM %s_data LIMIT %s", db_tag, db, n))
+  records <- db.query(sprintf("SELECT %s FROM %s_data LIMIT %s OFFSET 6000", db_tag, db, n))
 
   resolve.options$suppress <<- TRUE
   resolve.options$open_connection <<- FALSE
@@ -46,7 +46,6 @@ do_consistency_test <- function (db, n) {
 
     if (mod(i, 10) == 0)
       print(sprintf("#%s...", i))
-
   }
 
   db.disconnect()
@@ -58,6 +57,6 @@ do_consistency_test <- function (db, n) {
   print(sprintf("Missing attributes: %s (%s %%)", score_missing, round(score_missing/score_total*100)))
 }
 
-do_consistency_test("chebi", 80)
+do_consistency_test("chebi", 20)
 
 

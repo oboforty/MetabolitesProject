@@ -47,7 +47,7 @@ HmdbHandler <- setRefClass(Class = "HmdbHandler",
       kegg_id <- df.res$kegg_id[[1]]
 
       # construct complex reverse query
-      SQL <- "SELECT chebi_id FROM chebi_data WHERE"
+      SQL <- "SELECT hmdb_id FROM hmdb_data WHERE"
       clauses <- character()
 
       # todo: itt: construct proper is empty!

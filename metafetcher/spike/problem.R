@@ -1,9 +1,8 @@
 
-source('R/utils.R')
+file_i <- '../tmp/tests/resolve_i.RDS'
 
-df.res <- read.csv("discovery.csv", stringsAsFactors=FALSE)
+last_i <- readRDS(file_i)
 
-df.new <- transform_df(df.res)
+last_i <- 5000
 
-
-df.new[[2, 'hmdb_id']] <- c(df.new[[2, 'hmdb_id']], "asd")
+saveRDS(last_i, file_i)
