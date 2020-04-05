@@ -9,7 +9,7 @@ build_csv <- function (db) {
 
   if (!file.exists(file_i)) {
     # reset csv file and iteration tracker
-    df.res <- create_empty_record(0)
+    df.res <- create_empty_record(0, attr.meta)
     write.table(df.res, "../tmp/tests/resolve_dump.csv", row.names = FALSE, col.names=TRUE, sep="|", quote=FALSE)
 
     last_i <- 0
@@ -24,7 +24,7 @@ build_csv <- function (db) {
   records <- db.query(sprintf("SELECT %s FROM %s_data LIMIT 10000 OFFSET %s", db_tag, db, last_i))
   db_ids <- records[[db_tag]]
 
-  df.res <- create_empty_record(10)
+  df.res <- create_empty_record(10, attr.meta)
 
   resolve.options$suppress <<- TRUE
   resolve.options$open_connection <<- FALSE

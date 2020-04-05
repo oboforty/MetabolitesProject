@@ -1,0 +1,102 @@
+library(iterators)
+source("R/db_ctx.R")
+source("R/utils.R")
+source("R/migrate.R")
+
+
+bulk_insert_lipidmaps <- function(filepath) {
+  mapping.lipidmaps <- list(
+      'NAME' = 'names',
+      'SYSTEMATIC_NAME' = 'names',
+      'SYNONYMS' = 'names',
+      'ABBREVIATION' = 'names',
+
+      'LM_ID' = 'lipidmaps_id',
+      'CATEGORY' = 'category',
+      'MAIN_CLASS' = 'main_class',
+      'SUB_CLASS' = 'sub_class',
+      'CLASS_LEVEL4' = 'lvl4_class',
+      'EXACT_MASS' = 'mass',
+      'SMILES' = 'smiles',
+      'INCHI' = 'inchi',
+      'INCHI_KEY' = 'inchikey',
+      'FORMULA' = 'formula',
+      'KEGG_ID' = 'kegg_id',
+      'HMDB_ID' = 'hmdb_id',
+      'CHEBI_ID' = 'chebi_id',
+      'PUBCHEM_CID' = 'pubchem_id',
+      'LIPIDBANK_ID' = 'lipidbank_id'
+  )
+
+  # data frame buffer for the DB
+  attr.lm <- unique(unlist(mapping.lipidmaps))
+  mcard.lm <- c("names")
+  df.lipidmaps <- create_empty_record(1, attr.lm, mcard.lm)
+
+  # connect to DB
+  db.connect()
+  remigrate_lipidmaps(db_conn)
+  db.transaction()
+
+  # read file line by line
+  f_con <- file(filepath, "r")
+  it <- ireadLines(f_con)
+
+  j <- 1
+  state <- "something"
+  start_time <- Sys.time()
+  print("Inserting LipidMaps to DB...")
+
+  repeat {
+    line <- nextElem(it)
+
+    if (startsWith(line, "$$$$")) {
+      # metabolite parsing has ended, save to DB
+      # transform vectors to postgres ARRAY input strings
+      df.lipidmaps <- convert_df_to_db_array(df.lipidmaps, c("names"))
+      db.write_df("lipidmaps_data", df.lipidmaps)
+
+      # iterate on parsed records counter
+      j <- j + 1
+      df.lipidmaps <- create_empty_record(1, attr.lm, mcard.lm)
+
+      if (mod(j, 500) == 0) {
+        # commit every once in a while
+        print(sprintf("#%s (%s s)", j, Sys.time() - start_time))
+
+        db.commit()
+        db.transaction()
+      }
+    } else if (is.empty(line)) {
+      next
+    } else if (startsWith(line, ">")) {
+      # new state
+      state <- substr(line, 4, nchar(line)-1)
+    } else {
+      attr <- mapping.lipidmaps[[state]]
+
+      if (!is.null(attr)) {
+        if (attr == 'names') {
+          df.lipidmaps[[1, attr]] <- c(df.lipidmaps[[1, attr]], line)
+          next
+        }
+
+        if (attr == 'inchi')
+          line <- lstrip(line, "InChI=")
+
+        df.lipidmaps[[1, attr]] <- line
+      }
+    }
+  }
+
+  # finish up
+
+  print("Closing DB & File")
+  close(f_con)
+  db.commit()
+  db.disconnect()
+
+  print(sprintf("Done! Took %d seconds", round(as.numeric(Sys.time() - start_time),2)))
+}
+
+bulk_insert_lipidmaps("../tmp/lipidmaps.sdf")

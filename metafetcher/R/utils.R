@@ -48,9 +48,16 @@ mod<-function(x,m) {
   return(x-t1*m)
 }
 
-create_empty_record <- function (n=1) {
-  df <- data.frame(matrix(ncol = length(attr.meta), nrow = n))
-  colnames(df) <- attr.meta
+create_empty_record <- function (n=1, cnames, cvectors=NULL) {
+  df <- data.frame(matrix(ncol = length(cnames), nrow = n))
+  colnames(df) <- cnames
+
+  if (!is.null(cvectors)) {
+    # convert custom attributes to support bigger cardinality
+    for (attr_vec in cvectors) {
+      df[[attr_vec]] <- list(vector(length=0))
+    }
+  }
 
   return(df)
 }
@@ -74,6 +81,21 @@ transform_df <- function (df) {
 revert_df <- function (df) {
   for (attr in names(df)) {
     df[[attr]] <- unlist(lapply(df[[attr]], join))
+  }
+
+  return(df)
+}
+
+convert_df_to_db_array <- function (df, cvectors) {
+  # Convert dataframe vector cells to postgres lists
+  for (attr in cvectors) {
+    v <- df[[1, attr]]
+
+    if (length(v) > 0) {
+      df[[attr]] <- c(join(unique(v)))
+    } else {
+      df[[attr]] <- c(NA)
+    }
   }
 
   return(df)

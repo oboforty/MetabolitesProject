@@ -41,7 +41,7 @@ resolve_single_id <- function(start_db_tag, start_db_id) {
   #start_db_tag <- paste(c(start_db_tag, '_id'), collapse="")
 
   # Create initial dataframe from user input:
-  df.res <- create_empty_record()
+  df.res <- create_empty_record(1, attr.meta)
   df.res[[1, start_db_tag]] <- start_db_id
 
   # call the resolve algorithm
