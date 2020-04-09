@@ -53,7 +53,7 @@ bulk_insert_lipidmaps <- function(filepath) {
     if (startsWith(line, "$$$$")) {
       # metabolite parsing has ended, save to DB
       # transform vectors to postgres ARRAY input strings
-      df.lipidmaps <- convert_df_to_db_array(df.lipidmaps, c("names"))
+      df.lipidmaps <- convert_df_to_db_array(df.lipidmaps, mcard.lm)
       db.write_df("lipidmaps_data", df.lipidmaps)
 
       # iterate on parsed records counter
@@ -77,6 +77,7 @@ bulk_insert_lipidmaps <- function(filepath) {
 
       if (!is.null(attr)) {
         if (attr == 'names') {
+          # multiple cardinality
           df.lipidmaps[[1, attr]] <- c(df.lipidmaps[[1, attr]], line)
           next
         }
