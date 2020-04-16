@@ -4,25 +4,25 @@ source("R/utils.R")
 source("R/migrate.R")
 
 
-bulk_insert_lipidmaps <- function(filepath) {
+bulk_insert_chebi <- function(filepath) {
   mapping.chebi <- list(
     'ChEBI ID' = 'chebi_id',
 
     'ChEBI Name' = 'names',
     'IUPAC Name' = 'names',
 
-    'Formulae' = 'formulas',
-    'InChI' = 'inchis',
-    'InChIKey' = 'inchikeys',
+    'Formulae' = 'formula',
+    'InChI' = 'inchi',
+    'InChIKey' = 'inchikey',
     'SMILES' = 'smiles',
 
     'Definition' = 'description',
-    'PubChem Database Links' = 'pubchem_ids',
-    'Pubchem Database Links' = 'pubchem_ids',
-    'KEGG COMPOUND Database Links' = 'kegg_ids',
-    'HMDB Database Links' = 'hmdb_ids',
-    'LIPID MAPS instance Database Links' = 'lipidmaps_ids',
-    'CAS Registry Numbers' = 'cas_ids',
+    'PubChem Database Links' = 'pubchem_id',
+    'Pubchem Database Links' = 'pubchem_id',
+    'KEGG COMPOUND Database Links' = 'kegg_id',
+    'HMDB Database Links' = 'hmdb_id',
+    'LIPID MAPS instance Database Links' = 'lipidmaps_id',
+    'CAS Registry Numbers' = 'cas_id',
 
     #'Star' = 'quality',
     'Charge' = 'charge',
@@ -33,11 +33,7 @@ bulk_insert_lipidmaps <- function(filepath) {
   # data frame buffer for the DB
   attr.chebi <- unique(unlist(mapping.chebi))
   # todo: cardinality: chebi_id_alt, ??maybe formulas??,
-  mcard.chebi <- c(
-    "names",
-    # "formulas", "inchis", "inchikeys", "smiles",
-    #"pubchem_ids", "pubchem_ids", "kegg_ids", "hmdb_ids", "lipidmaps_ids", "cas_ids"
-  )
+  mcard.chebi <- c("names")
   df.chebi <- create_empty_record(1, attr.chebi, mcard.chebi)
 
 
@@ -62,7 +58,7 @@ bulk_insert_lipidmaps <- function(filepath) {
       # metabolite parsing has ended, save to DB
       # transform vectors to postgres ARRAY input strings
       df.chebi <- convert_df_to_db_array(df.chebi, mcard.chebi)
-      db.write_df("lipidmaps_data", df.chebi)
+      db.write_df("chebi_data", df.chebi)
 
       # iterate on parsed records counter
       j <- j + 1
@@ -107,4 +103,4 @@ bulk_insert_lipidmaps <- function(filepath) {
   print(sprintf("Done! Took %d seconds", round(as.numeric(Sys.time() - start_time),2)))
 }
 
-bulk_insert_lipidmaps("../tmp/chebi.sdf")
+bulk_insert_chebi("../tmp/ChEBI_complete.sdf")

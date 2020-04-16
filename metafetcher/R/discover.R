@@ -35,6 +35,11 @@ resolve.options <- list(
   http_timeout = 3
 )
 
+resolve_by_names <- function (df.discovered) {
+  'Discover metabolites based on names'
+  
+}
+
 
 resolve_single_id <- function(start_db_tag, start_db_id) {
   'Discover from single database ID'
