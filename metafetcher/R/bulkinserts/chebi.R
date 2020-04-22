@@ -81,12 +81,19 @@ bulk_insert_chebi <- function(filepath) {
 
       if (!is.null(attr)) {
         if (attr == 'names') {
-          df.chebi[[1, attr]] <- c(df.chebi[[1, attr]], line)
+          df.chebi[[1, attr]] <- c(df.chebi[[1, attr]], escape_sql(line))
           next
         }
 
         if (attr == 'inchi')
           line <- lstrip(line, "InChI=")
+        else if (attr == 'chebi_id')
+          line <- lstrip(line, "CHEBI:")
+        else if (attr == 'pubchem_id')
+          if (startsWith(line, "SID:"))
+            next
+          else if(startsWith(line,"CID:"))
+            line <- lstrip(line, "CID: ")
 
         df.chebi[[1, attr]] <- line
       }
@@ -94,7 +101,6 @@ bulk_insert_chebi <- function(filepath) {
   }
 
   # finish up
-
   print("Closing DB & File")
   close(f_con)
   db.commit()

@@ -50,9 +50,7 @@ resolve_single_id <- function(start_db_tag, start_db_id) {
   df.res[[1, start_db_tag]] <- start_db_id
 
   # call the resolve algorithm
-  df.res <- resolve(df.res)
-
-  return(df.res)
+  return(resolve(df.res))
 }
 
 resolve <- function(df.discovered) {
@@ -69,12 +67,14 @@ resolve <- function(df.discovered) {
   # queue for the discover algorithm
   L <- nrow(df.discovered)
 
+  undiscovered <- set()
+  secondary.ids <- set()
+  ambigous <- list()
+
   for (i in 1:L) {
     # variables for algorithm: Queue, discovered,
     Q <- Queue()
     discovered <- set()
-    undiscovered <- set()
-    secondary.ids <- set()
 
     if (!resolve.options$suppress) {
       print("-------------------------------")
@@ -161,8 +161,6 @@ resolve <- function(df.discovered) {
         }
       }
 
-      # todo: if we have all db ids, skip reverse query
-      # todo: only run the reverse query once??!? maybe not
       if (Q$size() == 0) {
         # once we ran out of ids to explore, try reverse queries
         for (db_tag_missing in attr.refs) {
@@ -194,25 +192,46 @@ resolve <- function(df.discovered) {
 
   # post parse data
   for (i in 1:L) {
+    amb <- character(length = 0)
+
     for (attr in names(df.discovered)) {
       val <- df.discovered[[i, attr]]
 
       # filter out redundant vectors & replace logical(0) with NA
       if (length(val) == 0)
         df.discovered[[i, attr]] <- NA
-      else
-        df.discovered[[i, attr]] <- unique(val)
+      else {
+        unq <- unique(val)
+        df.discovered[[i, attr]] <- unq
+
+        if (length(unq) > 1) {
+          amb <- c(amb, attr)
+        }
+      }
     }
+
+    ambigous[[i]] <- amb
+
+    # end of loop
   }
 
+
+
   # Return complex output of everything
-  return(list(
+  resp <- list(
     df = df.discovered,
 
-    discovered = lapply(discovered, as.vector),
+    #discovered = lapply(discovered, as.vector),
     undiscovered = lapply(undiscovered, as.vector),
-    secondary = lapply(secondary.ids, as.vector)
-  ))
+    secondary = lapply(secondary.ids, as.vector),
+    ambigous = ambigous
+  )
+
+  if (resolve.options$suppress && length(resp$undiscovered) > 0) {
+    warning("You have undiscovered metabolite IDs! Check return$undiscovered for details.")
+  }
+
+  return(resp)
 }
 
 find_by_secondary_id <- function(db_tag, db_id) {

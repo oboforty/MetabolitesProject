@@ -127,7 +127,7 @@ bulk_insert_hmdb <- function(filepath) {
   db.commit()
   db.disconnect()
 
-  print(sprintf("Done! Took %d seconds", round(Sys.time() - start_time, 2)))
+  print(sprintf("Done! Took %s seconds", round(Sys.time() - start_time, 2)))
 }
 
 filepath <- "../tmp/hmdb_metabolites.xml"

@@ -13,7 +13,6 @@ is.empty <- function(v) {
   return(length(v) == 0 || is.na(v) || v == "" || v == "\n")
 }
 
-
 lstrip <- function(sr, sub) {
   return(substring(sr, nchar(sub)+1, nchar(sr)))
 }
@@ -21,6 +20,10 @@ lstrip <- function(sr, sub) {
 join <- function(v) {
   st <- paste0('{"', paste(v, collapse = '","'), '"}')
   return(st)
+}
+
+escape_sql <- function(st) {
+  return (gsub('"', '""', gsub("'","''",st)))
 }
 
 pg_vector2str <- function (m) {

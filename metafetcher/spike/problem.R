@@ -1,8 +1,10 @@
+source("R/db_ctx.R")
+source("R/utils.R")
 
-file_i <- '../tmp/tests/resolve_i.RDS'
+oof = '{"5-Oxoasdfsd \"\"2b\"\" aglycone"}'
 
-last_i <- readRDS(file_i)
+f =  db.query(sprintf('UPDATE "VARKOMAROM" SET var = \'%s\' WHERE pid = 1', postgresqlEscapeStrings(db_conn, oof)))
 
-last_i <- 5000
+print(f)
 
-saveRDS(last_i, file_i)
+db.disconnect()
