@@ -17,13 +17,10 @@ lstrip <- function(sr, sub) {
   return(substring(sr, nchar(sub)+1, nchar(sr)))
 }
 
-join <- function(v) {
-  st <- paste0('{"', paste(v, collapse = '","'), '"}')
-  return(st)
-}
+join_sql_arr <- function(v) {
+  v <- str_replace_all(str_replace_all(v, "'", ''), '"', '')
 
-escape_sql <- function(st) {
-  return (gsub('"', '""', gsub("'","''",st)))
+  return(paste0('{"', paste(v, collapse = '","'), '"}'))
 }
 
 pg_vector2str <- function (m) {
@@ -46,7 +43,22 @@ pg_str2vector <- function (x) {
   return(m)
 }
 
-mod<-function(x,m) {
+convert_df_to_db_array <- function (df, cvectors) {
+  # Convert dataframe vector cells to postgres lists
+  for (attr in cvectors) {
+    v <- df[[1, attr]]
+
+    if (length(v) > 0) {
+      df[[attr]] <- c(join_sql_arr(unique(v)))
+    } else {
+      df[[attr]] <- c(NA)
+    }
+  }
+
+  return(df)
+}
+
+mod <- function(x,m) {
   t1<-floor(x/m)
   return(x-t1*m)
 }
@@ -75,30 +87,20 @@ transform_df <- function (df) {
     df2[[attr]] <- list(vector(length=0))
   }
 
+  # replace empty string "" to NA in the first row
+  df[1][df[1] == ""] <- NA
+
+  # create a dataframe of lists (which contain vectors to store multiple alternative values)
   idx <- !is.na(df)
-  df2[idx] <- df[idx]
+  df2[idx] <- as.character(df[idx])
+
 
   return(df2)
 }
 
 revert_df <- function (df) {
   for (attr in names(df)) {
-    df[[attr]] <- unlist(lapply(df[[attr]], join))
-  }
-
-  return(df)
-}
-
-convert_df_to_db_array <- function (df, cvectors) {
-  # Convert dataframe vector cells to postgres lists
-  for (attr in cvectors) {
-    v <- df[[1, attr]]
-
-    if (length(v) > 0) {
-      df[[attr]] <- c(join(unique(v)))
-    } else {
-      df[[attr]] <- c(NA)
-    }
+    df[[attr]] <- unlist(lapply(df[[attr]], join_sql_arr))
   }
 
   return(df)
@@ -120,4 +122,31 @@ http_call_api <- function (url, db_id) {
   if (is.null(out))
     return(NULL)
   return(out)
+}
+
+id_to_url <- function (db_id, db_tag = NULL) {
+  if (is.null(db_tag)) {
+    if (substr(db_id, 1, 4) == 'HMDB')
+      db_tag <- 'hmdb_id'
+    else if (startsWith(db_id, 'CHEBI:'))
+      db_tag <- 'chebi_id'
+    else if (substr(db_id, 1, 1) == 'C')
+      db_tag <- 'kegg_id'
+  }
+
+  if (is.null(db_tag))
+    return("")
+
+  if (db_tag == 'hmdb_id')
+    url <- "https://hmdb.ca/metabolites/%s"
+  else if (db_tag == 'chebi_id')
+    url <- "https://www.ebi.ac.uk/chebi/searchId.do;?chebiId=%s"
+  else if (db_tag == 'kegg_id')
+    url <- "https://www.genome.jp/dbget-bin/www_bget?cpd:%s"
+  else if (db_tag == 'pubchem_id')
+    url <- "https://pubchem.ncbi.nlm.nih.gov/compound/%s"
+  else if (db_tag == 'lipidmaps_id')
+    url <- "https://www.lipidmaps.org/data/LMSDRecord.php?LMID=%s"
+
+  return(sprintf(url, db_id))
 }

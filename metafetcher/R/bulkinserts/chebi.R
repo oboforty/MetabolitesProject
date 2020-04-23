@@ -57,8 +57,7 @@ bulk_insert_chebi <- function(filepath) {
     if (startsWith(line, "$$$$")) {
       # metabolite parsing has ended, save to DB
       # transform vectors to postgres ARRAY input strings
-      df.chebi <- convert_df_to_db_array(df.chebi, mcard.chebi)
-      db.write_df("chebi_data", df.chebi)
+      db.write_df("chebi_data", convert_df_to_db_array(df.chebi, mcard.chebi))
 
       # iterate on parsed records counter
       j <- j + 1
@@ -81,7 +80,7 @@ bulk_insert_chebi <- function(filepath) {
 
       if (!is.null(attr)) {
         if (attr == 'names') {
-          df.chebi[[1, attr]] <- c(df.chebi[[1, attr]], escape_sql(line))
+          df.chebi[[1, attr]] <- c(df.chebi[[1, attr]], line)
           next
         }
 

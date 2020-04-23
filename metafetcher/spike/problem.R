@@ -1,10 +1,18 @@
-source("R/db_ctx.R")
-source("R/utils.R")
+library(stringi)
+library(stringr)
 
-oof = '{"5-Oxoasdfsd \"\"2b\"\" aglycone"}'
 
-f =  db.query(sprintf('UPDATE "VARKOMAROM" SET var = \'%s\' WHERE pid = 1', postgresqlEscapeStrings(db_conn, oof)))
+oof = c('5-Oxoasdfsd "2b" aglycone', 'asdage')
 
-print(f)
+join_sql_arr <- function(v) {
+  v <- str_replace_all(str_replace_all(v, "'", ''), '"', '')
 
-db.disconnect()
+  return(paste0('{"', paste(v, collapse = '","'), '"}'))
+}
+
+
+join_sql_arr(oof)
+
+
+grepl('"', oof, fixed = TRUE)
+apply()

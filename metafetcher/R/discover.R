@@ -70,6 +70,8 @@ resolve <- function(df.discovered) {
   undiscovered <- set()
   secondary.ids <- set()
   ambigous <- list()
+  attr.df <- intersect(names(df.discovered), attr.meta)
+  attr.todiscover <- intersect(attr.df, attr.refs)
 
   for (i in 1:L) {
     # variables for algorithm: Queue, discovered,
@@ -82,12 +84,12 @@ resolve <- function(df.discovered) {
     }
 
     # put initial db ids to queue
-    for (attr in attr.refs) {
+    for (attr in attr.todiscover) {
       # insert all reference IDs to the queue
       db_id <- df.discovered[[i, attr]]
 
       if (!is.empty(db_id)) {
-        Q$push(tuple(attr, db_id, "root"))
+        Q$push(tuple(attr, db_id, "root", "-"))
       }
     }
 
@@ -109,7 +111,8 @@ resolve <- function(df.discovered) {
       # Query metabolite record from local database or web api
       if (!resolve.options$suppress) {
         db_ref <- tpl[[3]]
-        print(sprintf("%s -> %s (%s)", db_ref, db_tag, db_id))
+        db_ref_id <- tpl[[4]]
+        print(sprintf("%s[%s] -> %s[%s]", db_ref, db_ref_id, db_tag, db_id))
       }
       df.result <- hand$query_metabolite(db_id)
 
@@ -119,7 +122,7 @@ resolve <- function(df.discovered) {
 
         if (!is.null(db_id_primary)) {
           # put the primary ID in the queue again to be resolved
-          Q$push(tuple(db_tag, db_id_primary, sprintf("secondary_%s", db_tag)))
+          Q$push(tuple(db_tag, db_id_primary, sprintf("secondary_%s", db_tag), db_id))
 
           # exclude secondary ids from output dataframe
           ids <- df.discovered[[i, db_tag]]
@@ -138,7 +141,7 @@ resolve <- function(df.discovered) {
       discovered <- c(discovered, tuple(db_tag, db_id))
 
       # merge result with previously discovered data
-      for (attr in attr.meta) {
+      for (attr in attr.df) {
         new.val <- df.result[[1, attr]]
         old.val <- df.discovered[[i, attr]]
 
@@ -148,7 +151,7 @@ resolve <- function(df.discovered) {
       }
 
       # parse reference IDs and add them to queue
-      for (new_db_tag in attr.refs) {
+      for (new_db_tag in attr.todiscover) {
         new_db_id <- df.result[[1, new_db_tag]]
 
         # check if such refId is present in the record
@@ -156,14 +159,14 @@ resolve <- function(df.discovered) {
           if (!set_contains_element(discovered, tuple(new_db_tag, new_db_id))) {
             # enqueue for exploration, but only if it hasn't occured before
             # Format: (db_tag, db_id, db_tag that referenced this id)
-            Q$push(tuple(new_db_tag, new_db_id, db_tag))
+            Q$push(tuple(new_db_tag, new_db_id, db_tag, db_id))
           }
         }
       }
 
       if (Q$size() == 0) {
         # once we ran out of ids to explore, try reverse queries
-        for (db_tag_missing in attr.refs) {
+        for (db_tag_missing in attr.todiscover) {
 
           if (length(df.discovered[[i, db_tag_missing]]) == 0) {
             # if (!resolve.options$suppress)
@@ -176,7 +179,7 @@ resolve <- function(df.discovered) {
             for (db_id_missing in db_ids) {
               # put these newly discovered ids to the queue
               if (!set_contains_element(discovered, tuple(db_tag_missing, db_id_missing))) {
-                Q$push(tuple(db_tag_missing, db_id_missing, "reversed"))
+                Q$push(tuple(db_tag_missing, db_id_missing, "reversed", "-"))
               }
             }
           }
