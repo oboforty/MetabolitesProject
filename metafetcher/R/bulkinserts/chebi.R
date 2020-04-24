@@ -107,6 +107,6 @@ bulk_insert_chebi <- function(filepath) {
   db.commit()
   db.disconnect()
 
-  print(sprintf("Done inserting %s records! DT: %s", round(as.numeric(j, Sys.time() - start_time),2)))
+  print(sprintf("Done inserting %s records! DT: %s", j, round(as.numeric(Sys.time() - start_time),2)))
 }
 
