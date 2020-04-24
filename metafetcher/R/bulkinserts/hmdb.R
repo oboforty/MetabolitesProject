@@ -101,7 +101,7 @@ bulk_insert_hmdb <- function(filepath) {
           db.write_df("hmdb_data", convert_df_to_db_array(.state$df, mcard.hmdb))
 
           if (mod(.state$i, 500) == 0) {
-            print(sprintf("#%s (DT: %s)", .state$i, Sys.time() - start_time))
+            print(sprintf("#%s (DT: %s)", .state$i, round(Sys.time() - start_time, 2)))
 
             # on buffer full commit & reset DB buffer
             db.commit()

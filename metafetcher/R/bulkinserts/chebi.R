@@ -67,7 +67,7 @@ bulk_insert_chebi <- function(filepath) {
 
       if (mod(j, 500) == 0) {
         # commit every once in a while
-        print(sprintf("#%s (DT: %s)", j, Sys.time() - start_time))
+        print(sprintf("#%s (DT: %s)", j, round(Sys.time() - start_time, 2)))
 
         db.commit()
         db.transaction()

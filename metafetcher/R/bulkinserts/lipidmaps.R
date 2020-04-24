@@ -48,7 +48,9 @@ bulk_insert_lipidmaps <- function(filepath) {
   print("Inserting LipidMaps to DB...")
 
   repeat {
-    line <- nextElem(it)
+    line <- try(nextElem(it))
+    if (class(line) == "try-error")
+      break
 
     if (startsWith(line, "$$$$")) {
       # metabolite parsing has ended, save to DB
@@ -61,7 +63,7 @@ bulk_insert_lipidmaps <- function(filepath) {
 
       if (mod(j, 500) == 0) {
         # commit every once in a while
-        print(sprintf("#%s (DT: %s)", j, Sys.time() - start_time))
+        print(sprintf("#%s (DT: %s)", j, round(Sys.time() - start_time, 2)))
 
         db.commit()
         db.transaction()
