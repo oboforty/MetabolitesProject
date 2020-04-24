@@ -52,7 +52,9 @@ bulk_insert_chebi <- function(filepath) {
   print("Inserting ChEBI to DB...")
 
   repeat {
-    line <- nextElem(it)
+    line <- try(nextElem(it))
+    if (class(line) == "try-error")
+      break
 
     if (startsWith(line, "$$$$")) {
       # metabolite parsing has ended, save to DB
@@ -65,7 +67,7 @@ bulk_insert_chebi <- function(filepath) {
 
       if (mod(j, 500) == 0) {
         # commit every once in a while
-        print(sprintf("#%s (%s s)", j, Sys.time() - start_time))
+        print(sprintf("#%s (DT: %s)", j, Sys.time() - start_time))
 
         db.commit()
         db.transaction()
@@ -105,7 +107,6 @@ bulk_insert_chebi <- function(filepath) {
   db.commit()
   db.disconnect()
 
-  print(sprintf("Done! Took %d seconds", round(as.numeric(Sys.time() - start_time),2)))
+  print(sprintf("Done inserting %s records! DT: %s", round(as.numeric(j, Sys.time() - start_time),2)))
 }
 
-bulk_insert_chebi("../tmp/ChEBI_complete.sdf")

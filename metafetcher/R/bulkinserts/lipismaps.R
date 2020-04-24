@@ -61,7 +61,7 @@ bulk_insert_lipidmaps <- function(filepath) {
 
       if (mod(j, 500) == 0) {
         # commit every once in a while
-        print(sprintf("#%s (%s s)", j, Sys.time() - start_time))
+        print(sprintf("#%s (DT: %s)", j, Sys.time() - start_time))
 
         db.commit()
         db.transaction()
@@ -96,7 +96,6 @@ bulk_insert_lipidmaps <- function(filepath) {
   db.commit()
   db.disconnect()
 
-  print(sprintf("Done! Took %d seconds", round(as.numeric(Sys.time() - start_time),2)))
+  print(sprintf("Done inserting %s records! DT: %s", round(as.numeric(j, Sys.time() - start_time),2)))
 }
 
-bulk_insert_lipidmaps("../tmp/lipidmaps.sdf")

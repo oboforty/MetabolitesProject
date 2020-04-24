@@ -101,7 +101,7 @@ bulk_insert_hmdb <- function(filepath) {
           db.write_df("hmdb_data", convert_df_to_db_array(.state$df, mcard.hmdb))
 
           if (mod(.state$i, 500) == 0) {
-            print(sprintf("Inserting to DB... #%s dt: %s", .state$i, round(Sys.time() - start_time,2)))
+            print(sprintf("#%s (DT: %s)", .state$i, Sys.time() - start_time))
 
             # on buffer full commit & reset DB buffer
             db.commit()
@@ -127,8 +127,6 @@ bulk_insert_hmdb <- function(filepath) {
   db.commit()
   db.disconnect()
 
-  print(sprintf("Done! Took %s seconds", round(Sys.time() - start_time, 2)))
+  print(sprintf("Done inserting %s records! DT: %s", round(as.numeric(j, Sys.time() - start_time),2)))
 }
 
-filepath <- "../tmp/hmdb_metabolites.xml"
-bulk_insert_hmdb(filepath)
