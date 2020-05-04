@@ -1,4 +1,4 @@
-file = '../../tmp/tests/resolve_dump.csv'
+file = '../../tmp/tests/cov_old/resolve_dump.csv'
 file2 = '../../tmp/tests/resolve_dump2.csv'
 
 

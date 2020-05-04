@@ -3,7 +3,7 @@ import json
 import sys
 from collections import defaultdict
 
-file = '../../tmp/tests/resolve_dump2.csv'
+file = '../../tmp/tests/cov_old/resolve_dump2.csv'
 
 
 n_ambigous = defaultdict(int)

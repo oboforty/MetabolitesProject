@@ -16,3 +16,10 @@ join_sql_arr(oof)
 
 grepl('"', oof, fixed = TRUE)
 apply()
+
+
+
+a <- c(
+  "ASD" = "fuf",
+  "floof" = "floof"
+)

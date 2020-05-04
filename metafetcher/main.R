@@ -11,5 +11,9 @@ df.out <- resp$df
 
 
 
-#df.res <- resolve_single_id('hmdb_id', 'HMDB0035495')
-#df.res2 <- revert_df(df.res)
+source('R/discover.R')
+resp <- resolve_single_id('hmdb_id', 'HMDB0035495')
+df.out <- resp$df
+
+df.out <- revert_df(df.out)
+

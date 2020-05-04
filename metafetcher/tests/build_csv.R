@@ -3,57 +3,109 @@ source("R/utils.R")
 source('R/discover.R')
 
 
-build_csv <- function (db) {
-  db_tag <- paste(db,'_id',sep="")
-  file_i <- '../tmp/tests/resolve_i.RDS'
+fn_dbids <- '../tmp/tests/dbs.RDS'
+fn_prog <- '../tmp/tests/resolve_i.RDS'
 
-  if (!file.exists(file_i)) {
-    # reset csv file and iteration tracker
-    df.res <- create_empty_record(0, attr.meta)
-    write.table(df.res, "../tmp/tests/resolve_dump.csv", row.names = FALSE, col.names=TRUE, sep="|", quote=FALSE)
+get_ids <- function (N) {
+  ns <- N / 15
 
-    last_i <- 0
-    saveRDS(last_i, file_i)
-    print("Resetting file")
-  } else {
-    # iteration tracker
-    last_i <- readRDS(file_i)
-    print(sprintf("Continuing at %s ...", last_i))
+  if (!file.exists(fn_dbids)) {
+    db_ids <- readRDS(fn_dbids)
+
+    return(db_ids)
   }
 
-  records <- db.query(sprintf("SELECT %s FROM %s_data LIMIT 10000 OFFSET %s", db_tag, db, last_i))
+  lim <- round(runif(1, 2000, 35000))
+  records <- db.query(sprintf("SELECT chebi_id FROM chebi_data LIMIT %s OFFSET %s", lim, ns*3))
   db_ids <- records[[db_tag]]
 
-  df.res <- create_empty_record(10, attr.meta)
+  lim <- round(runif(1, 2000, 35000))
+  records <- db.query(sprintf("SELECT pubchem_id FROM chebi_data LIMIT %s OFFSET %s", lim, ns))
+  db_ids <- c(db_ids, records[[db_tag]])
+
+  lim <- round(runif(1, 2000, 35000))
+  records <- db.query(sprintf("SELECT kegg_id FROM chebi_data LIMIT %s OFFSET %s", lim, ns))
+  db_ids <- c(db_ids, records[[db_tag]])
+
+
+  lim <- round(runif(1, 2000, 35000))
+  records <- db.query(sprintf("SELECT hmdb_id FROM hmdb_data LIMIT %s OFFSET %s", lim, ns*3))
+  db_ids <- c(db_ids, records[[db_tag]])
+
+  lim <- round(runif(1, 2000, 35000))
+  records <- db.query(sprintf("SELECT pubchem_id FROM hmdb_data LIMIT %s OFFSET %s", lim, ns))
+  db_ids <- c(db_ids, records[[db_tag]])
+
+  lim <- round(runif(1, 2000, 35000))
+  records <- db.query(sprintf("SELECT kegg_id FROM hmdb_data LIMIT %s OFFSET %s", lim, ns))
+  db_ids <- c(db_ids, records[[db_tag]])
+
+
+  lim <- round(runif(1, 2000, 35000))
+  records <- db.query(sprintf("SELECT lipidmaps_id FROM lipidmaps_data LIMIT %s OFFSET %s", lim, ns*3))
+  db_ids <- c(db_ids, records[[db_tag]])
+
+  lim <- round(runif(1, 2000, 35000))
+  records <- db.query(sprintf("SELECT pubchem_id FROM lipidmaps_data LIMIT %s OFFSET %s", lim, ns))
+  db_ids <- c(db_ids, records[[db_tag]])
+
+  lim <- round(runif(1, 2000, 35000))
+  records <- db.query(sprintf("SELECT kegg_id FROM lipidmaps_data LIMIT %s OFFSET %s", lim, ns))
+  db_ids <- c(db_ids, records[[db_tag]])
+
+  # save
+  db_ids <- get_ids(7500)
+  saveRDS(db_ids, fn_dbids)
+
+  return(db_ids)
+}
+
+get_last_progress <- function () {
+  if (!file.exists(fn_prog)) {
+    last_i <- 0
+    saveRDS(last_i, fn_prog)
+  } else {
+    # iteration tracker
+    last_i <- readRDS(fn_prog)
+  }
+
+  return(last_i)
+}
+
+save_progress <- function (i) {
+  saveRDS(i, fn_prog)
+}
+
+build_csv <- function () {
+  db_ids <- get_ids(7500)
+  i <- get_last_progress()
+  N <- 20
+  L <- nrow(db_ids)
 
   resolve.options$suppress <<- TRUE
   resolve.options$open_connection <<- FALSE
 
-  start_time <- Sys.time()
   db.connect()
 
-  i <- 1
-  N <- 10
-  L <- nrow(records)
-  print(sprintf("Parsing %s records", L))
+  start_time <- Sys.time()
+  print(sprintf("Parsing %s records. Started at %s", L, start_time))
 
   while (i < L) {
     # pump 10 entries and resolve
     df.res[db_tag] <- db_ids[i:(i+N-1)]
 
     result <- resolve(df.res)
-
     df.out <- revert_df(result$df)
 
     write.table(df.out, "../tmp/tests/resolve_dump.csv", row.names = FALSE, col.names=FALSE, append = T, sep="|")
 
     i <- i + N
-    last_i <- last_i + N
     print(sprintf("%s/%s...", i, L))
-    saveRDS(last_i, file_i)
+    save_progress(i)
   }
 
   db.disconnect()
 }
 
-build_csv("chebi")
+
+build_csv()
