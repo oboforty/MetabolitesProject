@@ -50,7 +50,6 @@ HmdbHandler <- setRefClass(Class = "HmdbHandler",
       SQL <- "SELECT hmdb_id FROM hmdb_data WHERE"
       clauses <- character()
 
-      # todo: itt: construct proper is empty!
       if (!is.empty(chebi_id))
         clauses <- c(clauses, sprintf("chebi_id = '%s'", chebi_id))
       if (!is.empty(pubchem_id))

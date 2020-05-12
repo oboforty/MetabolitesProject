@@ -10,7 +10,9 @@ create_kegg_record <- function () {
     "exact_mass", "mol_weight",
     "comments", "formula", "names",
 
-    "kegg_id", "chebi_id",  "lipidmaps_id", "pubchem_id",
+    "kegg_id", "chebi_id",  "lipidmaps_id",
+    # pubchem ID is substance ID only in KEGG!
+    #"pubchem_id",
     "ref_etc"
   )
 
@@ -41,7 +43,7 @@ KeggHandler <- setRefClass(Class = "KeggHandler",
     query_metabolite = function(db_id) {
       # Queries a KEGG metabolite record and converts it to a common interface
       SQL <- "SELECT
-        kegg_id,chebi_id,lipidmaps_id,pubchem_id,
+        kegg_id,chebi_id,lipidmaps_id,
         names,formula,
         exact_mass,mol_weight,
         comments
@@ -55,13 +57,8 @@ KeggHandler <- setRefClass(Class = "KeggHandler",
         if(is.null(df.kegg) || length(df.kegg) == 0)
           return(NULL)
 
-        # Save to db
-        if (length(df.kegg$names[[1]]) > 0)
-          df.kegg$names <- c(join(df.kegg$names[[1]]))
-
         # cache kegg record
-        #saveRDS(df.kegg, "kegg_data.rds")
-        db.write_df("kegg_data", df.kegg)
+        db.write_df("kegg_data", convert_df_to_db_array(df.kegg, c("names")))
       }
 
       # convert to common interface:
@@ -82,7 +79,7 @@ KeggHandler <- setRefClass(Class = "KeggHandler",
 
     query_reverse = function(df.res) {
       chebi_id <- df.res$chebi_id[[1]]
-      pubchem_id <- df.res$pubchem_id[[1]]
+      #pubchem_id <- df.res$pubchem_id[[1]]
       lipidmaps_id <- df.res$lipidmaps_id[[1]]
 
       # construct complex reverse query
@@ -92,8 +89,8 @@ KeggHandler <- setRefClass(Class = "KeggHandler",
       # todo: itt: construct proper is empty!
       if (!is.empty(chebi_id))
         clauses <- c(clauses, sprintf("chebi_id = '%s'", chebi_id))
-      if (!is.empty(pubchem_id))
-        clauses <- c(clauses, sprintf("pubchem_id = '%s'", pubchem_id))
+      #if (!is.empty(pubchem_id))
+      #  clauses <- c(clauses, sprintf("pubchem_id = '%s'", pubchem_id))
       if (!is.empty(lipidmaps_id))
         clauses <- c(clauses, sprintf("lipidmaps_id = '%s'", lipidmaps_id))
 
@@ -161,7 +158,7 @@ KeggHandler <- setRefClass(Class = "KeggHandler",
           if (!endsWith(db_tag, "_id"))
             db_tag <- paste(c(db_tag, "_id"), collapse = "")
 
-          if (!db_tag %in% c("kegg_id", "chebi_id", "lipidmaps_id", "pubchem_id"))
+          if (!db_tag %in% c("kegg_id", "chebi_id", "lipidmaps_id")) # pubchem_id
             next
 
           # remove db_tag and parse the rest of line as db_id

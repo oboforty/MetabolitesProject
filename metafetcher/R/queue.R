@@ -35,6 +35,9 @@ Queue <- setRefClass(Class = "Queue",
                          if (length(pos) == 1) return(data[[pos]])
                          else return(data[pos])
                        },
+                       contains = function (item) {
+                         return(item %in% data)
+                       },
                        clear = function() {
                          'Clears queue.'
 

@@ -155,11 +155,12 @@ resolve <- function(df.discovered) {
         new_db_id <- df.result[[1, new_db_tag]]
 
         # check if such refId is present in the record
-        if (!is.empty(new_db_id)) {
-          if (!set_contains_element(discovered, tuple(new_db_tag, new_db_id))) {
+        if (!is.empty(new_db_id) && !set_contains_element(discovered, tuple(new_db_tag, new_db_id))) {
+          if (new_db_id != db_id || new_db_tag != db_tag)  {
             # enqueue for exploration, but only if it hasn't occured before
             # Format: (db_tag, db_id, db_tag that referenced this id)
             Q$push(tuple(new_db_tag, new_db_id, db_tag, db_id))
+            discovered <- c(discovered, tuple(new_db_tag, new_db_id))
           }
         }
       }

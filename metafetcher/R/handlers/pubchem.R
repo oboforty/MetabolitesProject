@@ -45,27 +45,30 @@ PubchemHandler <- setRefClass(Class = "PubchemHandler",
       df.pubchem <- db.query(sprintf(SQL, db_id))
 
       if (length(df.pubchem) == 0) {
+        # call api and save to database
         df.pubchem <- .self$call_api(db_id)
 
         # if api response is still empty, then the record doesn't exist
         if (is.null(df.pubchem) || length(df.pubchem) == 0)
           return(NULL)
-
-        # Save to db
-        if (length(df.pubchem$names[[1]]) > 0)
-          df.pubchem$names <- c(join(df.pubchem$names[[1]]))
-        if (length(df.pubchem$smiles[[1]]) > 0)
-          df.pubchem$smiles <- c(join(df.pubchem$smiles[[1]]))
+        #
+        # # Save to db
+        # if (length(df.pubchem$names[[1]]) > 0)
+        #   df.pubchem$names <- c(join_sql_arr(df.pubchem$names[[1]]))
+        #
+        # if (length(df.pubchem$smiles[[1]]) > 0)
+        #   df.pubchem$smiles <- c(join_sql_arr(df.pubchem$smiles[[1]]))
 
         # cache pubchem record
-        #saveRDS(df.pubchem, "pubchem_data.rds")
-        db.write_df("pubchem_data", df.pubchem)
+        db.write_df("pubchem_data", convert_df_to_db_array(df.pubchem, c("names", "smiles")))
+      } else {
+        # we don't have to convert from postgres array format if the data comes from api
+        df.pubchem$names <- list(pg_str2vector(df.pubchem$names[[1]]))
+        df.pubchem$smiles <- list(pg_str2vector(df.pubchem$smiles[[1]]))
       }
 
       # convert to common interface:
       # convert pg array strings to R vectors:
-      df.pubchem$names <- list(pg_str2vector(df.pubchem$names[[1]]))
-      df.pubchem$smiles <- list(pg_str2vector(df.pubchem$smiles[[1]]))
       df.pubchem$source <- c("pubchem")
       # df.pubchem$metlin_id = c(NA)
       # df.pubchem$lipidmaps_id = c(NA)
