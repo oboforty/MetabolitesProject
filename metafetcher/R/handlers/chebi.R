@@ -29,9 +29,6 @@ ChebiHandler <- setRefClass(Class = "ChebiHandler",
 
       # convert to common interface:
       df.chebi$names <- list(pg_str2vector(df.chebi$names[[1]]))
-      df.chebi$source <- c("chebi")
-      # df.chebi$metlin_id = c(NA)
-      # df.chebi$cas_id = c(NA)
 
       return (df.chebi)
     },
@@ -46,7 +43,6 @@ ChebiHandler <- setRefClass(Class = "ChebiHandler",
       SQL <- "SELECT chebi_id FROM chebi_data WHERE"
       clauses <- character()
 
-      # todo: itt: construct proper is empty!
       if (!is.empty(hmdb_id))
         clauses <- c(clauses, sprintf("hmdb_id = '%s'", hmdb_id))
       if (!is.empty(pubchem_id))

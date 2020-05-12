@@ -25,12 +25,8 @@ LipidmapsHandler <- setRefClass(Class = "LipidmapsHandler",
       if(length(df.lipidmaps) == 0)
         return(NULL)
 
-      # convert to common interface:
+      # convert pg array strings to R vectors:
       df.lipidmaps$names <- list(pg_str2vector(df.lipidmaps$names[[1]]))
-      df.lipidmaps$source = c("lipidmaps")
-      df.lipidmaps$metlin_id = c(NA)
-      df.lipidmaps$cas_id = c(NA)
-      df.lipidmaps$monoisotopic_mass = c(NA)
 
       return (df.lipidmaps)
     },
@@ -45,7 +41,6 @@ LipidmapsHandler <- setRefClass(Class = "LipidmapsHandler",
       SQL <- "SELECT lipidmaps_id FROM lipidmaps_data WHERE"
       clauses <- character()
 
-      # todo: itt: construct proper is empty!
       if (!is.empty(pubchem_id))
         clauses <- c(clauses, sprintf("pubchem_id = '%s'", pubchem_id))
       if (!is.empty(chebi_id))

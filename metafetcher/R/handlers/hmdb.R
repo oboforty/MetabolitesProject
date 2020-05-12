@@ -31,12 +31,8 @@ HmdbHandler <- setRefClass(Class = "HmdbHandler",
         return(NULL)
       }
 
-      # convert to common interface:
       # convert pg array strings to R vectors:
       df.hmdb$names <- list(pg_str2vector(df.hmdb$names[[1]]))
-      df.hmdb$source <- c("hmdb")
-      # df.hmdb$lipidmaps_id <- c(NA)
-      # df.hmdb$cas_id = c(NA)
 
       return (df.hmdb)
     },

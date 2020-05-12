@@ -59,18 +59,12 @@ KeggHandler <- setRefClass(Class = "KeggHandler",
 
         # cache kegg record
         db.write_df("kegg_data", convert_df_to_db_array(df.kegg, c("names")))
+      } else {
+        # convert pg array strings to R vectors:
+        df.kegg$names <- list(pg_str2vector(df.kegg$names[[1]]))
       }
 
       # convert to common interface:
-      # convert pg array strings to R vectors:
-      df.kegg$names <- list(pg_str2vector(df.kegg$names[[1]]))
-      df.kegg$source <- c("kegg")
-      df.kegg$metlin_id = c(NA)
-      df.kegg$hmdb_id = c(NA)
-      df.kegg$smiles = c(NA)
-      df.kegg$inchi = c(NA)
-      df.kegg$inchikey = c(NA)
-
       colnames(df.kegg)[colnames(df.kegg)=="exact_mass"]  <-"monoisotopic_mass"
       colnames(df.kegg)[colnames(df.kegg)=="mol_weight"]  <-"mass"
 

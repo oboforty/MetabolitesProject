@@ -63,16 +63,11 @@ PubchemHandler <- setRefClass(Class = "PubchemHandler",
         db.write_df("pubchem_data", convert_df_to_db_array(df.pubchem, c("names", "smiles")))
       } else {
         # we don't have to convert from postgres array format if the data comes from api
+
+        # convert pg array strings to R vectors:
         df.pubchem$names <- list(pg_str2vector(df.pubchem$names[[1]]))
         df.pubchem$smiles <- list(pg_str2vector(df.pubchem$smiles[[1]]))
       }
-
-      # convert to common interface:
-      # convert pg array strings to R vectors:
-      df.pubchem$source <- c("pubchem")
-      # df.pubchem$metlin_id = c(NA)
-      # df.pubchem$lipidmaps_id = c(NA)
-      # df.pubchem$chemspider_id = c(NA)
 
       return (df.pubchem)
     },
