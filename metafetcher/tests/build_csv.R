@@ -108,11 +108,11 @@ build_csv <- function () {
   start_time <- Sys.time()
   print(sprintf("Parsing %s records. Started at %s", L, start_time))
 
-  while (i < L-N) {
+  while (i < L) {
     df.res <- create_empty_record(20, attr.meta)
 
-    db_tag <- db_ids$db_tags[i:(i+N-1)]
-    db_id <- db_ids$db_ids[i:(i+N-1)]
+    db_tag <- db_ids$db_tags[i:(i+N)]
+    db_id <- db_ids$db_ids[i:(i+N)]
 
     # save db_id in dataframe
     for (j in 1:20) {
@@ -124,8 +124,9 @@ build_csv <- function () {
 
     write.table(df.out, "../tmp/tests/resolve_dump.csv", row.names = FALSE, col.names=FALSE, append = T, sep="|")
 
-    i <- i + N
     print(sprintf("%s/%s...", i, L))
+    i <- i + N
+
     save_progress(i)
   }
 

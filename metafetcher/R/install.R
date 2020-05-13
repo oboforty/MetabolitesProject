@@ -1,3 +1,5 @@
+print("INSTALL 2")
+
 source("R/bulkinserts/hmdb.R")
 source("R/bulkinserts/chebi.R")
 source("R/bulkinserts/lipidmaps.R")

@@ -1,3 +1,4 @@
+print("INSTALL 1")
 
 # Databases
 install.packages("RPostgreSQL")
