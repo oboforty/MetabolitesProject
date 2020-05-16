@@ -37,10 +37,20 @@ resolve.options <- list(
 
 resolve_by_names <- function (df.discovered) {
   'Discover metabolites based on names'
-  
+
 }
 
 
+#' Resolves missing external IDs belonging to a single metabolome ID
+#'
+#' @param start_db_tag The type of the ID - which database it belongs to? All lowercase and must end in '_id'
+#' @param start_db_id The metabolome ID in the given database
+#' @return A list containing some statistics and a dataframe, that contains a single row with the resolved data.
+#' @examples
+#' # For example to start the search from https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:8077
+#' resp <- resolve_single_id("chebi_id", "8077")
+#' df.out <- resp$df
+#' view(df.out)
 resolve_single_id <- function(start_db_tag, start_db_id) {
   'Discover from single database ID'
   #start_db_tag <- paste(c(start_db_tag, '_id'), collapse="")
@@ -53,6 +63,15 @@ resolve_single_id <- function(start_db_tag, start_db_id) {
   return(resolve(df.res))
 }
 
+#' Resolves missing metabolome IDs and other attributes in dataframe
+#'
+#' @param df.discovered A dataframe
+#' @return A list containing some statistics and the same dataframe, extended with missing data.
+#' @examples
+#' df_from_csv <- read.csv("meta_ids.csv", stringsAsFactors=FALSE)
+#' resp <- resolve(df_from_csv)
+#' df.out <- resp$df
+#' view(df.out)
 resolve <- function(df.discovered) {
   'Discover missing IDs and attributes from a dataframe input'
 

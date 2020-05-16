@@ -2,10 +2,11 @@ Package: metafetcher
 Type: Package
 Title: What the Package Does (Title Case)
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Rajmund Csombordi <>
+Maintainer: Rajmund Csombordi <yourself@somewhere.net>
+Description: Metabolomics database ID resolver.
+    This package helps you fetch the following types of records
+    with ease: Pubchem, Chebi, HMDB, KEGG compounds and Lipidmaps
+License: MIT License
 Encoding: UTF-8
 LazyData: true
