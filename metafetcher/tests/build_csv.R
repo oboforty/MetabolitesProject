@@ -77,7 +77,7 @@ get_last_progress <- function () {
   if (!file.exists(fn_prog)) {
     # create empty headers
     df.empty <- create_empty_record(0, attr.meta)
-    write.table(df.empty, "../tmp/tests/resolve_dump.csv", row.names = FALSE, col.names=TRUE, sep="|", quote=FALSE)
+    write.table(df.empty, "../tmp/tests/resolve_dump.csv", row.names = FALSE, col.names=TRUE, sep="|", quote=TRUE)
 
 
     last_i <- 0
@@ -122,7 +122,7 @@ build_csv <- function () {
     result <- resolve(df.res)
     df.out <- revert_df(result$df)
 
-    write.table(df.out, "../tmp/tests/resolve_dump.csv", row.names = FALSE, col.names=FALSE, append = T, sep="|")
+    write.table(df.out, "../tmp/tests/resolve_dump.csv", row.names = FALSE, col.names=FALSE, append = T, sep="|", quote=FALSE)
 
     print(sprintf("%s/%s...", i, L))
     i <- i + N

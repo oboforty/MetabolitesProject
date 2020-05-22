@@ -3,7 +3,7 @@ import json
 import sys
 from collections import defaultdict
 
-file = '../../tmp/tests/cov_old/resolve_dump2.csv'
+file = '../../tmp/tests/resolve_dump_1.csv'
 
 
 n_ambigous = defaultdict(int)
@@ -35,6 +35,7 @@ with open(file, encoding='utf-8') as csvfile:
             if isinstance(val, list):
                 L = len([v for v in val if v != 'NA'])
             elif type(val) in [str, int, float, bool]:
+                # this case doesn't actually happen because every value in the CSV is stored as an array
                 L = 1
             else:
                 raise Exception(str(type(val)))
