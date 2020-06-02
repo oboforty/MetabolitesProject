@@ -1,4 +1,7 @@
-#library(devtools)
+# Install
+library(devtools)
+install_github("oboforty/metafetcher")
 
 
-#install_github("oboforty/metabolitesproject")
+library(metafetcher)
+

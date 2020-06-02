@@ -3,7 +3,7 @@ import json
 import sys
 from collections import defaultdict
 
-file = '../../tmp/tests/resolve_dump_1.csv'
+file = '../../tmp/tests/resolve_dump_4.csv'
 
 
 n_ambigous = defaultdict(int)
@@ -48,7 +48,7 @@ with open(file, encoding='utf-8') as csvfile:
             #    # attr is a reference ID
             #    pass
 
-keys = list(n_resolved.keys())
+keys = list(sorted(n_resolved.keys()))
 print('\t'.join(keys))
 
 for attr in keys:
